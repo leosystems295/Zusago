@@ -105,6 +105,7 @@ function htmlToText(html) {
     .replace(/&nbsp;/g, " ").replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&#39;|&apos;/g, "'")
     .replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&auml;/g, "ä").replace(/&ouml;/g, "ö").replace(/&uuml;/g, "ü")
     .replace(/&Auml;/g, "Ä").replace(/&Ouml;/g, "Ö").replace(/&Uuml;/g, "Ü").replace(/&#(\d+);/g, (_, n) => String.fromCharCode(+n))
+    .replace(/&(ndash|mdash);/g, "–").replace(/&hellip;/g, "…").replace(/&(laquo|raquo);/g, m => m === "&laquo;" ? "«" : "»").replace(/&szlig;/g, "ss").replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCharCode(parseInt(h, 16)))
     .replace(/[ \t]+/g, " ").replace(/\s*\n\s*/g, "\n").trim();
   return (ld ? "STRUKTURIERTE DATEN:\n" + ld + "\n\nSEITENTEXT:\n" : "") + text.slice(0, 12_000);
 }

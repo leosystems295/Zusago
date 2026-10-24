@@ -294,7 +294,7 @@ $("#noAi").addEventListener("click", () => {
       ? [`Ich besuche die ${p.klasse || "Oberstufe"} und interessiere mich sehr für den Beruf ${j.beruf}. Gerne würde ich ${j.firma ? "bei der " + j.firma : "bei Ihnen"} einige Tage schnuppern.`,
          `Ich bin ${p.staerken.slice(0, 3).join(", ") || "motiviert"} und freue mich darauf, den Berufsalltag kennenzulernen.`,
          "Ich freue mich auf Ihre Antwort."]
-      : [`Mit grossem Interesse habe ich gelesen, dass Sie ${j.lehrbeginn ? "ab " + j.lehrbeginn + " " : ""}eine Lernende oder einen Lernenden als ${j.beruf} suchen. Hiermit bewerbe ich mich für diese Lehrstelle.`,
+      : [`Mit grossem Interesse habe ich gelesen, dass Sie ${j.lehrbeginn && /\d/.test(j.lehrbeginn) ? "ab " + j.lehrbeginn + " " : ""}eine Lernende oder einen Lernenden als ${j.beruf} suchen. Hiermit bewerbe ich mich für diese Lehrstelle.`,
          `${p.motivation || "Der Beruf interessiert mich, weil ich gerne Neues lerne und anpacke."}`,
          `Ich bin ${p.staerken.slice(0, 3).join(", ") || "motiviert und zuverlässig"}. ${p.hobbys.length ? "In meiner Freizeit: " + p.hobbys.join(", ") + "." : ""}`,
          "Gerne stelle ich mich bei Ihnen persönlich vor oder komme schnuppern. Ich freue mich auf Ihre Antwort."]

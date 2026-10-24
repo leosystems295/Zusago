@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zusago – Lebenslauf und Bewerbung für deine Lehrstelle</title>
+<meta name="description" content="Füg den Link zur Lehrstelle ein – Zusago schreibt deinen Lebenslauf und deine Bewerbung passend dazu. Gemacht für die 8. bis 10. Klasse.">
+<meta name="theme-color" content="#4F46E5">
+<link rel="icon" href="assets/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="cursor-glow" aria-hidden="true"></div>
+
+<!-- NAVIGATION -->
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo" aria-label="Zusago Startseite"><img src="assets/zusago-logo-farbig.svg" alt="Zusago" width="128" height="29"></a>
+    <nav class="nav-links" aria-label="Hauptnavigation">
+      <a href="so-funktionierts.html">So funktioniert's</a>
+      <a href="funktionen.html">Funktionen</a>
+      <a href="vorlagen.html">Vorlagen</a>
+      <a href="preise.html">Preise</a>
+      <a href="eltern.html">Für Eltern</a>
+      <a href="faq.html">FAQ</a>
+    </nav>
+    <div class="nav-cta">
+      <a href="#start" class="btn btn-primary btn-sm magnetic">Gratis starten</a>
+      <button class="burger" id="burger" aria-label="Menü öffnen" aria-expanded="false"><span></span><span></span></button>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="so-funktionierts.html">So funktioniert's</a>
+    <a href="funktionen.html">Funktionen</a>
+    <a href="vorlagen.html">Vorlagen</a>
+    <a href="preise.html">Preise</a>
+    <a href="eltern.html">Für Eltern</a>
+    <a href="faq.html">FAQ</a>
+    <a href="#start" class="btn btn-primary">Gratis starten</a>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- HERO -->
+<section class="hero" id="start">
+  <canvas class="hero-canvas" id="heroCanvas" aria-hidden="true"></canvas>
+  <div class="wrap hero-center">
+    <span class="pill pill-coral reveal"><span class="spark" aria-hidden="true"></span>KI passt alles an deinen Beruf an</span>
+    <h1 id="heroTitle"><span class="h-line">Deine Bewerbung als</span><span class="rotator" id="rotator" aria-live="polite"><span class="rot-word in">Informatiker/in</span><span class="rot-line" aria-hidden="true"></span></span><span class="h-line">in 10 Minuten<span class="dot">.</span></span></h1>
+    <p class="hero-sub reveal" data-delay="2">Füg den Link zur Lehrstelle ein – wir schreiben deinen Lebenslauf und deine Bewerbung passend dazu. Gemacht für die 8. bis 10. Klasse.</p>
+
+    <form class="link-form reveal" data-delay="3" id="linkForm" novalidate>
+      <label for="jobLink" class="sr-only">Link zum Lehrstelleninserat</label>
+      <div class="link-field">
+        <svg class="link-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7.1 0l3-3a5 5 0 0 0-7.1-7.1l-1.2 1.2M14 10a5 5 0 0 0-7.1 0l-3 3a5 5 0 0 0 7.1 7.1l1.2-1.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <input id="jobLink" type="url" inputmode="url" autocomplete="off" placeholder="Link zum Lehrstelleninserat">
+        <button class="btn btn-primary" type="submit">Los geht's <span class="arrow" aria-hidden="true">→</span></button>
+      </div>
+      <p class="form-error" id="formError" role="alert"></p>
+      <a href="vorlagen.html" class="sub-link">Kein Inserat? Beruf auswählen</a>
+    </form>
+
+    <ul class="trust reveal" data-delay="4">
+      <li><span class="tick" aria-hidden="true">✓</span>Gratis ausprobieren</li>
+      <li><span class="tick" aria-hidden="true">✓</span>Ohne Anmeldung starten</li>
+      <li><span class="tick" aria-hidden="true">✓</span>Schweizer Format</li>
+    </ul>
+  </div>
+
+  <!-- App-Ansicht (Beispiel) -->
+  <div class="mock-stage">
+    <div class="wave" aria-hidden="true"><span></span><span></span><span></span></div>
+    <div class="wrap">
+      <div class="mock" id="mock" role="group" aria-label="Beispiel: So sieht der Zusago-Editor aus">
+        <div class="mock-bar"><i></i><i></i><i></i><div class="mock-url">app.zusago.ch/bewerbung</div><span class="mock-demo">Beispiel</span></div>
+        <div class="mock-body">
+          <aside class="mock-side">
+            <div class="ms-title">Deine Bewerbung</div>
+            <ol class="ms-steps">
+              <li class="done">Inserat</li><li class="done">Fragen</li><li class="done">Vorlage</li><li class="act">Vorschau</li><li>Download</li>
+            </ol>
+            <div class="ms-found">
+              <div class="ms-k">Erkannt aus dem Inserat</div>
+              <span class="chip-s">Informatiker/in EFZ</span><span class="chip-s">Muster AG</span><span class="chip-s">Lehrbeginn August</span>
+            </div>
+          </aside>
+
+          <div class="mock-main">
+            <div class="mock-tabs" role="tablist" aria-label="Dokument wählen">
+              <button role="tab" aria-selected="true" data-tab="cv">Lebenslauf</button>
+              <button role="tab" aria-selected="false" data-tab="letter">Bewerbung</button>
+              <button role="tab" aria-selected="false" data-tab="schnupper">Schnupperlehre</button>
+              <span class="tab-ind" aria-hidden="true"></span>
+            </div>
+            <div class="mock-paper">
+              <div class="pane on" data-pane="cv">
+                <div class="cv-head"><div class="cv-photo"></div><div><div class="cv-name">Lena Muster</div><div class="cv-role">Bewerbung als Informatikerin EFZ</div></div></div>
+                <div class="cv-cols">
+                  <div>
+                    <div class="cv-sec">Schule</div><p class="pt">Sekundarschule Niveau A<br><span>2023 – 2026</span></p>
+                    <div class="cv-sec">Schnupperlehren</div><p class="pt">Informatikerin EFZ, Muster AG<br><span>3 Tage · März 2026</span></p>
+                  </div>
+                  <div>
+                    <div class="cv-sec">Stärken</div><div class="cv-chips"><span>logisch</span><span>geduldig</span><span>teamfähig</span></div>
+                    <div class="cv-sec">Hobbys</div><p class="pt">PC zusammenbauen, Volleyball im Verein</p>
+                  </div>
+                </div>
+              </div>
+              <div class="pane" data-pane="letter">
+                <p class="pt small">Muster AG · Personalabteilung · 4500 Solothurn</p>
+                <p class="pt strong">Bewerbung als Informatikerin EFZ</p>
+                <p class="pt letter-text" id="toneText"></p>
+                <div class="doc-line w90"></div><div class="doc-line w75"></div>
+              </div>
+              <div class="pane" data-pane="schnupper">
+                <p class="pt small">Betreff</p>
+                <p class="pt strong">Anfrage Schnupperlehre Informatikerin EFZ</p>
+                <p class="pt">Guten Tag Frau Beispiel</p>
+                <p class="pt">Ich besuche die 8. Klasse und interessiere mich sehr für die Informatik. Gerne würde ich bei der Muster AG zwei bis drei Tage schnuppern.</p>
+                <div class="doc-line w80"></div>
+              </div>
+            </div>
+          </div>
+
+          <aside class="mock-ai">
+            <div class="ai-head"><span class="spark" aria-hidden="true"></span>KI-Assistent</div>
+            <label class="ai-lbl" for="tone">Ton deines Briefs</label>
+            <input type="range" id="tone" min="0" max="2" step="1" value="1">
+            <div class="tone-scale" aria-hidden="true"><span>locker</span><span>normal</span><span>formell</span></div>
+            <div class="ms-k">Vorschläge</div>
+            <div class="ai-sugg"><button type="button" class="sugg" data-s="short">Kürzer machen</button><button type="button" class="sugg" data-s="strong">Stärke ergänzen</button></div>
+            <div class="ai-ok"><span class="check-circle sm">✓</span>Bereit zum Senden</div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<section class="marquee" aria-label="Beispiele für Lehrberufe">
+  <div class="marquee-track">
+    <ul>
+      <li>Informatiker/in EFZ</li><li>Kauffrau/Kaufmann EFZ</li><li>Polymechaniker/in EFZ</li><li>Fachfrau/Fachmann Gesundheit</li><li>Detailhandelsfachfrau/-mann</li><li>Elektroinstallateur/in EFZ</li><li>Automatiker/in EFZ</li><li>Logistiker/in EFZ</li><li>Coiffeur/Coiffeuse EFZ</li><li>Zeichner/in EFZ</li><li>Automobil-Mechatroniker/in</li><li>Mediamatiker/in EFZ</li>
+    </ul>
+    <ul aria-hidden="true">
+      <li>Informatiker/in EFZ</li><li>Kauffrau/Kaufmann EFZ</li><li>Polymechaniker/in EFZ</li><li>Fachfrau/Fachmann Gesundheit</li><li>Detailhandelsfachfrau/-mann</li><li>Elektroinstallateur/in EFZ</li><li>Automatiker/in EFZ</li><li>Logistiker/in EFZ</li><li>Coiffeur/Coiffeuse EFZ</li><li>Zeichner/in EFZ</li><li>Automobil-Mechatroniker/in</li><li>Mediamatiker/in EFZ</li>
+    </ul>
+  </div>
+</section>
+
+<!-- KENNST DU DAS -->
+<section class="section know" id="kennst-du-das">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <span class="eyebrow">Kennst du das?</span>
+      <h2>Bewerben ist schwer<span class="dot">.</span><br><span class="muted">Vor allem beim ersten Mal.</span></h2>
+    </div>
+  </div>
+  <div class="know-rows" aria-label="Typische Sorgen bei der ersten Bewerbung">
+    <div class="know-row"><ul><li><span class="q" aria-hidden="true">?</span>Ich weiss nicht, wie ich anfangen soll.</li><li><span class="q" aria-hidden="true">?</span>Ich habe ja noch keine Erfahrung.</li><li><span class="q" aria-hidden="true">?</span>Word macht mein Layout kaputt.</li><li><span class="q" aria-hidden="true">?</span>Für jede Stelle alles neu schreiben?</li><li><span class="q" aria-hidden="true">?</span>Klingt mein Brief zu kindisch?</li></ul><ul aria-hidden="true"><li><span class="q" aria-hidden="true">?</span>Ich weiss nicht, wie ich anfangen soll.</li><li><span class="q" aria-hidden="true">?</span>Ich habe ja noch keine Erfahrung.</li><li><span class="q" aria-hidden="true">?</span>Word macht mein Layout kaputt.</li><li><span class="q" aria-hidden="true">?</span>Für jede Stelle alles neu schreiben?</li><li><span class="q" aria-hidden="true">?</span>Klingt mein Brief zu kindisch?</li></ul></div>
+    <div class="know-row rev"><ul><li><span class="q" aria-hidden="true">?</span>Was gehört in einen Lebenslauf?</li><li><span class="q" aria-hidden="true">?</span>Meine Eltern haben gerade keine Zeit.</li><li><span class="q" aria-hidden="true">?</span>Die Frist ist schon nächste Woche.</li><li><span class="q" aria-hidden="true">?</span>Muss ein Foto drauf?</li><li><span class="q" aria-hidden="true">?</span>Wie frage ich für eine Schnupperlehre an?</li></ul><ul aria-hidden="true"><li><span class="q" aria-hidden="true">?</span>Was gehört in einen Lebenslauf?</li><li><span class="q" aria-hidden="true">?</span>Meine Eltern haben gerade keine Zeit.</li><li><span class="q" aria-hidden="true">?</span>Die Frist ist schon nächste Woche.</li><li><span class="q" aria-hidden="true">?</span>Muss ein Foto drauf?</li><li><span class="q" aria-hidden="true">?</span>Wie frage ich für eine Schnupperlehre an?</li></ul></div>
+  </div>
+  <p class="know-answer reveal">Zusago nimmt dir genau das ab<span class="dot">.</span></p>
+</section>
+
+
+<div class="hatch" aria-hidden="true"></div>
+
+
+<!-- DREI SCHRITTE (kurz) -->
+<section class="section" id="ablauf">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <span class="eyebrow">So funktioniert's</span>
+      <h2>Drei Schritte<span class="dot">.</span><br><span class="muted">Und deine Bewerbung ist fertig.</span></h2>
+    </div>
+    <div class="steps3">
+      <article class="step reveal spot"><span class="step-n">01</span><h3>Link einfügen</h3><p>Kopier den Link zur Lehrstelle. Zusago erkennt Beruf, Firma und was dort wichtig ist.</p></article>
+      <article class="step reveal spot" data-delay="1"><span class="step-n">02</span><h3>Fragen beantworten</h3><p>Eine Frage pro Bildschirm, vieles zum Antippen. Dauert etwa 5 Minuten.</p></article>
+      <article class="step reveal spot" data-delay="2"><span class="step-n">03</span><h3>PDF herunterladen</h3><p>Lebenslauf und Brief im gleichen Design, im Schweizer Format.</p></article>
+    </div>
+    <div class="more reveal"><a href="so-funktionierts.html" class="btn btn-ghost">Mehr zum Ablauf <span class="arrow" aria-hidden="true">→</span></a></div>
+  </div>
+</section>
+
+
+<!-- FUNKTIONEN (Auswahl) -->
+<section class="section" id="funktionen">
+  <div class="wrap">
+    <div class="sec-head split reveal">
+      <h2>Alles drin<span class="dot">.</span><br><span class="muted">Für jede Bewerbung.</span></h2>
+      <p>Ton-Regler, Foto-Helfer, Dossier, Tracker und mehr: Zusago begleitet dich durch die ganze Lehrstellensuche.</p>
+    </div>
+    <div class="feat-row">
+      <a class="feat reveal spot" href="funktionen.html"><span class="feat-ico">Aa</span><b>Ton-Regler</b><span>Zu locker oder zu steif? Ein Regler, und der Text passt.</span></a>
+      <a class="feat reveal spot" data-delay="1" href="funktionen.html"><span class="feat-ico">PDF</span><b>Bewerbungsdossier</b><span>Lebenslauf, Brief und Zeugnisse in einem PDF.</span></a>
+      <a class="feat reveal spot" data-delay="2" href="funktionen.html"><span class="feat-ico">✓</span><b>Bewerbungs-Tracker</b><span>Behalte den Überblick über alle Bewerbungen.</span></a>
+    </div>
+    <div class="more reveal"><a href="funktionen.html" class="btn btn-ghost">Alle Funktionen <span class="arrow" aria-hidden="true">→</span></a></div>
+  </div>
+</section>
+
+
+
+<div class="hatch" aria-hidden="true"></div>
+
+
+<!-- VORLAGEN (Auswahl) -->
+<section class="section section-tint" id="vorlagen">
+  <div class="wrap">
+    <div class="sec-head split reveal">
+      <h2>Lebenslauf und Brief<span class="dot">.</span><br><span class="muted">Immer als passendes Set.</span></h2>
+      <p>Fahr über eine Karte oder tipp drauf, um den passenden Brief zu sehen.</p>
+    </div>
+    <div class="tpl-grid" id="tplGrid" data-limit="6"></div>
+    <div class="more reveal"><a href="vorlagen.html" class="btn btn-ghost">Alle Vorlagen ansehen <span class="arrow" aria-hidden="true">→</span></a></div>
+  </div>
+</section>
+
+
+<!-- ELTERN (kurz) -->
+<section class="section parents-strip">
+  <div class="wrap ps-inner reveal">
+    <div><span class="eyebrow">Für Eltern und Lehrpersonen</span><h2 class="ps-title">Sicher, fair und ohne Abo-Falle<span class="dot">.</span></h2></div>
+    <ul class="ps-list"><li><span class="tick" aria-hidden="true">✓</span>Keine Werbung, kein Verkauf von Daten</li><li><span class="tick" aria-hidden="true">✓</span>Einmal zahlen, kein Abo</li><li><span class="tick" aria-hidden="true">✓</span>Klassenzugang für Lehrpersonen</li></ul>
+    <a href="eltern.html" class="btn btn-ghost">Mehr für Eltern <span class="arrow" aria-hidden="true">→</span></a>
+  </div>
+</section>
+
+
+<!-- SCHLUSS-CTA -->
+<section class="final" id="final">
+  <canvas class="rays" id="raysCanvas" aria-hidden="true"></canvas>
+  <div class="wrap final-inner reveal">
+    <h2>Link einfügen.<br>Fragen beantworten.<br><span class="hl">Bewerbung abschicken.</span></h2>
+    <p>Gratis starten, ohne Anmeldung.</p>
+    <a href="#start" class="btn btn-light magnetic">Los geht's <span class="arrow" aria-hidden="true">→</span></a>
+  </div>
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="wrap footer-top">
+    <div>
+      <img src="assets/zusago-logo-negativ.svg" alt="Zusago" width="140" height="32">
+      <p class="footer-claim">Dein Weg zur Lehrstelle.</p>
+    </div>
+    <div class="footer-cols">
+      <div><h4>Produkt</h4><a href="so-funktionierts.html">So funktioniert's</a><a href="vorlagen.html">Vorlagen</a><a href="preise.html">Preise</a></div>
+      <div><h4>Hilfe</h4><a href="faq.html">FAQ</a><a href="eltern.html">Für Eltern</a><a href="mailto:hallo@zusago.ch">Kontakt</a></div>
+      <div><h4>Rechtliches</h4><a href="impressum.html">Impressum</a><a href="datenschutz.html">Datenschutz</a><a href="agb.html">AGB</a></div>
+    </div>
+  </div>
+  <div class="footer-mega" aria-hidden="true"><span class="mega-word">zusago<span class="dot">.</span></span></div>
+  <div class="wrap footer-bottom"><span>© <span id="year">2026</span> Zusago</span><span>Gemacht in der Schweiz</span></div>
+</footer>
+
+<!-- DEMO-OVERLAY nach Link-Eingabe -->
+<div class="demo" id="demo" role="dialog" aria-modal="true" aria-labelledby="waitTitle" hidden>
+  <div class="demo-box">
+    <button class="demo-close" id="demoClose" aria-label="Schliessen">×</button>
+    <div class="demo-wait" id="demoWait">
+      <span class="check-circle lg">✓</span>
+      <p class="demo-title" id="waitTitle">Zusago startet bald<span class="dot">.</span></p>
+      <p class="demo-sub">Lass deine E-Mail da – wir melden uns, sobald du deine Bewerbung erstellen kannst.</p>
+      <form class="wait-form" id="waitForm" novalidate>
+        <label for="waitMail" class="sr-only">E-Mail</label>
+        <input id="waitMail" type="email" placeholder="deine@email.ch" autocomplete="email">
+        <button class="btn btn-primary" type="submit">Eintragen</button>
+      </form>
+      <p class="form-error" id="waitError" role="alert"></p>
+      <p class="demo-done" id="waitDone" hidden>Danke! Du bist auf der Liste.</p>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

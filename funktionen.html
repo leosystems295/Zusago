@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Funktionen – Zusago</title>
+<meta name="description" content="Inserat erkennen, Ton-Regler, Foto-Helfer, Dossier, Gegenlesen und Tracker.">
+<meta name="theme-color" content="#4F46E5">
+<link rel="icon" href="assets/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="cursor-glow" aria-hidden="true"></div>
+
+<!-- NAVIGATION -->
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo" aria-label="Zusago Startseite"><img src="assets/zusago-logo-farbig.svg" alt="Zusago" width="128" height="29"></a>
+    <nav class="nav-links" aria-label="Hauptnavigation">
+      <a href="so-funktionierts.html">So funktioniert's</a>
+      <a href="funktionen.html" aria-current="page">Funktionen</a>
+      <a href="vorlagen.html">Vorlagen</a>
+      <a href="preise.html">Preise</a>
+      <a href="eltern.html">Für Eltern</a>
+      <a href="faq.html">FAQ</a>
+    </nav>
+    <div class="nav-cta">
+      <a href="index.html#start" class="btn btn-primary btn-sm magnetic">Gratis starten</a>
+      <button class="burger" id="burger" aria-label="Menü öffnen" aria-expanded="false"><span></span><span></span></button>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="so-funktionierts.html">So funktioniert's</a>
+    <a href="funktionen.html" aria-current="page">Funktionen</a>
+    <a href="vorlagen.html">Vorlagen</a>
+    <a href="preise.html">Preise</a>
+    <a href="eltern.html">Für Eltern</a>
+    <a href="faq.html">FAQ</a>
+    <a href="index.html#start" class="btn btn-primary">Gratis starten</a>
+  </div>
+</header>
+
+<main id="top">
+
+<section class="page-hero">
+  <div class="page-blobs" aria-hidden="true"><span></span><span></span><span></span></div>
+  <div class="wrap page-hero-inner">
+    <span class="eyebrow reveal">Funktionen</span>
+    <h1 class="page-title reveal" data-delay="1">Alles drin<span class="dot">.</span><br><span class="muted">Für jede Bewerbung.</span></h1>
+    <p class="page-lead reveal" data-delay="2">Von der ersten Schnupperlehr-Anfrage bis zum fertigen Dossier: Zusago begleitet dich durch die ganze Lehrstellensuche.</p>
+  </div>
+</section>
+
+
+<!-- FUNKTIONEN: Bento -->
+<section class="section pt0" id="funktionen">
+  <div class="wrap">
+    <div class="bento">
+      <article class="bx bx-wide reveal spot" id="bxDetect">
+        <div class="bx-art detect">
+          <div class="mini-field sm"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7.1 0l3-3a5 5 0 0 0-7.1-7.1l-1.2 1.2M14 10a5 5 0 0 0-7.1 0l-3 3a5 5 0 0 0 7.1 7.1l1.2-1.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>yousty.ch/lehrstellen/…</div>
+          <div class="detect-out">
+            <span class="dchip" style="--k:0"><b>Beruf</b>Informatiker/in EFZ</span>
+            <span class="dchip" style="--k:1"><b>Firma</b>Muster AG</span>
+            <span class="dchip" style="--k:2"><b>Start</b>August 2027</span>
+            <span class="dchip coral" style="--k:3"><b>Gesucht</b>Freude an Technik</span>
+            <span class="dchip coral" style="--k:4"><b>Gesucht</b>logisches Denken</span>
+          </div>
+        </div>
+        <h3>Inserat erkennen</h3><p>Zusago liest aus dem Inserat, was der Betrieb sucht, und baut genau das in deine Bewerbung ein.</p>
+      </article>
+      <article class="bx reveal spot" data-delay="1">
+        <div class="bx-art tone-mini">
+          <p class="tm-text" id="toneMini">Informatik ist genau mein Ding.</p>
+          <input type="range" min="0" max="2" step="1" value="0" id="toneMiniRange" aria-label="Ton wählen: locker, normal, formell">
+          <div class="tone-scale" aria-hidden="true"><span>locker</span><span>normal</span><span>formell</span></div>
+        </div>
+        <h3>Ton-Regler</h3><p>Zu locker oder zu steif? Ein Regler, und der Text passt.</p>
+      </article>
+      <article class="bx reveal spot">
+        <div class="bx-art photo"><div class="ph"><div class="ph-crop"></div></div></div>
+        <h3>Foto-Helfer</h3><p>Foto hochladen, Zusago schneidet es passend zu.</p>
+      </article>
+      <article class="bx reveal spot" data-delay="1">
+        <div class="bx-art dossier"><div class="dp a">Lebenslauf</div><div class="dp b">Brief</div><div class="dp c">Zeugnisse</div><div class="dp pdf"><span>PDF</span></div></div>
+        <h3>Bewerbungsdossier</h3><p>Lebenslauf, Brief und Zeugnisse in einem einzigen PDF.</p>
+      </article>
+      <article class="bx reveal spot" data-delay="2">
+        <div class="bx-art share">
+          <div class="sh-link">zusago.ch/r/lena-8f2…<span>Kopiert</span></div>
+          <div class="sh-note"><span class="av">M</span><p>Sieht super aus! Beim zweiten Satz noch «gerne» ergänzen.</p></div>
+        </div>
+        <h3>Gegenlesen lassen</h3><p>Schick Eltern oder Lehrperson einen Link zum Kommentieren.</p>
+      </article>
+      <article class="bx bx-full reveal spot" id="bxTrack">
+        <div class="bx-art track">
+          <div class="tr-row"><span class="tr-firm">Muster AG</span><span class="tr-job">Informatiker/in</span><span class="st st-sent">Versendet</span></div>
+          <div class="tr-row"><span class="tr-firm">Beispiel GmbH</span><span class="tr-job">Mediamatiker/in</span><span class="st st-int">Schnuppern</span></div>
+          <div class="tr-row"><span class="tr-firm">Werkstatt Sonnenberg</span><span class="tr-job">Polymechaniker/in</span><span class="st st-wait" data-final="Zusage">Wartet</span></div>
+        </div>
+        <h3>Bewerbungs-Tracker</h3><p>Behalte den Überblick: wo du dich beworben hast, wo du nachfragen solltest und wo es klappt.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- SCHLUSS-CTA -->
+<section class="final" id="final">
+  <canvas class="rays" id="raysCanvas" aria-hidden="true"></canvas>
+  <div class="wrap final-inner reveal">
+    <h2>Link einfügen.<br>Fragen beantworten.<br><span class="hl">Bewerbung abschicken.</span></h2>
+    <p>Gratis starten, ohne Anmeldung.</p>
+    <a href="index.html#start" class="btn btn-light magnetic">Los geht's <span class="arrow" aria-hidden="true">→</span></a>
+  </div>
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="wrap footer-top">
+    <div>
+      <img src="assets/zusago-logo-negativ.svg" alt="Zusago" width="140" height="32">
+      <p class="footer-claim">Dein Weg zur Lehrstelle.</p>
+    </div>
+    <div class="footer-cols">
+      <div><h4>Produkt</h4><a href="so-funktionierts.html">So funktioniert's</a><a href="vorlagen.html">Vorlagen</a><a href="preise.html">Preise</a></div>
+      <div><h4>Hilfe</h4><a href="faq.html">FAQ</a><a href="eltern.html">Für Eltern</a><a href="mailto:hallo@zusago.ch">Kontakt</a></div>
+      <div><h4>Rechtliches</h4><a href="impressum.html">Impressum</a><a href="datenschutz.html">Datenschutz</a><a href="agb.html">AGB</a></div>
+    </div>
+  </div>
+  <div class="footer-mega" aria-hidden="true"><span class="mega-word">zusago<span class="dot">.</span></span></div>
+  <div class="wrap footer-bottom"><span>© <span id="year">2026</span> Zusago</span><span>Gemacht in der Schweiz</span></div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

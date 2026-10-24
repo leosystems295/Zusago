@@ -2,10 +2,6 @@
    Zusago – Startseite: Animationen und Interaktionen
    ========================================================= */
 
-// Warteliste: hier später die Adresse deines Formular-Dienstes eintragen
-// (z.B. Formspree: "https://formspree.io/f/DEINE-ID"). Leer = öffnet eine E-Mail an hallo@zusago.ch.
-const WAITLIST_URL = "";
-
 const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 const $ = (s, el = document) => el.querySelector(s);
@@ -372,11 +368,9 @@ if (finePointer && !reduce) $$(".magnetic").forEach(b => {
   (function loop(t) { if (visible) draw(t); requestAnimationFrame(loop); })(0);
 })();
 
-/* ---------- Link-Formular + Demo ---------- */
+/* ---------- Link-Formular: weiter in die App ---------- */
 (() => {
   const form = $("#linkForm"), input = $("#jobLink"), err = $("#formError"); if (!form) return;
-  const demo = $("#demo");
-  const close = () => { demo.hidden = true; document.body.style.overflow = ""; };
   input.addEventListener("input", () => { err.textContent = ""; });
   form.addEventListener("submit", e => {
     e.preventDefault();
@@ -385,29 +379,9 @@ if (finePointer && !reduce) $$(".magnetic").forEach(b => {
     if (!/^https?:\/\//i.test(v)) v = "https://" + v;
     try { const u = new URL(v); if (!u.hostname.includes(".")) throw 0; }
     catch { err.textContent = "Das sieht nicht nach einem Link aus. Kopier ihn direkt aus der Adresszeile."; shake(); return; }
-    demo.hidden = false; document.body.style.overflow = "hidden"; $("#waitMail").focus();
+    location.href = "app.html?link=" + encodeURIComponent(v);
   });
   function shake() { form.classList.remove("shake"); void form.offsetWidth; form.classList.add("shake"); }
-  $("#demoClose").addEventListener("click", close);
-  demo.addEventListener("click", e => { if (e.target === demo) close(); });
-  addEventListener("keydown", e => { if (e.key === "Escape" && !demo.hidden) close(); });
-
-  const wf = $("#waitForm"), mail = $("#waitMail"), werr = $("#waitError"), done = $("#waitDone");
-  mail.addEventListener("input", () => { werr.textContent = ""; });
-  wf.addEventListener("submit", async e => {
-    e.preventDefault();
-    const m = mail.value.trim();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(m)) { werr.textContent = "Gib eine gültige E-Mail-Adresse ein."; return; }
-    if (!WAITLIST_URL) {
-      location.href = `mailto:hallo@zusago.ch?subject=${encodeURIComponent("Warteliste Zusago")}&body=${encodeURIComponent("Bitte trag mich ein: " + m + "\nInserat: " + input.value.trim())}`;
-      return;
-    }
-    try {
-      const r = await fetch(WAITLIST_URL, { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify({ email: m, inserat: input.value.trim() }) });
-      if (!r.ok) throw 0;
-      wf.hidden = true; done.hidden = false;
-    } catch { werr.textContent = "Das hat nicht geklappt. Versuch es nochmals."; }
-  });
 })();
 
 $("#year").textContent = new Date().getFullYear();

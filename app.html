@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bewerbung erstellen – Zusago</title>
+<meta name="description" content="Erstelle deinen Lebenslauf und deine Bewerbung für die Lehrstelle – Schritt für Schritt.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#4F46E5">
+<link rel="icon" href="assets/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body class="app">
+
+<header class="app-top">
+  <a href="index.html" class="app-logo" aria-label="Zur Startseite"><img src="assets/zusago-logo-farbig.svg" alt="Zusago" width="120" height="27"></a>
+  <ol class="progress-steps" id="progress" aria-label="Fortschritt"></ol>
+  <div class="progress-mobile" aria-hidden="true"><span id="progressText">Schritt 1 von 7</span><div class="pm-bar"><i id="progressBar"></i></div></div>
+</header>
+
+<main class="app-main">
+
+  <!-- 0: INSERAT -->
+  <section class="panel" data-step="0" hidden>
+    <div class="panel-head">
+      <span class="eyebrow">Schritt 1</span>
+      <h1>Für welche Stelle bewirbst du dich<span class="dot">?</span></h1>
+      <p>Füg den Link zum Inserat ein. Zusago liest heraus, was der Betrieb sucht.</p>
+    </div>
+
+    <div class="seg" role="tablist" aria-label="Wie willst du das Inserat angeben?">
+      <button type="button" role="tab" class="on" data-src="link">Link</button>
+      <button type="button" role="tab" data-src="text">Text einfügen</button>
+      <button type="button" role="tab" data-src="manual">Ohne Inserat</button>
+    </div>
+
+    <div class="src" data-src-panel="link">
+      <label class="lbl" for="jobUrl">Link zum Lehrstelleninserat</label>
+      <div class="row-input">
+        <input id="jobUrl" type="url" inputmode="url" placeholder="https://www.yousty.ch/…" autocomplete="off">
+        <button type="button" class="btn btn-primary" id="readUrl">Inserat lesen</button>
+      </div>
+    </div>
+    <div class="src" data-src-panel="text" hidden>
+      <label class="lbl" for="jobText">Text vom Inserat</label>
+      <textarea id="jobText" rows="7" placeholder="Markier im Inserat den ganzen Text, kopier ihn und füg ihn hier ein."></textarea>
+      <button type="button" class="btn btn-primary" id="readText">Inserat lesen</button>
+    </div>
+    <div class="src" data-src-panel="manual" hidden>
+      <p class="hint">Kein Problem. Gib einfach den Beruf und – falls du ihn kennst – den Betrieb an.</p>
+    </div>
+    <p class="err" id="jobErr" role="alert"></p>
+    <div class="loading-line" id="jobLoading" hidden><span class="spin"></span>Zusago liest das Inserat …</div>
+
+    <div class="card job-card" id="jobCard">
+      <div class="card-title"><span class="check-circle sm">✓</span><span id="jobCardTitle">Angaben zur Stelle</span></div>
+      <div class="radio-row" role="radiogroup" aria-label="Art der Bewerbung">
+        <label class="radio"><input type="radio" name="art" value="lehre" data-bind="job.art"> Lehrstelle</label>
+        <label class="radio"><input type="radio" name="art" value="schnupper" data-bind="job.art"> Schnupperlehre</label>
+      </div>
+      <div class="grid2">
+        <div class="field full"><label class="lbl" for="f-beruf">Beruf *</label><input id="f-beruf" list="berufe" data-bind="job.beruf" placeholder="z.B. Informatiker/in EFZ" required></div>
+        <div class="field"><label class="lbl" for="f-firma">Betrieb</label><input id="f-firma" data-bind="job.firma" placeholder="z.B. Muster AG"></div>
+        <div class="field"><label class="lbl" for="f-lb">Lehrbeginn</label><input id="f-lb" data-bind="job.lehrbeginn" placeholder="z.B. August 2027"></div>
+        <div class="field"><label class="lbl" for="f-jstr">Strasse</label><input id="f-jstr" data-bind="job.strasse" placeholder="Bahnhofstrasse 1"></div>
+        <div class="field"><label class="lbl" for="f-jort">PLZ und Ort</label><input id="f-jort" data-bind="job.plz_ort" placeholder="4500 Solothurn"></div>
+        <div class="field"><label class="lbl" for="f-kan">Kontaktperson</label>
+          <div class="pair"><select id="f-kan" data-bind="job.kontakt_anrede" aria-label="Anrede"><option value="">–</option><option>Frau</option><option>Herr</option></select><input data-bind="job.kontakt_name" placeholder="Nachname" aria-label="Name der Kontaktperson"></div></div>
+        <div class="field"><label class="lbl" for="reqInput">Das sucht der Betrieb</label>
+          <div class="tag-input" data-list="job.anforderungen"><input id="reqInput" placeholder="Eintippen und Enter"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1: ÜBER DICH -->
+  <section class="panel" data-step="1" hidden>
+    <div class="panel-head">
+      <span class="eyebrow">Schritt 2</span>
+      <h1>Erzähl uns von dir<span class="dot">.</span></h1>
+      <p>Diese Angaben kommen oben in deinen Lebenslauf und in den Brief.</p>
+    </div>
+    <div class="card">
+      <div class="photo-row">
+        <div class="photo-box" id="photoBox"><span>Foto</span></div>
+        <div>
+          <p class="lbl">Bewerbungsfoto (freiwillig)</p>
+          <p class="hint">Ein freundliches Foto vor ruhigem Hintergrund. Es bleibt auf deinem Gerät.</p>
+          <div class="btn-row"><label class="btn btn-ghost btn-sm" for="photoInput">Foto wählen</label><button type="button" class="btn-link" id="photoRemove" hidden>Entfernen</button></div>
+          <input type="file" id="photoInput" accept="image/*" hidden>
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label class="lbl" for="f-vn">Vorname *</label><input id="f-vn" data-bind="profile.vorname" autocomplete="given-name" required></div>
+        <div class="field"><label class="lbl" for="f-nn">Nachname *</label><input id="f-nn" data-bind="profile.nachname" autocomplete="family-name" required></div>
+        <div class="field"><label class="lbl" for="f-str">Strasse und Nr.</label><input id="f-str" data-bind="profile.strasse" autocomplete="street-address"></div>
+        <div class="field"><label class="lbl" for="f-ort">PLZ und Ort *</label><input id="f-ort" data-bind="profile.plz_ort" placeholder="4500 Solothurn" required></div>
+        <div class="field"><label class="lbl" for="f-tel">Telefon</label><input id="f-tel" type="tel" data-bind="profile.telefon" autocomplete="tel" placeholder="079 123 45 67"></div>
+        <div class="field"><label class="lbl" for="f-mail">E-Mail *</label><input id="f-mail" type="email" data-bind="profile.email" autocomplete="email" placeholder="vorname.nachname@email.ch" required></div>
+        <div class="field"><label class="lbl" for="f-geb">Geburtsdatum</label><input id="f-geb" data-bind="profile.geburtsdatum" placeholder="12.03.2011"></div>
+        <div class="field"><label class="lbl" for="f-nat">Nationalität (freiwillig)</label><input id="f-nat" data-bind="profile.nationalitaet" placeholder="Schweiz"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2: SCHULE -->
+  <section class="panel" data-step="2" hidden>
+    <div class="panel-head">
+      <span class="eyebrow">Schritt 3</span>
+      <h1>Deine Schulzeit<span class="dot">.</span></h1>
+      <p>Die aktuelle Schule zuerst, danach die Primarschule.</p>
+    </div>
+    <div class="card">
+      <div class="field"><label class="lbl" for="f-kl">In welcher Klasse bist du?</label>
+        <select id="f-kl" data-bind="profile.klasse"><option value="">Bitte wählen</option><option>8. Klasse</option><option>9. Klasse</option><option>10. Schuljahr</option><option>Brückenangebot</option></select></div>
+      <div class="rows" data-rows="profile.schule" data-fields="zeit:Zeitraum:2023 – heute|name:Schule:Sekundarschule Solothurn|details:Niveau / Details:Niveau A"></div>
+      <button type="button" class="btn-add" data-add="profile.schule">+ Weitere Schule</button>
+    </div>
+  </section>
+
+  <!-- 3: ERFAHRUNGEN -->
+  <section class="panel" data-step="3" hidden>
+    <div class="panel-head">
+      <span class="eyebrow">Schritt 4</span>
+      <h1>Schnupperlehren und Erfahrungen<span class="dot">.</span></h1>
+      <p>Schnupperlehren, Ferienjobs, Ämtli oder Mithilfe im Familienbetrieb – alles zählt. Noch nichts? Dann einfach weiter.</p>
+    </div>
+    <div class="card">
+      <div class="rows" data-rows="profile.erfahrungen" data-fields="zeit:Wann:März 2026|titel:Was:Schnupperlehre Informatikerin EFZ|ort:Wo:Muster AG, Solothurn"></div>
+      <button type="button" class="btn-add" data-add="profile.erfahrungen">+ Weitere Erfahrung</button>
+    </div>
+  </section>
+
+  <!-- 4: STÄRKEN -->
+  <section class="panel" data-step="4" hidden>
+    <div class="panel-head">
+      <span class="eyebrow">Schritt 5</span>
+      <h1>Was dich ausmacht<span class="dot">.</span></h1>
+      <p>Tipp deine Stärken an. Die KI wählt die passendsten für den Beruf aus.</p>
+    </div>
+    <div class="card">
+      <p class="lbl">Deine Stärken <span class="muted-s">(bis 6)</span></p>
+      <div class="chips" id="strengths"></div>
+      <div class="field"><label class="lbl" for="hobbyInput">Hobbys und Vereine</label>
+        <div class="tag-input" data-list="profile.hobbys"><input id="hobbyInput" placeholder="z.B. Volleyball im Verein – Enter drücken"></div></div>
+      <p class="lbl">Sprachen</p>
+      <div class="rows" data-rows="profile.sprachen" data-fields="sprache:Sprache:Deutsch|niveau:Niveau:select"></div>
+      <button type="button" class="btn-add" data-add="profile.sprachen">+ Weitere Sprache</button>
+      <div class="field"><label class="lbl" for="f-pc">Computer</label><input id="f-pc" data-bind="profile.computer" placeholder="z.B. Word, PowerPoint, Excel, 10-Finger-System"></div>
+      <div class="field"><label class="lbl" for="f-mot">Warum interessiert dich dieser Beruf? (freiwillig, hilft der KI sehr)</label>
+        <textarea id="f-mot" rows="3" data-bind="profile.motivation" placeholder="z.B. Ich habe meinen eigenen PC zusammengebaut und möchte verstehen, wie Netzwerke funktionieren."></textarea></div>
+    </div>
+  </section>
+
+  <!-- 5: REFERENZEN -->
+  <section class="panel" data-step="5" hidden>
+    <div class="panel-head">
+      <span class="eyebrow">Schritt 6</span>
+      <h1>Referenzen<span class="dot">.</span></h1>
+      <p>Personen, die den Betrieb über dich Auskunft geben können, z.B. deine Klassenlehrperson. Frag sie vorher, ob das in Ordnung ist. Freiwillig.</p>
+    </div>
+    <div class="card">
+      <div class="rows" data-rows="profile.referenzen" data-fields="name:Name:Frau Anna Lehrer|funktion:Funktion:Klassenlehrerin|telefon:Telefon:032 123 45 67"></div>
+      <button type="button" class="btn-add" data-add="profile.referenzen">+ Weitere Referenz</button>
+    </div>
+  </section>
+
+  <!-- 6: VORLAGE -->
+  <section class="panel" data-step="6" hidden>
+    <div class="panel-head">
+      <span class="eyebrow">Schritt 7</span>
+      <h1>Wähl deine Vorlage<span class="dot">.</span></h1>
+      <p>Lebenslauf und Brief bekommen das gleiche Design. Du kannst die Vorlage später noch wechseln.</p>
+    </div>
+    <div class="tpl-pick" id="tplPick" role="radiogroup" aria-label="Vorlage"></div>
+    <div class="card tone-card">
+      <p class="lbl">Wie soll dein Brief klingen?</p>
+      <div class="seg seg-tone" id="toneSeg" role="radiogroup" aria-label="Ton">
+        <button type="button" data-tone="locker">Locker</button><button type="button" data-tone="normal">Normal</button><button type="button" data-tone="formell">Formell</button>
+      </div>
+    </div>
+    <p class="err" id="genErr" role="alert"></p>
+    <div class="gen-fallback" id="genFallback" hidden><button type="button" class="btn-link" id="noAi">Ohne KI mit einer einfachen Vorlage weitermachen</button></div>
+  </section>
+
+  <!-- 7: ERGEBNIS -->
+  <section class="panel panel-wide" data-step="7" hidden>
+    <div class="ws">
+      <div class="ws-main">
+        <div class="ws-head">
+          <div class="mock-tabs doc-tabs" role="tablist" aria-label="Dokument">
+            <button role="tab" aria-selected="true" data-doc="cv">Lebenslauf</button>
+            <button role="tab" aria-selected="false" data-doc="letter">Bewerbungsbrief</button>
+            <span class="tab-ind" aria-hidden="true"></span>
+          </div>
+          <p class="hint edit-hint">Klick in den Text, um ihn direkt zu ändern.</p>
+        </div>
+        <div class="sheet-wrap" id="sheetWrap"><div class="sheet" id="sheet"></div></div>
+      </div>
+      <aside class="ws-side">
+        <div class="side-block done-note"><span class="check-circle">✓</span><div><b>Stark!</b><span>Deine Bewerbung ist bereit. Lies sie in Ruhe durch.</span></div></div>
+        <div class="side-block">
+          <p class="lbl">Herunterladen</p>
+          <button type="button" class="btn btn-primary w100" data-print="current">PDF von dieser Seite</button>
+          <button type="button" class="btn btn-ghost w100" data-print="both">Beides in einem PDF</button>
+          <p class="hint">Im Druckfenster «Als PDF sichern» bzw. «Als PDF speichern» wählen.</p>
+        </div>
+        <div class="side-block">
+          <p class="lbl">Vorlage</p>
+          <div class="tpl-mini" id="tplMini"></div>
+        </div>
+        <div class="side-block">
+          <p class="lbl">Brief überarbeiten</p>
+          <div class="seg seg-tone" id="toneSeg2" role="radiogroup" aria-label="Ton des Briefs">
+            <button type="button" data-tone="locker">Locker</button><button type="button" data-tone="normal">Normal</button><button type="button" data-tone="formell">Formell</button>
+          </div>
+          <div class="btn-row"><button type="button" class="sugg" data-rw="kuerzer">Kürzer machen</button><button type="button" class="sugg" data-rw="neu">Neu formulieren</button></div>
+          <div class="loading-line" id="rwLoading" hidden><span class="spin"></span>Die KI überarbeitet deinen Brief …</div>
+          <p class="err" id="rwErr" role="alert"></p>
+        </div>
+        <div class="side-block">
+          <button type="button" class="btn-link" data-goto="1">Angaben ändern</button>
+          <button type="button" class="btn-link" id="newJob">Neue Stelle – gleiche Angaben</button>
+          <button type="button" class="btn-link danger" id="wipe">Alle meine Daten löschen</button>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <nav class="wiz-nav" id="wizNav" aria-label="Schritte">
+    <button type="button" class="btn btn-ghost" id="back">Zurück</button>
+    <button type="button" class="btn btn-primary" id="next">Weiter <span class="arrow" aria-hidden="true">→</span></button>
+  </nav>
+</main>
+
+<div class="gen-overlay" id="genOverlay" hidden>
+  <div class="gen-box">
+    <div class="gen-docs" aria-hidden="true"><div class="gd a"></div><div class="gd b"></div></div>
+    <p class="gen-title">Zusago schreibt deine Bewerbung<span class="dot">.</span></p>
+    <p class="gen-sub" id="genSub">Das dauert etwa 20 Sekunden.</p>
+  </div>
+</div>
+
+<div id="printRoot" aria-hidden="true"></div>
+
+<datalist id="berufe">
+  <option>Informatiker/in EFZ</option><option>Mediamatiker/in EFZ</option><option>ICT-Fachmann/-frau EFZ</option><option>Kauffrau/Kaufmann EFZ</option>
+  <option>Detailhandelsfachfrau/-mann EFZ</option><option>Detailhandelsassistent/in EBA</option><option>Fachfrau/Fachmann Gesundheit EFZ</option><option>Fachfrau/Fachmann Betreuung EFZ</option>
+  <option>Assistent/in Gesundheit und Soziales EBA</option><option>Medizinische/r Praxisassistent/in EFZ</option><option>Polymechaniker/in EFZ</option><option>Automatiker/in EFZ</option>
+  <option>Elektroinstallateur/in EFZ</option><option>Montage-Elektriker/in EFZ</option><option>Automobil-Mechatroniker/in EFZ</option><option>Automobil-Fachmann/-frau EFZ</option>
+  <option>Logistiker/in EFZ</option><option>Logistiker/in EBA</option><option>Zeichner/in EFZ</option><option>Schreiner/in EFZ</option><option>Maurer/in EFZ</option>
+  <option>Maler/in EFZ</option><option>Sanitärinstallateur/in EFZ</option><option>Koch/Köchin EFZ</option><option>Coiffeur/Coiffeuse EFZ</option><option>Fachfrau/Fachmann Kundendialog EFZ</option>
+  <option>Gärtner/in EFZ</option><option>Laborant/in EFZ</option><option>Pharma-Assistent/in EFZ</option><option>Grafiker/in EFZ</option>
+</datalist>
+
+<script src="app.js"></script>
+</body>
+</html>

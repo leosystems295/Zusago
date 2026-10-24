@@ -1,0 +1,11 @@
+{
+  "name": "zusago-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "KI-Server für Zusago",
+  "main": "server.js",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node server.js"
+  }
+}

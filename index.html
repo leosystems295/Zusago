@@ -24,11 +24,9 @@
   <div class="nav-inner">
     <a href="index.html" class="nav-logo" aria-label="Zusago Startseite"><img src="assets/zusago-logo-farbig.svg" alt="Zusago" width="128" height="29"></a>
     <nav class="nav-links" aria-label="Hauptnavigation">
-      <a href="so-funktionierts.html">So funktioniert's</a>
-      <a href="funktionen.html">Funktionen</a>
-      <a href="vorlagen.html">Vorlagen</a>
+      <div class="nd"><button type="button" class="nd-btn" aria-expanded="false" aria-controls="ndProdukt">Produkt<svg class="nd-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="nd-panel" id="ndProdukt"><a href="so-funktionierts.html"><b>So funktioniert's</b><span>In drei Schritten zur Bewerbung</span></a><a href="funktionen.html"><b>Funktionen</b><span>Inserat erkennen, Ton-Regler, Foto</span></a><a href="vorlagen.html"><b>Vorlagen</b><span>Lebenslauf und Brief als Set</span></a></div></div>
       <a href="preise.html">Preise</a>
-      <a href="eltern.html">Für Eltern</a>
+      <div class="nd"><button type="button" class="nd-btn" aria-expanded="false" aria-controls="ndWer">Eltern &amp; Schulen<svg class="nd-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="nd-panel" id="ndWer"><a href="eltern.html"><b>Für Eltern</b><span>Datenschutz, Kosten, Resultat</span></a><a href="lehrpersonen.html"><b>Für Lehrpersonen</b><span>Zusago im Unterricht</span></a></div></div>
       <a href="faq.html">FAQ</a>
     </nav>
     <div class="nav-cta">
@@ -37,12 +35,9 @@
     </div>
   </div>
   <div class="mobile-menu" id="mobileMenu">
-    <a href="so-funktionierts.html">So funktioniert's</a>
-    <a href="funktionen.html">Funktionen</a>
-    <a href="vorlagen.html">Vorlagen</a>
-    <a href="preise.html">Preise</a>
-    <a href="eltern.html">Für Eltern</a>
-    <a href="faq.html">FAQ</a>
+    <p class="mm-h">Produkt</p><a href="so-funktionierts.html">So funktioniert's</a><a href="funktionen.html">Funktionen</a><a href="vorlagen.html">Vorlagen</a>
+    <p class="mm-h">Eltern &amp; Schulen</p><a href="eltern.html">Für Eltern</a><a href="lehrpersonen.html">Für Lehrpersonen</a>
+    <p class="mm-h">Mehr</p><a href="preise.html">Preise</a><a href="faq.html">FAQ</a>
     <a href="app.html" class="btn btn-primary">Gratis starten</a>
   </div>
 </header>
@@ -75,72 +70,11 @@
     </ul>
   </div>
 
-  <!-- App-Ansicht (Beispiel) -->
+  <!-- Beispiel: aus dem Inserat werden echte Dokumente -->
   <div class="mock-stage">
     <div class="wave" aria-hidden="true"><span></span><span></span><span></span></div>
     <div class="wrap">
-      <div class="mock" id="mock" role="group" aria-label="Beispiel: So sieht der Zusago-Editor aus">
-        <div class="mock-bar"><i></i><i></i><i></i><div class="mock-url">app.zusago.ch/bewerbung</div><span class="mock-demo">Beispiel</span></div>
-        <div class="mock-body">
-          <aside class="mock-side">
-            <div class="ms-title">Deine Bewerbung</div>
-            <ol class="ms-steps">
-              <li class="done">Inserat</li><li class="done">Fragen</li><li class="done">Vorlage</li><li class="act">Vorschau</li><li>Download</li>
-            </ol>
-            <div class="ms-found">
-              <div class="ms-k">Erkannt aus dem Inserat</div>
-              <span class="chip-s">Informatiker/in EFZ</span><span class="chip-s">Muster AG</span><span class="chip-s">Lehrbeginn August</span>
-            </div>
-          </aside>
-
-          <div class="mock-main">
-            <div class="mock-tabs" role="tablist" aria-label="Dokument wählen">
-              <button role="tab" aria-selected="true" data-tab="cv">Lebenslauf</button>
-              <button role="tab" aria-selected="false" data-tab="letter">Bewerbung</button>
-              <button role="tab" aria-selected="false" data-tab="schnupper">Schnupperlehre</button>
-              <span class="tab-ind" aria-hidden="true"></span>
-            </div>
-            <div class="mock-paper">
-              <div class="pane on" data-pane="cv">
-                <div class="cv-head"><div class="cv-photo"></div><div><div class="cv-name">Lena Muster</div><div class="cv-role">Bewerbung als Informatikerin EFZ</div></div></div>
-                <div class="cv-cols">
-                  <div>
-                    <div class="cv-sec">Schule</div><p class="pt">Sekundarschule Niveau A<br><span>2023 – 2026</span></p>
-                    <div class="cv-sec">Schnupperlehren</div><p class="pt">Informatikerin EFZ, Muster AG<br><span>3 Tage · März 2026</span></p>
-                  </div>
-                  <div>
-                    <div class="cv-sec">Stärken</div><div class="cv-chips"><span>logisch</span><span>geduldig</span><span>teamfähig</span></div>
-                    <div class="cv-sec">Hobbys</div><p class="pt">PC zusammenbauen, Volleyball im Verein</p>
-                  </div>
-                </div>
-              </div>
-              <div class="pane" data-pane="letter">
-                <p class="pt small">Muster AG · Personalabteilung · 4500 Solothurn</p>
-                <p class="pt strong">Bewerbung als Informatikerin EFZ</p>
-                <p class="pt letter-text" id="toneText"></p>
-                <div class="doc-line w90"></div><div class="doc-line w75"></div>
-              </div>
-              <div class="pane" data-pane="schnupper">
-                <p class="pt small">Betreff</p>
-                <p class="pt strong">Anfrage Schnupperlehre Informatikerin EFZ</p>
-                <p class="pt">Guten Tag Frau Beispiel</p>
-                <p class="pt">Ich besuche die 8. Klasse und interessiere mich sehr für die Informatik. Gerne würde ich bei der Muster AG zwei bis drei Tage schnuppern.</p>
-                <div class="doc-line w80"></div>
-              </div>
-            </div>
-          </div>
-
-          <aside class="mock-ai">
-            <div class="ai-head"><span class="spark" aria-hidden="true"></span>KI-Assistent</div>
-            <label class="ai-lbl" for="tone">Ton deines Briefs</label>
-            <input type="range" id="tone" min="0" max="2" step="1" value="1">
-            <div class="tone-scale" aria-hidden="true"><span>locker</span><span>normal</span><span>formell</span></div>
-            <div class="ms-k">Vorschläge</div>
-            <div class="ai-sugg"><button type="button" class="sugg" data-s="short">Kürzer machen</button><button type="button" class="sugg" data-s="strong">Stärke ergänzen</button></div>
-            <div class="ai-ok"><span class="check-circle sm">✓</span>Bereit zum Senden</div>
-          </aside>
-        </div>
-      </div>
+      <div id="mock"><div class="hero-docs" id="heroDocs"></div></div>
     </div>
   </div>
 </section>
@@ -227,12 +161,19 @@
 </section>
 
 
-<!-- ELTERN (kurz) -->
+<!-- ELTERN UND LEHRPERSONEN (kurz, getrennt) -->
 <section class="section parents-strip">
-  <div class="wrap ps-inner reveal">
-    <div><span class="eyebrow">Für Eltern und Lehrpersonen</span><h2 class="ps-title">Sicher, fair und ohne Abo-Falle<span class="dot">.</span></h2></div>
-    <ul class="ps-list"><li><span class="tick" aria-hidden="true">✓</span>Keine Werbung, kein Verkauf von Daten</li><li><span class="tick" aria-hidden="true">✓</span>Einmal zahlen, kein Abo</li><li><span class="tick" aria-hidden="true">✓</span>Klassenzugang für Lehrpersonen</li></ul>
-    <a href="eltern.html" class="btn btn-ghost">Mehr für Eltern <span class="arrow" aria-hidden="true">→</span></a>
+  <div class="wrap duo">
+    <div class="ps-inner reveal">
+      <div><span class="eyebrow">Für Eltern</span><h2 class="ps-title">Sicher, fair und ohne Abo-Falle<span class="dot">.</span></h2></div>
+      <ul class="ps-list"><li><span class="tick" aria-hidden="true">✓</span>Keine Werbung, kein Verkauf von Daten</li><li><span class="tick" aria-hidden="true">✓</span>Einmal zahlen, kein Abo</li><li><span class="tick" aria-hidden="true">✓</span>Die KI erfindet nichts dazu</li></ul>
+      <a href="eltern.html" class="btn btn-ghost">Mehr für Eltern <span class="arrow" aria-hidden="true">→</span></a>
+    </div>
+    <div class="ps-inner reveal" data-delay="1">
+      <div><span class="eyebrow">Für Lehrpersonen</span><h2 class="ps-title">Bewerbungen im Unterricht<span class="dot">.</span></h2></div>
+      <ul class="ps-list"><li><span class="tick" aria-hidden="true">✓</span>Gratis und ohne Anmeldung</li><li><span class="tick" aria-hidden="true">✓</span>In einer Lektion zur fertigen Bewerbung</li><li><span class="tick" aria-hidden="true">✓</span>Schweizer Format, EFZ und EBA</li></ul>
+      <a href="lehrpersonen.html" class="btn btn-ghost">Mehr für Lehrpersonen <span class="arrow" aria-hidden="true">→</span></a>
+    </div>
   </div>
 </section>
 
@@ -258,7 +199,8 @@
     </div>
     <div class="footer-cols">
       <div><h4>Produkt</h4><a href="so-funktionierts.html">So funktioniert's</a><a href="vorlagen.html">Vorlagen</a><a href="preise.html">Preise</a></div>
-      <div><h4>Hilfe</h4><a href="faq.html">FAQ</a><a href="eltern.html">Für Eltern</a><a href="mailto:hallo@zusago.ch">Kontakt</a></div>
+      <div><h4>Hilfe</h4><a href="faq.html">FAQ</a><a href="eltern.html">Für Eltern</a>
+      <a href="lehrpersonen.html">Für Lehrpersonen</a><a href="mailto:hallo@zusago.ch">Kontakt</a></div>
       <div><h4>Rechtliches</h4><a href="impressum.html">Impressum</a><a href="datenschutz.html">Datenschutz</a><a href="agb.html">AGB</a></div>
     </div>
   </div>

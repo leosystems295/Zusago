@@ -25,6 +25,23 @@ $$("#mobileMenu a").forEach(a => a.addEventListener("click", () => {
   burger.setAttribute("aria-expanded", "false"); menu.classList.remove("open");
 }));
 
+/* ---------- Ausklappmenüs in der Navigation ---------- */
+(() => {
+  const groups = $$(".nd"); if (!groups.length) return;
+  const close = (except) => groups.forEach(g => { if (g !== except) { g.classList.remove("open"); $(".nd-btn", g).setAttribute("aria-expanded", "false"); } });
+  groups.forEach(g => {
+    const btn = $(".nd-btn", g);
+    btn.addEventListener("click", e => {
+      e.stopPropagation();
+      const open = !g.classList.contains("open");
+      close(g); g.classList.toggle("open", open); btn.setAttribute("aria-expanded", String(open));
+    });
+    g.addEventListener("keydown", e => { if (e.key === "Escape") { close(); btn.focus(); } });
+    g.addEventListener("focusout", e => { if (!g.contains(e.relatedTarget)) close(); });
+  });
+  document.addEventListener("click", e => { if (!e.target.closest(".nd")) close(); });
+})();
+
 /* ---------- Scroll-Reveal ---------- */
 const io = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
@@ -47,7 +64,8 @@ if (finePointer && !reduce) {
 (() => {
   const box = $("#rotator"); if (!box) return;
   const line = $(".rot-line", box);
-  const jobs = ["Informatiker/in", "Polymechaniker/in", "Kaufmann/-frau", "FaGe", "Detailhändler/in", "Logistiker/in", "Mediamatiker/in", "Automatiker/in"];
+  // gleiche Reihenfolge wie die Beispiel-Szenen im Hero (heroDocs)
+  const jobs = ["Informatiker/in", "Polymechaniker/in", "Kauffrau/-mann", "FaGe", "Grafiker/in"];
   let i = 0, current = $(".rot-word", box);
   const split = (el, text) => {
     el.setAttribute("aria-label", text);
@@ -60,6 +78,7 @@ if (finePointer && !reduce) {
   if (document.fonts) document.fonts.ready.then(() => fitLine(current));
   setInterval(() => {
     i = (i + 1) % jobs.length;
+    document.dispatchEvent(new CustomEvent("zusago:job", { detail: i }));
     if (reduce) { split(current, jobs[i]); fitLine(current); return; }
     const next = document.createElement("span");
     next.className = "rot-word"; split(next, jobs[i]); box.insertBefore(next, line);
@@ -68,6 +87,59 @@ if (finePointer && !reduce) {
     requestAnimationFrame(() => requestAnimationFrame(() => { next.classList.add("in"); fitLine(next); }));
     setTimeout(() => old.remove(), 1200);
   }, 3000);
+})();
+
+/* ---------- Hero: Inserat → echte Dokumente (wechselt mit dem Beruf) ---------- */
+(() => {
+  const box = $("#heroDocs"); if (!box || !window.ZV) return;
+  const { sample, byId, cv, letter, mini, fit, esc } = window.ZV;
+  const SCENES = [
+    { field: "it", tpl: "terminal", url: "yousty.ch/lehrstellen/informatiker-efz", title: "Informatiker/in EFZ", firm: "Muster Informatik AG · Solothurn", req: ["Freude an Technik", "logisches Denken", "Sek A oder B"] },
+    { field: "handwerk", tpl: "werkstatt", url: "yousty.ch/lehrstellen/polymechaniker-efz", title: "Polymechaniker/in EFZ", firm: "Muster Präzision AG · Grenchen", req: ["handwerkliches Geschick", "räumliches Denken", "Genauigkeit"] },
+    { field: "buero", tpl: "klar", url: "lena.ch/lehrstelle/kauffrau-kaufmann-efz", title: "Kauffrau/Kaufmann EFZ", firm: "Muster Versicherungen AG · Olten", req: ["Freude am Kundenkontakt", "exakte Arbeitsweise", "gutes Deutsch"] },
+    { field: "gesundheit", tpl: "fuersorge", url: "yousty.ch/lehrstellen/fage-efz", title: "Fachfrau/Fachmann Gesundheit EFZ", firm: "Alterszentrum Muster · Biel", req: ["Einfühlungsvermögen", "Belastbarkeit", "Teamfähigkeit"] },
+    { field: "gestaltung", tpl: "buehne", url: "muster-studio.ch/jobs/lehre-grafik", title: "Grafiker/in EFZ", firm: "Studio Muster GmbH · Bern", req: ["Kreativität", "Mappe mit Arbeiten", "Genauigkeit"] }
+  ];
+  const linkIco = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7.1 0l3-3a5 5 0 0 0-7.1-7.1l-1.2 1.2M14 10a5 5 0 0 0-7.1 0l-3 3a5 5 0 0 0 7.1 7.1l1.2-1.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+  const arrow = '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 24h30M28 14l10 10-10 10" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  box.innerHTML = `<div class="hd-scenes">${SCENES.map((sc, k) => {
+    const st = sample(sc.field), t = byId(sc.tpl);
+    return `<div class="hd-scene ${k === 0 ? "on" : ""}" ${k === 0 ? "" : 'aria-hidden="true"'}>
+      <div class="ad-card">
+        <div class="ad-url">${linkIco}${esc(sc.url)}</div>
+        <span class="ad-kicker">Lehrstelle · Inserat</span>
+        <div class="ad-title">${esc(sc.title)}</div>
+        <div class="ad-firm">${esc(sc.firm)}</div>
+        <div class="ad-req">${sc.req.map(r => `<span>${esc(r)}</span>`).join("")}</div>
+        <div class="ad-meta"><span>Lehrbeginn August 2027</span><span>3 Jahre</span></div>
+      </div>
+      <div class="hd-arrow">${arrow}</div>
+      <div class="doc-pair" role="img" aria-label="Beispiel: Lebenslauf und Bewerbungsbrief als ${esc(sc.title)} in der Vorlage ${esc(t.name)}">
+        <div class="dp-page dp-letter">${mini(letter(st, t))}</div>
+        <div class="dp-page dp-cv">${mini(cv(st, t))}</div>
+        <span class="dp-badge"><span class="spark" aria-hidden="true"></span>Passend zum Inserat</span>
+      </div>
+    </div>`;
+  }).join("")}</div>`;
+  fit(box);
+  const scenes = $$(".hd-scene", box);
+  document.addEventListener("zusago:job", e => {
+    const k = e.detail % scenes.length;
+    scenes.forEach((sc, j) => { sc.classList.toggle("on", j === k); if (j === k) sc.removeAttribute("aria-hidden"); else sc.setAttribute("aria-hidden", "true"); });
+  });
+})();
+
+/* ---------- Echte Dokumente als Paar: <div data-docs="feld:vorlage"> ---------- */
+(() => {
+  if (!window.ZV) return;
+  const { sample, byId, cv, letter, mini, fit, esc } = window.ZV;
+  $$("[data-docs]").forEach(el => {
+    const [field, tpl] = el.dataset.docs.split(":"), st = sample(field), t = byId(tpl);
+    el.classList.add("doc-pair");
+    if (!el.hasAttribute("role")) { el.setAttribute("role", "img"); el.setAttribute("aria-label", `Beispiel: Lebenslauf und Bewerbungsbrief in der Vorlage ${t.name}`); }
+    el.innerHTML = `<div class="dp-page dp-letter">${mini(letter(st, t))}</div><div class="dp-page dp-cv">${mini(cv(st, t))}</div>${el.dataset.badge ? `<span class="dp-badge"><span class="spark" aria-hidden="true"></span>${esc(el.dataset.badge)}</span>` : ""}`;
+    fit(el);
+  });
 })();
 
 /* ---------- Hero-Hintergrund: weiche Farbflächen + Partikel ---------- */

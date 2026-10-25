@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Für Eltern und Lehrpersonen – Zusago</title>
-<meta name="description" content="Datenschutz, faire Preise und der Klassenzugang für Lehrpersonen.">
+<title>Für Eltern – Zusago</title>
+<meta name="description" content="Wie Zusago dein Kind bei der Bewerbung unterstützt, was mit den Daten passiert und was es kostet.">
 <meta name="theme-color" content="#4F46E5">
 <link rel="icon" href="assets/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png">
@@ -13,6 +13,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="dokumente.css">
 </head>
 <body>
 
@@ -23,11 +24,9 @@
   <div class="nav-inner">
     <a href="index.html" class="nav-logo" aria-label="Zusago Startseite"><img src="assets/zusago-logo-farbig.svg" alt="Zusago" width="128" height="29"></a>
     <nav class="nav-links" aria-label="Hauptnavigation">
-      <a href="so-funktionierts.html">So funktioniert's</a>
-      <a href="funktionen.html">Funktionen</a>
-      <a href="vorlagen.html">Vorlagen</a>
+      <div class="nd"><button type="button" class="nd-btn" aria-expanded="false" aria-controls="ndProdukt">Produkt<svg class="nd-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="nd-panel" id="ndProdukt"><a href="so-funktionierts.html"><b>So funktioniert's</b><span>In drei Schritten zur Bewerbung</span></a><a href="funktionen.html"><b>Funktionen</b><span>Inserat erkennen, Ton-Regler, Foto</span></a><a href="vorlagen.html"><b>Vorlagen</b><span>Lebenslauf und Brief als Set</span></a></div></div>
       <a href="preise.html">Preise</a>
-      <a href="eltern.html" aria-current="page">Für Eltern</a>
+      <div class="nd is-current"><button type="button" class="nd-btn" aria-expanded="false" aria-controls="ndWer">Eltern &amp; Schulen<svg class="nd-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="nd-panel" id="ndWer"><a href="eltern.html" aria-current="page"><b>Für Eltern</b><span>Datenschutz, Kosten, Resultat</span></a><a href="lehrpersonen.html"><b>Für Lehrpersonen</b><span>Zusago im Unterricht</span></a></div></div>
       <a href="faq.html">FAQ</a>
     </nav>
     <div class="nav-cta">
@@ -36,46 +35,44 @@
     </div>
   </div>
   <div class="mobile-menu" id="mobileMenu">
-    <a href="so-funktionierts.html">So funktioniert's</a>
-    <a href="funktionen.html">Funktionen</a>
-    <a href="vorlagen.html">Vorlagen</a>
-    <a href="preise.html">Preise</a>
-    <a href="eltern.html" aria-current="page">Für Eltern</a>
-    <a href="faq.html">FAQ</a>
+    <p class="mm-h">Produkt</p><a href="so-funktionierts.html">So funktioniert's</a><a href="funktionen.html">Funktionen</a><a href="vorlagen.html">Vorlagen</a>
+    <p class="mm-h">Eltern &amp; Schulen</p><a href="eltern.html" aria-current="page">Für Eltern</a><a href="lehrpersonen.html">Für Lehrpersonen</a>
+    <p class="mm-h">Mehr</p><a href="preise.html">Preise</a><a href="faq.html">FAQ</a>
     <a href="app.html" class="btn btn-primary">Gratis starten</a>
   </div>
 </header>
 
 <main id="top">
 
+
 <section class="page-hero">
   <div class="page-blobs" aria-hidden="true"><span></span><span></span><span></span></div>
   <div class="wrap page-hero-inner">
-    <span class="eyebrow reveal">Für Eltern und Lehrpersonen</span>
+    <span class="eyebrow reveal">Für Eltern</span>
     <h1 class="page-title reveal" data-delay="1">Sicher und fair<span class="dot">.</span><br><span class="muted">Ohne Abo-Falle.</span></h1>
-    <p class="page-lead reveal" data-delay="2">Zusago hilft Jugendlichen bei der ersten Bewerbung. Hier steht, wie wir mit Daten und Geld umgehen und wie Lehrpersonen ganze Klassen begleiten.</p>
+    <p class="page-lead reveal" data-delay="2">Zusago hilft deinem Kind, eine gute Bewerbung für die Lehrstelle zu schicken. Hier steht, wie das funktioniert, was mit den Daten passiert und was es kostet.</p>
   </div>
 </section>
 
 
-<!-- ELTERN UND LEHRPERSONEN -->
+<!-- DREI PUNKTE FÜR ELTERN -->
 <section class="section pt0" id="eltern">
   <div class="wrap">
     <div class="cards3">
       <article class="info-card reveal spot">
         <div class="ico"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.8-7 9-4-1.2-7-4.5-7-9V6l7-3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></div>
         <h3>Datenschutz zuerst</h3>
-        <p>Keine Werbung, kein Verkauf von Daten. Konto und alle Daten lassen sich mit einem Klick löschen.</p>
+        <p>Keine Werbung, kein Verkauf von Daten. Die Angaben bleiben im Browser auf dem Gerät deines Kindes.</p>
       </article>
       <article class="info-card reveal spot" data-delay="1">
         <div class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 10h18" stroke="currentColor" stroke-width="2"/></svg></div>
         <h3>Einmal zahlen, kein Abo</h3>
-        <p>Gratis starten. Der Lehrstellen-Pass kostet einmalig und verlängert sich nie automatisch. Bezahlen mit TWINT.</p>
+        <p>Gratis starten. Der Lehrstellen-Pass kostet einmalig und verlängert sich nie automatisch.</p>
       </article>
       <article class="info-card reveal spot" data-delay="2">
-        <div class="ico"><svg viewBox="0 0 24 24"><path d="M4 19V9l8-5 8 5v10" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 19v-5h6v5" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
-        <h3>Für ganze Klassen</h3>
-        <p>Mit dem Klassenzugang begleitest du als Lehrperson alle Bewerbungen und siehst den Fortschritt auf einen Blick.</p>
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Ehrliche Texte</h3>
+        <p>Die KI schreibt nur mit den Angaben deines Kindes und erfindet nichts dazu. Jeder Satz lässt sich ändern.</p>
       </article>
     </div>
   </div>
@@ -85,29 +82,25 @@
 <div class="hatch" aria-hidden="true"></div>
 
 
-<!-- KLASSENZUGANG -->
-<section class="section" id="klassen">
-  <div class="wrap klass">
+<!-- SO SIEHT DAS RESULTAT AUS -->
+<section class="section" id="resultat">
+  <div class="wrap lesson">
     <div class="reveal">
-      <span class="eyebrow">Für Lehrpersonen</span>
-      <h2>Der Klassenzugang<span class="dot">.</span><br><span class="muted">Alle Bewerbungen im Blick.</span></h2>
-      <p class="lead">Mit dem Klassenzugang bekommt jede Schülerin und jeder Schüler einen Lehrstellen-Pass. Du siehst, wer wie weit ist, und kannst Bewerbungen gegenlesen.</p>
+      <span class="eyebrow">Das Resultat</span>
+      <h2>So sieht die fertige Bewerbung aus<span class="dot">.</span></h2>
+      <p class="lead">Lebenslauf und Bewerbungsbrief im gleichen Design, im Schweizer Format. Dein Kind beantwortet einfache Fragen, Zusago formuliert daraus passende Texte für die Lehrstelle.</p>
       <ol class="klass-steps">
-        <li><b>Klasse anlegen</b><span>Du bekommst einen Klassen-Code.</span></li>
-        <li><b>Code verteilen</b><span>Die Jugendlichen starten mit dem Code, ohne selbst zu zahlen.</span></li>
-        <li><b>Fortschritt sehen</b><span>Übersicht, wer wo steht, und Gegenlesen per Link.</span></li>
+        <li><b>Zusammen durchlesen</b><span>Schaut die Bewerbung gemeinsam an, bevor sie verschickt wird.</span></li>
+        <li><b>Direkt anpassen</b><span>Ein Klick in den Text genügt, um ein Wort oder einen Satz zu ändern.</span></li>
+        <li><b>Als PDF verschicken</b><span>Lebenslauf und Brief als PDF speichern und per E-Mail oder Portal senden.</span></li>
       </ol>
-      <a href="mailto:hallo@zusago.ch?subject=Klassenzugang%20Zusago" class="btn btn-primary">Klassenzugang anfragen <span class="arrow" aria-hidden="true">→</span></a>
     </div>
-    <div class="klass-card reveal" data-delay="1" aria-hidden="true">
-      <div class="kc-head"><b>Klasse 9b</b><span>22 Schüler/innen</span></div>
-      <div class="kc-row"><span>Lebenslauf fertig</span><div class="kc-bar"><i style="--v:82%"></i></div><em>18</em></div>
-      <div class="kc-row"><span>Bewerbung versendet</span><div class="kc-bar"><i style="--v:55%"></i></div><em>12</em></div>
-      <div class="kc-row"><span>Schnupperlehre</span><div class="kc-bar"><i style="--v:36%"></i></div><em>8</em></div>
-      <div class="kc-note">Beispielansicht</div>
+    <div class="reveal" data-delay="1">
+      <div data-docs="handwerk:werkstatt" data-badge="Beispiel"></div>
     </div>
   </div>
 </section>
+
 
 <!-- DATENSCHUTZ -->
 <section class="section section-tint" id="daten">
@@ -118,10 +111,10 @@
     </div>
     <ul class="data-list reveal">
       <li><span class="tick" aria-hidden="true">✓</span>Wir fragen nur, was für Lebenslauf und Bewerbung nötig ist.</li>
+      <li><span class="tick" aria-hidden="true">✓</span>Die Angaben werden im Browser auf dem Gerät gespeichert, nicht in einem Konto bei uns.</li>
+      <li><span class="tick" aria-hidden="true">✓</span>Für die Texte gehen nur die Angaben für die Bewerbung an einen KI-Dienst.</li>
       <li><span class="tick" aria-hidden="true">✓</span>Keine Werbung, kein Verkauf und keine Weitergabe von Daten.</li>
-      <li><span class="tick" aria-hidden="true">✓</span>Texte werden mit einem KI-Dienst erstellt. Dafür gehen nur die Angaben für die Bewerbung dorthin.</li>
-      <li><span class="tick" aria-hidden="true">✓</span>Das Konto und alle Daten lassen sich mit einem Klick löschen.</li>
-      <li><span class="tick" aria-hidden="true">✓</span>Kein Abo: Der Pass verlängert sich nie automatisch.</li>
+      <li><span class="tick" aria-hidden="true">✓</span>Mit «Alle meine Daten löschen» ist alles sofort vom Gerät entfernt.</li>
     </ul>
   </div>
 </section>
@@ -147,7 +140,8 @@
     </div>
     <div class="footer-cols">
       <div><h4>Produkt</h4><a href="so-funktionierts.html">So funktioniert's</a><a href="vorlagen.html">Vorlagen</a><a href="preise.html">Preise</a></div>
-      <div><h4>Hilfe</h4><a href="faq.html">FAQ</a><a href="eltern.html">Für Eltern</a><a href="mailto:hallo@zusago.ch">Kontakt</a></div>
+      <div><h4>Hilfe</h4><a href="faq.html">FAQ</a><a href="eltern.html">Für Eltern</a>
+      <a href="lehrpersonen.html">Für Lehrpersonen</a><a href="mailto:hallo@zusago.ch">Kontakt</a></div>
       <div><h4>Rechtliches</h4><a href="impressum.html">Impressum</a><a href="datenschutz.html">Datenschutz</a><a href="agb.html">AGB</a></div>
     </div>
   </div>
@@ -155,6 +149,7 @@
   <div class="wrap footer-bottom"><span>© <span id="year">2026</span> Zusago</span><span>Gemacht in der Schweiz</span></div>
 </footer>
 
+<script src="vorlagen.js"></script>
 <script src="script.js"></script>
 </body>
 </html>

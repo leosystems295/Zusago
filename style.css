@@ -387,8 +387,7 @@ h3{font-size:20px}
 .h-line .w{display:inline-block;opacity:0;filter:blur(10px);transform:translateY(.35em);transition:opacity .9s var(--ease),filter .9s var(--ease),transform .9s var(--ease);transition-delay:calc(var(--wi) * 90ms + .1s)}
 .hero.ready .h-line .w{opacity:1;filter:none;transform:none}
 .rotator{opacity:0;transition:opacity .8s ease .45s}
-.hero.ready .rotator{opacity:1}
-
+.hero.ready 
 /* ---------- App-Ansicht ---------- */
 .mock-stage{position:relative;margin-top:64px;padding-bottom:90px}
 .wave{position:absolute;left:0;right:0;top:110px;bottom:0;overflow:hidden;pointer-events:none}
@@ -705,3 +704,84 @@ h3{font-size:20px}
 /* Mobile: Gruppen mit kleinen Titeln */
 .mm-h{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);padding:16px 4px 2px}
 .mm-h:first-child{padding-top:8px}
+
+/* =========================================================
+   Preise: einzeln oder im Paket
+   ========================================================= */
+.free-strip{display:flex;gap:14px;align-items:center;max-width:860px;margin:0 auto 28px;background:var(--mint-l);border-radius:18px;padding:16px 22px;font-size:15px;color:var(--ink)}
+.free-strip b{color:var(--mint-d)}
+.pkgs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;max-width:1000px;margin:0 auto}
+@media (min-width:860px){.pkgs{grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}}
+.pkg{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:left;background:#fff;border:2px solid var(--line);border-radius:20px;padding:30px 20px 22px;cursor:pointer;transition:border-color .2s,box-shadow .3s var(--ease),transform .3s var(--ease)}
+.pkg:hover{transform:translateY(-3px);box-shadow:0 26px 50px -34px rgba(20,33,61,.5)}
+.pkg.on{border-color:var(--indigo);box-shadow:0 30px 60px -34px rgba(79,70,229,.7)}
+.pkg.on::after{content:"✓";position:absolute;top:14px;right:14px;width:24px;height:24px;border-radius:50%;background:var(--indigo);color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.pkg-fav{position:absolute;top:-12px;left:18px;font-size:12px;font-weight:500;background:var(--coral);color:#fff;padding:4px 11px;border-radius:999px}
+.pkg-n{font-size:15px;font-weight:500;color:var(--ink-2)}
+.pkg-price{font-size:clamp(28px,3vw,34px);font-weight:700;letter-spacing:-.03em;line-height:1.15;color:var(--ink);margin-top:4px}
+.pkg-per{font-size:14px;color:var(--ink-2)}
+.pkg-save{margin-top:10px;font-size:13px;font-weight:700;color:var(--mint-d);background:var(--mint-l);padding:3px 10px;border-radius:999px}
+.pkg-sum{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:18px;max-width:1000px;margin:22px auto 0;background:var(--ink);color:#fff;border-radius:22px;padding:22px 26px}
+.pkg-sum>div{display:grid;gap:2px}
+.pkg-sum-k{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#AEB6CF}
+.pkg-sum b{font-size:20px}
+.pkg-sum-save{font-size:14px;color:#C9D0E3}
+.pkg-sum .btn{background:#fff;color:var(--indigo);box-shadow:none}
+.pkg-note{max-width:1000px;margin:14px auto 0;font-size:14px;color:var(--ink-2);text-align:center}
+.pkg-incl{max-width:1000px;margin:56px auto 0;background:#fff;border:1px solid var(--line);border-radius:24px;padding:32px}
+.pkg-incl-t{font-size:clamp(22px,2.6vw,28px);margin-bottom:18px}
+.pkg-incl ul{list-style:none;display:grid;gap:12px;font-size:15px}
+@media (min-width:760px){.pkg-incl ul{grid-template-columns:1fr 1fr;column-gap:30px}}
+.pkg-incl li{display:flex;gap:10px;align-items:flex-start}
+.pkg-price{white-space:nowrap}
+.pkg-n{padding-right:24px}
+@media (max-width:460px){.pkg{padding:26px 14px 18px}.pkg-price{font-size:24px}.pkg-per{font-size:13px}.pkg.on::after{top:10px;right:10px;width:20px;height:20px;font-size:11px}.pkg-sum b{font-size:18px}}
+@media (max-width:460px){.pkg-n{padding-right:0;font-size:14px;white-space:nowrap}}
+
+/* =========================================================
+   Ruhiger Auftritt: keine Endlos-Animationen, keine Spielereien
+   ========================================================= */
+.rotator{opacity:1}
+.reveal{transform:translateY(10px);transition:opacity .6s ease,transform .6s ease}
+.hd-scene{transform:none;transition:opacity .5s ease,visibility 0s linear .5s}
+.doc-pair:hover .dp-letter{transform:rotate(4deg)}
+.doc-pair:hover .dp-cv{transform:rotate(-3deg)}
+.doc-pair .dp-letter{transform:rotate(2deg)}
+.doc-pair .dp-cv{transform:rotate(-1.5deg)}
+.pkg:hover{transform:none}
+.price.featured::before{animation:none}
+.badge-ai,.badge-check,.sh-note,.ph-crop{animation:none}
+.caret{animation:none;opacity:.6}
+/* Fragen-Karten: ruhig und zentriert statt Laufband */
+.know{padding-bottom:70px}
+.know-rows{mask-image:none;-webkit-mask-image:none;max-width:1100px;margin:0 auto;padding:0 20px}
+.know-row{animation:none;width:auto;justify-content:center}
+.know-row ul{flex-wrap:wrap;justify-content:center;padding:0}
+.know-row ul[aria-hidden="true"]{display:none}
+.know-row li{font-size:15px;padding:12px 18px}
+.page-hero{background:linear-gradient(180deg,#fff 0%,var(--bg) 100%)}
+.mock-stage{margin-top:56px;padding-bottom:70px}
+.final{padding:96px 0}
+@media (prefers-reduced-motion:reduce){.reveal,.hd-scene{transition:none}}
+
+/* ---------- Startseite: Hürden und Lösung (ersetzt «Kennst du das?») ---------- */
+.hurdle-grid{display:grid;gap:16px;max-width:1040px;margin:0 auto}
+@media (min-width:820px){.hurdle-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}}
+.hurdle{background:#fff;border:1px solid var(--line);border-radius:22px;padding:24px 24px 26px;box-shadow:0 20px 50px -44px rgba(20,33,61,.55)}
+.h-q{font-size:15px;color:var(--ink-3);padding-bottom:16px;margin-bottom:18px;border-bottom:1px dashed var(--line)}
+.h-a{display:flex;gap:14px;align-items:flex-start}
+.h-ico{flex:none;width:40px;height:40px;border-radius:12px;background:var(--indigo-l);color:var(--indigo);display:flex;align-items:center;justify-content:center}
+.h-ico svg{width:20px;height:20px}
+.h-a b{display:block;font-size:17px;font-weight:700;color:var(--ink);letter-spacing:-.01em;margin-bottom:4px}
+.h-a div>span{display:block;font-size:15px;color:var(--ink-2);line-height:1.55}
+
+/* ---------- Eltern: Preis-Übersicht ---------- */
+.price-mini{background:#fff;border:1px solid var(--line);border-radius:22px;padding:26px;box-shadow:0 26px 60px -44px rgba(20,33,61,.55);max-width:420px;margin:0 auto}
+.pm-t{font-size:13px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+.price-mini ul{list-style:none;padding:0;margin:0 0 14px}
+.price-mini li{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--line);font-size:15px}
+.price-mini li b{white-space:nowrap;color:var(--ink)}
+.price-mini li.fav b{color:var(--indigo)}
+.price-mini li i{font-style:normal;font-size:11px;font-weight:500;background:var(--coral);color:#fff;border-radius:999px;padding:2px 8px;margin-left:6px;vertical-align:2px}
+.pm-n{font-size:13px;color:var(--ink-2);margin-bottom:16px}
+.w100{width:100%;justify-content:center}

@@ -272,17 +272,6 @@ if (finePointer && !reduce) {
   if (mini) mr.addEventListener("input", () => { mini.style.opacity = 0; setTimeout(() => { mini.textContent = M[+mr.value]; mini.style.opacity = 1; }, 180); });
 })();
 
-/* ---------- App-Ansicht kippt beim Scrollen flach ---------- */
-(() => {
-  const mock = $("#mock"); if (!mock || reduce) return;
-  const upd = () => {
-    const r = mock.getBoundingClientRect();
-    const p = Math.min(Math.max((innerHeight - r.top) / (innerHeight * .75), 0), 1);
-    mock.style.transform = `perspective(1600px) rotateX(${(1 - p) * 16}deg) scale(${.93 + p * .07}) translateY(${(1 - p) * 30}px)`;
-  };
-  upd(); addEventListener("scroll", () => requestAnimationFrame(upd), { passive: true }); addEventListener("resize", upd);
-})();
-
 /* ---------- Bento: Tracker und Dossier ---------- */
 (() => {
   const st = $("#bxTrack .st-wait");
@@ -293,32 +282,8 @@ if (finePointer && !reduce) {
   if (!finePointer) $$(".bx .dossier").forEach(d => new IntersectionObserver(([e]) => d.closest(".bx").classList.toggle("merge", e.isIntersecting), { threshold: .8 }).observe(d));
 })();
 
-/* ---------- Gestapelte Karten: hintere Karten leicht verkleinern ---------- */
-(() => {
-  const cards = $$(".stack-card"); if (reduce || !cards.length) return;
-  function update() {
-    cards.forEach((card, i) => {
-      const next = cards[i + 1]; if (!next) return;
-      const top = next.getBoundingClientRect().top, mine = card.getBoundingClientRect().top;
-      const overlap = Math.min(Math.max((card.offsetHeight - (top - mine)) / card.offsetHeight, 0), 1);
-      card.style.transform = `scale(${1 - overlap * .05})`;
-      card.style.filter = `brightness(${1 - overlap * .06})`;
-    });
-  }
-  addEventListener("scroll", () => requestAnimationFrame(update), { passive: true }); update();
-})();
-
-/* Tipp-Animation in Karte 1 */
-(() => {
-  const el = $(".typing"); if (!el) return;
-  const text = el.dataset.text;
-  const obs = new IntersectionObserver(([e]) => {
-    if (!e.isIntersecting) return; obs.disconnect();
-    if (reduce) { el.textContent = text; return; }
-    let i = 0; const t = setInterval(() => { el.textContent = text.slice(0, ++i); if (i >= text.length) clearInterval(t); }, 38);
-  }, { threshold: .5 });
-  obs.observe(el);
-})();
+/* Beispiel-Link in Karte 1 (ohne Tipp-Animation) */
+(() => { const el = $(".typing"); if (el) el.textContent = el.dataset.text; })();
 
 /* ---------- Vorlagen: Galerie mit echter Vorschau ----------
    Braucht vorlagen.js und dokumente.css.
@@ -328,7 +293,7 @@ if (finePointer && !reduce) {
   const grid = $("#tplGrid"); if (!grid || !window.ZV) return;
   const { TEMPLATES, FIELDS, cv, letter, sample, mini, fit, esc } = window.ZV;
   const list = TEMPLATES.slice(0, +grid.dataset.limit || TEMPLATES.length);
-  const tag = t => `<span class="tpl-tag ${t.free ? "tag-free" : "tag-pass"}">${t.free ? "Gratis" : "Im Pass"}</span>`;
+  const tag = () => "";
   grid.innerHTML = list.map(t => {
     const st = sample(t.field);
     return `<div class="tpl" data-f="${t.field}" data-id="${t.id}" tabindex="0" role="button" aria-label="Vorlage ${esc(t.name)}, ${FIELDS[t.field]}, gross ansehen">
@@ -350,7 +315,7 @@ if (finePointer && !reduce) {
     const t = TEMPLATES.find(x => x.id === id); if (!t) return;
     const st = sample(t.field);
     dlg.innerHTML = `<div class="tpl-dlg-head">
-        <div><h2 id="tplDlgTitle">${esc(t.name)}<span class="dot">.</span></h2><p>${FIELDS[t.field]} · ${t.free ? "Gratis" : "Im Lehrstellen-Pass"}</p></div>
+        <div><h2 id="tplDlgTitle">${esc(t.name)}<span class="dot">.</span></h2><p>${FIELDS[t.field]} · In jeder Bewerbung enthalten</p></div>
         <button type="button" class="tpl-dlg-x" aria-label="Schliessen"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
       </div>
       <div class="tpl-dlg-pages">
@@ -379,6 +344,27 @@ if (finePointer && !reduce) {
       if (show) { void t.offsetWidth; t.style.animationDelay = `${(i % 6) * 40}ms`; t.classList.add("enter"); }
     });
   }));
+})();
+
+/* ---------- Preise: Paket wählen ---------- */
+(() => {
+  const box = $("#pkgs"); if (!box) return;
+  const ONE = 6.90, chf = v => v.toFixed(2);
+  const pick = b => {
+    $$(".pkg", box).forEach(x => { x.classList.toggle("on", x === b); x.setAttribute("aria-checked", String(x === b)); });
+    const n = +b.dataset.n, tot = +b.dataset.total, save = n * ONE - tot;
+    $("#pkgSumTitle").textContent = `${n} ${n === 1 ? "Bewerbung" : "Bewerbungen"} für CHF ${chf(tot)}`;
+    $("#pkgSumSave").textContent = save > 0.004 ? `Du sparst CHF ${chf(save)} gegenüber dem Einzelkauf.` : "Ideal, wenn du dich nur bei einem Betrieb bewirbst.";
+    const go = $("#pkgGo"); if (go) go.href = `app.html?pack=${n}`;
+  };
+  $$(".pkg", box).forEach(b => {
+    b.addEventListener("click", () => pick(b));
+    b.addEventListener("keydown", e => {
+      const list = $$(".pkg", box), i = list.indexOf(b);
+      if (["ArrowRight", "ArrowDown"].includes(e.key)) { e.preventDefault(); const n = list[(i + 1) % list.length]; n.focus(); pick(n); }
+      if (["ArrowLeft", "ArrowUp"].includes(e.key)) { e.preventDefault(); const n = list[(i - 1 + list.length) % list.length]; n.focus(); pick(n); }
+    });
+  });
 })();
 
 /* ---------- Erfahrung -> Lebenslauf-Satz ---------- */
@@ -416,21 +402,6 @@ if (finePointer && !reduce) {
   }, { threshold: .5 });
   obs.observe(ba);
 })();
-
-/* ---------- Spotlight auf Karten ---------- */
-$$(".spot").forEach(el => el.addEventListener("pointermove", e => {
-  const r = el.getBoundingClientRect();
-  el.style.setProperty("--mx", `${e.clientX - r.left}px`); el.style.setProperty("--my", `${e.clientY - r.top}px`);
-}));
-
-/* ---------- Magnetische Buttons ---------- */
-if (finePointer && !reduce) $$(".magnetic").forEach(b => {
-  b.addEventListener("pointermove", e => {
-    const r = b.getBoundingClientRect();
-    b.style.transform = `translate(${(e.clientX - r.left - r.width / 2) * .18}px, ${(e.clientY - r.top - r.height / 2) * .3}px)`;
-  });
-  b.addEventListener("pointerleave", () => { b.style.transform = ""; });
-});
 
 /* ---------- Lichtstrahlen im Schluss-CTA ---------- */
 (() => {

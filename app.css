@@ -180,3 +180,49 @@ body.ws-mode .app-main{max-width:1240px}
 .ws-main,.ws-side{min-width:0}
 @media (min-width:1000px){.ws{grid-template-columns:minmax(0,1fr) 320px}}
 @media (max-width:640px){.doc-tabs{min-width:0;flex:1 1 100%}.edit-hint{display:none}}
+
+/* ---------- Kasse (vor dem Start bezahlen) ---------- */
+.paygate{max-width:1000px;margin:0 auto}
+.paygate .panel-head{text-align:center;max-width:640px;margin-left:auto;margin-right:auto}
+.pay-pkgs{margin-top:26px}
+.pay-pkgs .pkg{padding:26px 16px 18px}
+.pay-box{max-width:640px;margin:28px auto 0;text-align:center}
+.pay-actions{display:flex;flex-direction:column;gap:10px;align-items:stretch}
+@media (min-width:600px){.pay-actions{flex-direction:row;justify-content:center;align-items:center}}
+.pay-methods{list-style:none;display:flex;flex-wrap:wrap;justify-content:center;gap:8px;padding:0;margin:18px 0 6px}
+.pay-methods li{font-size:13px;color:var(--ink-2);background:#fff;border:1px solid var(--line);border-radius:999px;padding:5px 12px}
+.pay-methods .pm-twint{font-weight:700;letter-spacing:.02em;color:var(--ink)}
+.pay-secure{margin-top:6px}
+.pay-box .loading-line{justify-content:center}
+.pay-parent{max-width:640px;margin:22px auto 0}
+.pay-parent .btn-row{margin-top:12px;display:flex;flex-wrap:wrap;gap:10px}
+.pay-parent .btn-row .btn{flex:1 1 180px;justify-content:center}
+.wait-line{margin-top:14px}
+.pay-code{max-width:640px;margin:26px auto 0;font-size:14px;color:var(--ink-2)}
+.pay-code summary{cursor:pointer;text-align:center;font-weight:500;color:var(--indigo);list-style:none}
+.pay-code summary::-webkit-details-marker{display:none}
+.pay-code[open] summary{margin-bottom:12px}
+.pay-code .hint{margin-top:8px}
+.pay-back{text-align:center;font-size:13px;color:var(--ink-2);margin:30px 0 10px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap;align-items:center}
+.pay-back a{color:inherit}
+.paid{max-width:520px;margin:22px auto 0}
+.paid-top{display:flex;gap:14px;align-items:center;margin-bottom:18px}
+.paid-top b{display:block;font-size:22px;color:var(--ink)}
+.code-row{display:flex;gap:10px;align-items:center;background:var(--bg,#F7F8FC);border:1px dashed var(--line);border-radius:12px;padding:10px 12px;margin:6px 0 8px}
+.code-row code{flex:1;min-width:0;font-size:12px;overflow-wrap:anywhere;font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--ink)}
+.paid #paidGo{margin-top:16px}
+.paid-parent{margin-top:14px;text-align:center}
+.credit-line b{color:var(--ink)}
+.gen-cost{text-align:center;margin-top:16px}
+body.pay-mode .app-main{max-width:1040px}
+.btn-lg{padding:15px 26px;font-size:16px}
+body.pay-mode .progress-steps,body.pay-mode .progress-mobile{visibility:hidden}
+
+/* Guthaben oben rechts */
+.credit-pill{margin-left:auto;display:inline-flex;align-items:center;gap:8px;font:inherit;font-size:13px;font-weight:500;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer;white-space:nowrap}
+.credit-pill .cp-dot{width:8px;height:8px;border-radius:50%;background:var(--mint)}
+.credit-pill.empty .cp-dot{background:var(--coral)}
+.credit-pill:hover{border-color:var(--indigo)}
+@media (max-width:999px){.credit-pill{order:3;margin-left:10px}}
+@media (max-width:520px){.credit-pill{font-size:12px;padding:5px 10px}.progress-mobile{min-width:0}}
+[hidden]{display:none!important}

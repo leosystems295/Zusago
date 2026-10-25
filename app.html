@@ -23,9 +23,65 @@
   <a href="index.html" class="app-logo" aria-label="Zur Startseite"><img src="assets/zusago-logo-farbig.svg" alt="Zusago" width="120" height="27"></a>
   <ol class="progress-steps" id="progress" aria-label="Fortschritt"></ol>
   <div class="progress-mobile" aria-hidden="true"><span id="progressText">Schritt 1 von 7</span><div class="pm-bar"><i id="progressBar"></i></div></div>
+  <button type="button" class="credit-pill" id="creditPill" hidden aria-label="Dein Guthaben"><span class="cp-dot" aria-hidden="true"></span><span id="creditText">–</span></button>
 </header>
 
 <main class="app-main">
+
+  <!-- KASSE: vor dem Start bezahlen -->
+  <section class="paygate" id="payGate" hidden aria-labelledby="payTitle">
+    <div class="panel-head">
+      <span class="eyebrow" id="payEyebrow">Bevor es losgeht</span>
+      <h1 id="payTitle">Wähl dein Paket<span class="dot">.</span></h1>
+      <p id="payLead">Eine Bewerbung heisst: Lebenslauf und Brief für eine Stelle, beliebig oft anpassen, als PDF. Einmal bezahlen, kein Abo, kein Konto.</p>
+    </div>
+
+    <div class="pkgs pay-pkgs" id="payPkgs" role="radiogroup" aria-label="Anzahl Bewerbungen wählen">
+      <button type="button" class="pkg" role="radio" aria-checked="false" data-n="1" data-total="6.90"><span class="pkg-n">1 Bewerbung</span><span class="pkg-price">CHF 6.90</span><span class="pkg-per">Für eine Stelle</span></button>
+      <button type="button" class="pkg" role="radio" aria-checked="false" data-n="3" data-total="14.90"><span class="pkg-n">3 Bewerbungen</span><span class="pkg-price">CHF 14.90</span><span class="pkg-per">CHF 4.97 pro Bewerbung</span><span class="pkg-save">−28 %</span></button>
+      <button type="button" class="pkg on" role="radio" aria-checked="true" data-n="5" data-total="19.90"><span class="pkg-fav">Am beliebtesten</span><span class="pkg-n">5 Bewerbungen</span><span class="pkg-price">CHF 19.90</span><span class="pkg-per">CHF 3.98 pro Bewerbung</span><span class="pkg-save">−42 %</span></button>
+      <button type="button" class="pkg" role="radio" aria-checked="false" data-n="10" data-total="29.90"><span class="pkg-n">10 Bewerbungen</span><span class="pkg-price">CHF 29.90</span><span class="pkg-per">CHF 2.99 pro Bewerbung</span><span class="pkg-save">−57 %</span></button>
+    </div>
+
+    <div class="pay-box">
+      <div class="pay-actions">
+        <button type="button" class="btn btn-primary btn-lg" id="payNow">Weiter zur Zahlung · <span id="payAmount">CHF 19.90</span> <span class="arrow" aria-hidden="true">→</span></button>
+        <button type="button" class="btn btn-ghost" id="payParent">Eltern bezahlen lassen</button>
+      </div>
+      <ul class="pay-methods" aria-label="Zahlungsarten">
+        <li><b class="pm-twint">TWINT</b></li><li>Karte</li><li>Apple Pay</li><li>Google Pay</li>
+      </ul>
+      <p class="hint pay-secure">Die Zahlung läuft sicher über Stripe. Zusago sieht keine Karten- oder Kontodaten.</p>
+      <p class="err" id="payErr" role="alert"></p>
+      <div class="loading-line" id="payLoading" hidden><span class="spin"></span><span id="payLoadingText">Die Kasse wird geöffnet …</span></div>
+    </div>
+
+    <!-- Link für die Eltern -->
+    <div class="pay-parent card" id="parentBox" hidden>
+      <p class="lbl">Schick diesen Link deinen Eltern</p>
+      <p class="hint">Sie bezahlen auf ihrem Handy mit TWINT oder Karte. Sobald das erledigt ist, geht es hier automatisch weiter. Lass diese Seite offen.</p>
+      <div class="row-input"><input id="parentUrl" readonly aria-label="Bezahl-Link"><button type="button" class="btn btn-ghost" id="parentCopy">Kopieren</button></div>
+      <div class="btn-row"><a class="btn btn-primary btn-sm" id="parentWa" target="_blank" rel="noopener">Per WhatsApp senden</a><a class="btn btn-ghost btn-sm" id="parentMail">Per E-Mail senden</a></div>
+      <div class="loading-line wait-line" id="parentWait"><span class="spin"></span>Warten auf die Zahlung …</div>
+    </div>
+
+    <!-- Nach der Zahlung -->
+    <div class="paid card" id="paidBox" hidden>
+      <div class="paid-top"><span class="check-circle" aria-hidden="true">✓</span><div><span class="lbl">Dein Guthaben</span><b id="paidLeft">–</b></div></div>
+      <p class="lbl">Dein Guthaben-Code</p>
+      <div class="code-row"><code id="paidCode">–</code><button type="button" class="btn-link" id="paidCopy">Kopieren</button></div>
+      <p class="hint">Speicher den Code (z.B. als Foto oder Notiz). Damit kannst du dein Guthaben auf einem anderen Gerät brauchen.</p>
+      <button type="button" class="btn btn-primary btn-lg w100" id="paidGo">Jetzt Bewerbung erstellen <span class="arrow" aria-hidden="true">→</span></button>
+      <p class="hint paid-parent">Du hast für dein Kind bezahlt? Dann kannst du diese Seite schliessen. Auf seinem Gerät geht es automatisch weiter.</p>
+    </div>
+
+    <details class="pay-code">
+      <summary>Ich habe schon einen Guthaben-Code</summary>
+      <div class="row-input"><input id="codeInput" placeholder="cs_live_…" autocomplete="off" spellcheck="false" aria-label="Guthaben-Code"><button type="button" class="btn btn-ghost" id="codeUse">Einlösen</button></div>
+      <p class="hint">Den Code bekommst du nach der Zahlung. Damit kannst du dein Guthaben auch auf einem anderen Gerät brauchen.</p>
+    </details>
+    <p class="pay-back"><button type="button" class="btn-link" id="payClose" hidden>← Zurück zur Bewerbung</button><a href="preise.html">Preise und Fragen</a> · <a href="agb.html">AGB</a></p>
+  </section>
 
   <!-- 0: INSERAT -->
   <section class="panel" data-step="0" hidden>
@@ -185,8 +241,8 @@
         <button type="button" data-tone="locker">Locker</button><button type="button" data-tone="normal">Normal</button><button type="button" data-tone="formell">Formell</button>
       </div>
     </div>
+    <p class="hint gen-cost" id="genCost"></p>
     <p class="err" id="genErr" role="alert"></p>
-    <div class="gen-fallback" id="genFallback" hidden><button type="button" class="btn-link" id="noAi">Ohne KI mit einer einfachen Vorlage weitermachen</button></div>
   </section>
 
   <!-- 7: ERGEBNIS -->
@@ -223,6 +279,13 @@
           <div class="btn-row"><button type="button" class="sugg" data-rw="kuerzer">Kürzer machen</button><button type="button" class="sugg" data-rw="neu">Neu formulieren</button></div>
           <div class="loading-line" id="rwLoading" hidden><span class="spin"></span>Die KI überarbeitet deinen Brief …</div>
           <p class="err" id="rwErr" role="alert"></p>
+        </div>
+        <div class="side-block">
+          <p class="lbl">Dein Guthaben</p>
+          <p class="credit-line" id="creditLine">–</p>
+          <p class="hint">Dein Code – speicher ihn, damit du dein Guthaben auch auf einem anderen Gerät brauchen kannst:</p>
+          <div class="code-row"><code id="myCode">–</code><button type="button" class="btn-link" id="copyCode">Kopieren</button></div>
+          <button type="button" class="btn btn-ghost btn-sm" id="buyMore">Weitere Bewerbungen kaufen</button>
         </div>
         <div class="side-block">
           <button type="button" class="btn-link" data-goto="1">Angaben ändern</button>

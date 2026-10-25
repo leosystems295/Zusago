@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Preise – Zusago</title>
-<meta name="description" content="Gratis starten, einmal zahlen, kein Abo.">
+<meta name="description" content="Bewerbungen einzeln oder günstiger im Paket kaufen. Einmal bezahlen mit TWINT oder Karte – kein Abo.">
 <meta name="theme-color" content="#4F46E5">
 <link rel="icon" href="assets/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png">
@@ -18,6 +18,7 @@
 
 <div class="cursor-glow" aria-hidden="true"></div>
 
+
 <!-- NAVIGATION -->
 <header class="nav" id="nav">
   <div class="nav-inner">
@@ -29,7 +30,7 @@
       <a href="faq.html">FAQ</a>
     </nav>
     <div class="nav-cta">
-      <a href="app.html" class="btn btn-primary btn-sm magnetic">Gratis starten</a>
+      <a href="app.html" class="btn btn-primary btn-sm">Jetzt starten</a>
       <button class="burger" id="burger" aria-label="Menü öffnen" aria-expanded="false"><span></span><span></span></button>
     </div>
   </div>
@@ -37,48 +38,81 @@
     <p class="mm-h">Produkt</p><a href="so-funktionierts.html">So funktioniert's</a><a href="funktionen.html">Funktionen</a><a href="vorlagen.html">Vorlagen</a>
     <p class="mm-h">Eltern &amp; Schulen</p><a href="eltern.html">Für Eltern</a><a href="lehrpersonen.html">Für Lehrpersonen</a>
     <p class="mm-h">Mehr</p><a href="preise.html" aria-current="page">Preise</a><a href="faq.html">FAQ</a>
-    <a href="app.html" class="btn btn-primary">Gratis starten</a>
+    <a href="app.html" class="btn btn-primary">Jetzt starten</a>
   </div>
 </header>
 
 <main id="top">
 
 <section class="page-hero">
-  <div class="page-blobs" aria-hidden="true"><span></span><span></span><span></span></div>
   <div class="wrap page-hero-inner">
     <span class="eyebrow reveal">Preise</span>
-    <h1 class="page-title reveal" data-delay="1">Gratis starten<span class="dot">.</span><br><span class="muted">Einmal zahlen, kein Abo.</span></h1>
-    <p class="page-lead reveal" data-delay="2">Probier Zusago gratis aus. Wenn du mehr brauchst, kaufst du einmal den Lehrstellen-Pass – ohne automatische Verlängerung.</p>
+    <h1 class="page-title reveal" data-delay="1">Zahl nur, was du brauchst<span class="dot">.</span><br><span class="muted">Einzeln oder im Paket.</span></h1>
+    <p class="page-lead reveal" data-delay="2">Du kaufst Bewerbungen einzeln oder günstiger im Paket und bezahlst einmal. Kein Abo, nichts verlängert sich automatisch.</p>
   </div>
 </section>
 
 
-<!-- PREISE -->
+<!-- PREISE: einzeln oder im Paket -->
 <section class="section pt0" id="preise">
   <div class="wrap">
-    <div class="prices two">
-      <article class="price reveal spot">
-        <h3>Gratis</h3>
-        <div class="amount">CHF 0</div>
-        <p class="price-sub">Zum Ausprobieren</p>
-        <ul><li>1 Lebenslauf und 1 Bewerbung</li><li>3 Vorlagen</li><li>PDF-Download</li></ul>
-        <a href="app.html" class="btn btn-ghost">Gratis starten</a>
-      </article>
-      <article class="price featured reveal" data-delay="1">
-        <span class="price-badge">Am beliebtesten</span>
-        <h3>Lehrstellen-Pass</h3>
-        <div class="amount">CHF 19.90</div>
-        <p class="price-sub">Einmalig · 6 Monate gültig</p>
-        <ul><li>Alle Vorlagen</li><li>Unbegrenzt Bewerbungen</li><li>Schnupperlehr-Anfragen</li><li>Bewerbungsdossier als ein PDF</li><li>Ton-Regler und Tracker</li></ul>
-        <a href="app.html" class="btn btn-primary magnetic">Pass holen</a>
-      </article>
+
+    <div class="pkgs reveal" id="pkgs" role="radiogroup" aria-label="Anzahl Bewerbungen wählen">
+        <button type="button" class="pkg" role="radio" aria-checked="false" data-n="1" data-total="6.90">
+          <span class="pkg-n">1 Bewerbung</span>
+          <span class="pkg-price">CHF 6.90</span>
+          <span class="pkg-per">Einzeln kaufen</span>
+        </button>
+        <button type="button" class="pkg" role="radio" aria-checked="false" data-n="3" data-total="14.90">
+          <span class="pkg-n">3 Bewerbungen</span>
+          <span class="pkg-price">CHF 14.90</span>
+          <span class="pkg-per">CHF 4.97 pro Bewerbung</span><span class="pkg-save">−28 %</span>
+        </button>
+        <button type="button" class="pkg on" role="radio" aria-checked="true" data-n="5" data-total="19.90">
+          <span class="pkg-fav">Am beliebtesten</span><span class="pkg-n">5 Bewerbungen</span>
+          <span class="pkg-price">CHF 19.90</span>
+          <span class="pkg-per">CHF 3.98 pro Bewerbung</span><span class="pkg-save">−42 %</span>
+        </button>
+        <button type="button" class="pkg" role="radio" aria-checked="false" data-n="10" data-total="29.90">
+          <span class="pkg-n">10 Bewerbungen</span>
+          <span class="pkg-price">CHF 29.90</span>
+          <span class="pkg-per">CHF 2.99 pro Bewerbung</span><span class="pkg-save">−57 %</span>
+        </button>
+    </div>
+
+    <div class="pkg-sum reveal" aria-live="polite">
+      <div><span class="pkg-sum-k">Deine Auswahl</span><b id="pkgSumTitle">5 Bewerbungen für CHF 19.90</b><span id="pkgSumSave" class="pkg-sum-save">Du sparst CHF 14.60 gegenüber dem Einzelkauf.</span></div>
+      <a href="app.html?pack=5" class="btn btn-primary" id="pkgGo">Weiter zur Zahlung <span class="arrow" aria-hidden="true">→</span></a>
+    </div>
+    <p class="pkg-note reveal">Bezahlt wird vor dem Start, sicher über Stripe: mit TWINT, Karte, Apple Pay oder Google Pay. Deine Eltern können auch per Link bezahlen. Ungenutzte Bewerbungen bleiben 12 Monate gültig.</p>
+
+    <div class="pkg-incl reveal">
+      <h2 class="pkg-incl-t">In jeder Bewerbung drin<span class="dot">.</span></h2>
+      <ul>
+        <li><span class="tick" aria-hidden="true">✓</span>Lebenslauf und Bewerbungsbrief für eine Lehrstelle</li>
+        <li><span class="tick" aria-hidden="true">✓</span>Alle 12 Vorlagen, als passendes Set</li>
+        <li><span class="tick" aria-hidden="true">✓</span>KI passt alles an das Inserat an</li>
+        <li><span class="tick" aria-hidden="true">✓</span>Ton-Regler, «Kürzer machen» und «Neu formulieren»</li>
+        <li><span class="tick" aria-hidden="true">✓</span>Beliebig oft ändern und neu herunterladen</li>
+        <li><span class="tick" aria-hidden="true">✓</span>Auch für Anfragen zur Schnupperlehre</li>
+      </ul>
     </div>
   </div>
 </section>
 
 
-<div class="hatch" aria-hidden="true"></div>
-
+<!-- FRAGEN ZU DEN PREISEN -->
+<section class="section pt0" id="preis-fragen">
+  <div class="wrap faq-wrap">
+    <div class="sec-head reveal"><h2>Fragen zu den Preisen<span class="dot">.</span></h2></div>
+    <div class="faq">
+      <details class="reveal"><summary>Was zählt als eine Bewerbung?</summary><div class="faq-a"><p>Eine Bewerbung ist ein Lebenslauf plus Brief für eine bestimmte Lehrstelle oder Schnupperlehre. Für jede neue Stelle brauchst du eine neue Bewerbung.</p></div></details>
+      <details class="reveal"><summary>Kann ich nach dem Kauf noch etwas ändern?</summary><div class="faq-a"><p>Ja. Du kannst die Texte und die Vorlage so oft ändern und neu herunterladen, wie du willst. Das kostet nichts extra.</p></div></details>
+      <details class="reveal"><summary>Gibt es ein Abo?</summary><div class="faq-a"><p>Nein. Du zahlst nur für die Bewerbungen, die du kaufst. Nichts verlängert sich automatisch.</p></div></details>
+      <details class="reveal"><summary>Lohnt sich ein Paket?</summary><div class="faq-a"><p>Die meisten bewerben sich bei mehreren Betrieben. Mit 5 Bewerbungen kostet eine nur noch CHF 3.98 statt CHF 6.90.</p></div></details>
+    </div>
+  </div>
+</section>
 
 <!-- FÜR ELTERN -->
 <section class="section" id="sicher">
@@ -88,17 +122,17 @@
       <h2>Sicher und fair<span class="dot">.</span><br><span class="muted">Ohne Abo-Falle.</span></h2>
     </div>
     <div class="cards3">
-      <article class="info-card reveal spot">
+      <article class="info-card reveal">
         <div class="ico"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.8-7 9-4-1.2-7-4.5-7-9V6l7-3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></div>
         <h3>Datenschutz zuerst</h3>
         <p>Keine Werbung, kein Verkauf von Daten. Deine Angaben bleiben im Browser und lassen sich mit einem Klick löschen.</p>
       </article>
-      <article class="info-card reveal spot" data-delay="1">
+      <article class="info-card reveal" data-delay="1">
         <div class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 10h18" stroke="currentColor" stroke-width="2"/></svg></div>
-        <h3>Einmal zahlen, kein Abo</h3>
-        <p>Gratis starten. Der Lehrstellen-Pass kostet einmalig und verlängert sich nie automatisch. Bezahlen mit TWINT.</p>
+        <h3>Kein Abo</h3>
+        <p>Einzeln oder im Paket, einmal bezahlt. Nichts verlängert sich automatisch. Bezahlen mit TWINT, auch per Link vom Handy deines Kindes.</p>
       </article>
-      <article class="info-card reveal spot" data-delay="2">
+      <article class="info-card reveal" data-delay="2">
         <div class="ico"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <h3>Ehrliche Texte</h3>
         <p>Die KI schreibt nur mit deinen Angaben und erfindet nichts dazu. Jeder Satz lässt sich ändern.</p>
@@ -112,8 +146,8 @@
   <canvas class="rays" id="raysCanvas" aria-hidden="true"></canvas>
   <div class="wrap final-inner reveal">
     <h2>Link einfügen.<br>Fragen beantworten.<br><span class="hl">Bewerbung abschicken.</span></h2>
-    <p>Gratis starten, ohne Anmeldung.</p>
-    <a href="app.html" class="btn btn-light magnetic">Los geht's <span class="arrow" aria-hidden="true">→</span></a>
+    <p>Ab CHF 2.99 pro Bewerbung. Kein Abo, kein Konto.</p>
+    <a href="app.html" class="btn btn-light">Los geht's <span class="arrow" aria-hidden="true">→</span></a>
   </div>
 </section>
 

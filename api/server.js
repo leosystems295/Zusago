@@ -3,11 +3,13 @@
    Läuft als Render "Web Service" (Node 20+), ohne zusätzliche Pakete.
 
    Umgebungsvariablen (in Render unter "Environment" eintragen):
-     ANTHROPIC_API_KEY   dein Schlüssel von console.anthropic.com   (Pflicht)
+     OPENAI_API_KEY      dein Schlüssel von platform.openai.com     (Pflicht für ChatGPT)
+                         – oder statt dessen ANTHROPIC_API_KEY für Claude.
+                         Ist OPENAI_API_KEY gesetzt, wird ChatGPT verwendet.
      ALLOWED_ORIGINS     erlaubte Websites, mit Komma getrennt
                          z.B. https://zusago.onrender.com,https://zusago.ch,https://www.zusago.ch
-     MODEL               Modell zum Schreiben   (Standard: claude-sonnet-5-5)
-     MODEL_FAST          Modell zum Auslesen    (Standard: claude-haiku-5-5)
+     MODEL               Modell zum Schreiben   (Standard ChatGPT: gpt-6-sol,  Claude: claude-sonnet-5-5)
+     MODEL_FAST          Modell zum Auslesen    (Standard ChatGPT: gpt-6-luna, Claude: claude-haiku-5-5)
      MOCK=1              Test-Modus ohne KI (liefert Beispieltexte)
    ========================================================= */
 const http = require("node:http");
@@ -15,9 +17,12 @@ const dns = require("node:dns").promises;
 const net = require("node:net");
 
 const PORT = process.env.PORT || 8787;
-const KEY = process.env.ANTHROPIC_API_KEY || "";
-const MODEL = process.env.MODEL || "claude-sonnet-5-5";
-const MODEL_FAST = process.env.MODEL_FAST || "claude-haiku-5-5";
+const OPENAI_KEY = process.env.OPENAI_API_KEY || "";
+const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY || "";
+const PROVIDER = OPENAI_KEY ? "openai" : "anthropic";
+const KEY = OPENAI_KEY || ANTHROPIC_KEY;
+const MODEL = process.env.MODEL || (PROVIDER === "openai" ? "gpt-6-sol" : "claude-sonnet-5-5");
+const MODEL_FAST = process.env.MODEL_FAST || (PROVIDER === "openai" ? "gpt-6-luna" : "claude-haiku-5-5");
 const MOCK = process.env.MOCK === "1";
 const ORIGINS = (process.env.ALLOWED_ORIGINS ||
   "https://zusago.onrender.com,https://zusago.ch,https://www.zusago.ch,http://localhost:8080,http://127.0.0.1:8080")
@@ -110,12 +115,39 @@ function htmlToText(html) {
   return (ld ? "STRUKTURIERTE DATEN:\n" + ld + "\n\nSEITENTEXT:\n" : "") + text.slice(0, 12_000);
 }
 
-/* ---------- Claude API ---------- */
-async function claude({ model, system, user, tool, maxTokens = 2000 }) {
+/* ---------- KI aufrufen (ChatGPT oder Claude) ---------- */
+async function claude(opts) {
   if (!KEY) throw new Error("no_key");
+  return PROVIDER === "openai" ? callOpenAI(opts) : callAnthropic(opts);
+}
+
+/* ChatGPT über die OpenAI Responses API, mit erzwungenem Funktionsaufruf */
+async function callOpenAI({ model, system, user, tool, maxTokens = 2000 }) {
+  const r = await fetch("https://api.openai.com/v1/responses", {
+    method: "POST", signal: AbortSignal.timeout(80_000),
+    headers: { "Authorization": "Bearer " + OPENAI_KEY, "content-type": "application/json" },
+    body: JSON.stringify({
+      model, instructions: system, input: user,
+      // Platz für internes Nachdenken der neueren Modelle plus die eigentliche Antwort
+      max_output_tokens: Math.max(4000, maxTokens * 3),
+      tools: [{ type: "function", name: tool.name, description: tool.description, parameters: tool.input_schema }],
+      tool_choice: { type: "function", name: tool.name },
+      store: false
+    })
+  });
+  if (!r.ok) { console.error("OpenAI API", r.status, (await r.text()).slice(0, 500)); throw new Error("ai_failed"); }
+  const data = await r.json();
+  const call = (data.output || []).find(o => o.type === "function_call" && o.name === tool.name);
+  if (!call) { console.error("OpenAI: kein Funktionsaufruf", data.status, JSON.stringify(data.incomplete_details || {})); throw new Error("ai_failed"); }
+  try { return JSON.parse(call.arguments || "{}"); }
+  catch { console.error("OpenAI: Antwort ist kein gültiges JSON"); throw new Error("ai_failed"); }
+}
+
+/* Claude über die Anthropic Messages API */
+async function callAnthropic({ model, system, user, tool, maxTokens = 2000 }) {
   const r = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST", signal: AbortSignal.timeout(60_000),
-    headers: { "x-api-key": KEY, "anthropic-version": "2023-06-01", "content-type": "application/json" },
+    headers: { "x-api-key": ANTHROPIC_KEY, "anthropic-version": "2023-06-01", "content-type": "application/json" },
     body: JSON.stringify({
       model, max_tokens: maxTokens, system,
       tools: [tool], tool_choice: { type: "tool", name: tool.name },
@@ -255,7 +287,7 @@ http.createServer(async (req, res) => {
     res.writeHead(ok ? 204 : 403, ok ? { "Access-Control-Allow-Origin": origin, "Access-Control-Allow-Methods": "POST, GET, OPTIONS", "Access-Control-Allow-Headers": "Content-Type", "Access-Control-Max-Age": "86400", "Vary": "Origin" } : {});
     return res.end();
   }
-  if (req.method === "GET" && (path === "/" || path === "/health")) return send(res, 200, { ok: true, ki: MOCK ? "test" : (KEY ? "bereit" : "kein Schlüssel") }, origin);
+  if (req.method === "GET" && (path === "/" || path === "/health")) return send(res, 200, { ok: true, ki: MOCK ? "test" : (KEY ? "bereit" : "kein Schlüssel"), anbieter: PROVIDER === "openai" ? "ChatGPT" : "Claude", modell: MODEL }, origin);
   const route = ROUTES[path];
   if (!route || req.method !== "POST") return send(res, 404, { error: "Nicht gefunden." }, origin);
   if (origin && !ORIGINS.includes(origin) && !ORIGINS.includes("*")) return send(res, 403, { error: "Nicht erlaubt." }, origin);
@@ -268,8 +300,8 @@ http.createServer(async (req, res) => {
   } catch (e) {
     if (e instanceof UserError) return send(res, 400, { error: e.message }, origin);
     if (e.message === "too_large") return send(res, 413, { error: "Die Anfrage ist zu gross." }, origin);
-    if (e.message === "no_key") { console.error("ANTHROPIC_API_KEY fehlt"); return send(res, 503, { error: "Die KI ist noch nicht eingerichtet." }, origin); }
+    if (e.message === "no_key") { console.error("OPENAI_API_KEY (oder ANTHROPIC_API_KEY) fehlt"); return send(res, 503, { error: "Die KI ist noch nicht eingerichtet." }, origin); }
     console.error(e);
     send(res, 502, { error: "Die KI hat gerade nicht geantwortet. Versuch es gleich nochmals." }, origin);
   }
-}).listen(PORT, () => console.log(`Zusago-KI läuft auf Port ${PORT}${MOCK ? " (Test-Modus)" : ""}`));
+}).listen(PORT, () => console.log(`Zusago-KI läuft auf Port ${PORT}${MOCK ? " (Test-Modus)" : ` mit ${PROVIDER === "openai" ? "ChatGPT" : "Claude"} (${MODEL})${KEY ? "" : " – ACHTUNG: kein API-Schlüssel gesetzt"}`}`));

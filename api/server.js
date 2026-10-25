@@ -271,7 +271,7 @@ const TOOL_BEWERBUNG = {
   input_schema: { type: "object", properties: {
     kurzprofil: { type: "string", description: "1 Satz (max. 22 Wörter) für oben im Lebenslauf, in der Ich-Form" },
     staerken: { type: "array", items: { type: "string" }, description: "3 bis 5 Stärken aus dem Profil, die besten für diesen Beruf zuerst" },
-    erfahrungen: { type: "array", items: { type: "object", properties: { nr: { type: "integer" }, beschreibung: { type: "string", description: "max. 14 Wörter, was gemacht/gelernt" } }, required: ["nr", "beschreibung"] } },
+    erfahrungen: { type: "array", items: { type: "object", properties: { nr: { type: "integer" }, beschreibung: { type: "string", description: "max. 14 Wörter, was gemacht/gelernt. Nur aus den Angaben im Profil ableiten. Wenn das Profil dazu nichts hergibt: leerer Text. Nie Hinweise wie «keine Angaben» schreiben." } }, required: ["nr", "beschreibung"] } },
     hobbys: { type: "string", description: "Hobbys als kurze Zeile, z.B. 'Volleyball im Verein, PC zusammenbauen'" },
     brief_betreff: { type: "string", description: "z.B. 'Bewerbung als Informatikerin EFZ'" },
     brief_absaetze: { type: "array", items: { type: "string" }, description: "3 oder 4 Absätze ohne Anrede und ohne Grussformel, insgesamt 120 bis 200 Wörter" }
@@ -356,7 +356,7 @@ async function writeApplication(profile, job, tone) {
   return claude({
     model: MODEL, maxTokens: 1800, tool: TOOL_BEWERBUNG,
     system: STYLE + "\n" + TONE[tone],
-    user: `${art}\nDie Erfahrungen sind nummeriert (nr ab 1); gib pro Erfahrung eine kurze Beschreibung zurück.\n\nSTELLE:\n${JSON.stringify(job, null, 1)}\n\nPROFIL:\n${JSON.stringify(profile, null, 1)}`
+    user: `${art}\nDie Erfahrungen sind nummeriert (nr ab 1); gib pro Erfahrung eine kurze Beschreibung zurück, wie sie im Lebenslauf steht. Weisst du zu einer Erfahrung nichts, gib einen leeren Text zurück, nie einen Hinweis auf fehlende Angaben.\n\nSTELLE:\n${JSON.stringify(job, null, 1)}\n\nPROFIL:\n${JSON.stringify(profile, null, 1)}`
   });
 }
 async function routeRewrite(body) {

@@ -1,0 +1,121 @@
+/* =========================================================
+   Zusago – Dokumente (Lebenslauf und Bewerbungsbrief, A4)
+   Wird von der App (Vorschau und PDF) und von der Website
+   (Vorlagen-Vorschau) gemeinsam verwendet.
+   ========================================================= */
+.page{width:210mm;min-height:297mm;background:#fff;color:#1D2433;font-family:'Poppins',Arial,sans-serif;font-size:9.6pt;line-height:1.5;position:relative;overflow:hidden;text-align:left}
+.page h1,.page h2,.page h3{letter-spacing:-.01em}
+:where(.page) p{margin:0}
+.page h1:focus{outline:none}
+
+/* ---------- Lebenslauf – gemeinsame Teile ---------- */
+.cv-s{margin-bottom:7mm}
+.cv-s h3{font-size:8.4pt;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin-bottom:2.6mm;padding-bottom:1.4mm;border-bottom:.4mm solid color-mix(in srgb,var(--acc) 25%,transparent);line-height:1.3}
+.kv{display:grid;grid-template-columns:23mm 1fr;gap:3mm;margin-bottom:1.4mm}
+.kv span{color:#6B7390}
+.kv b{font-weight:500;overflow-wrap:anywhere}
+.tl{display:grid;grid-template-columns:28mm 1fr;gap:3mm;margin-bottom:3mm}
+.tl-z{color:#6B7390;font-size:8.8pt}
+.tl b{display:block;font-weight:500}
+.tl span:not(.tl-z){display:block;color:#4A5578;font-size:9pt}
+.cv-tags{list-style:none;display:flex;flex-wrap:wrap;gap:1.6mm;padding:0;margin:0}
+.cv-tags li{font-size:8.6pt;padding:.8mm 2.6mm;border-radius:99mm;background:color-mix(in srgb,var(--acc) 10%,#fff);color:var(--acc)}
+.ref{margin-bottom:2.4mm}.ref b{display:block;font-weight:500}.ref span{color:#6B7390;font-size:9pt}
+.cv-role{font-size:10.5pt;margin-top:1mm}
+.cv-kp{font-size:10pt;color:#3A4466;margin:0 0 8mm;padding:3.4mm 4.4mm;border-left:1mm solid var(--acc);background:color-mix(in srgb,var(--acc) 6%,#fff)}
+.cv-foto{width:32mm;height:42mm;object-fit:cover;border-radius:3mm;display:block}
+
+/* ---------- Layout «oben»: farbiges Band mit Name ---------- */
+.cv.top .cv-band{display:flex;justify-content:space-between;align-items:center;gap:8mm;padding:14mm 16mm 12mm;background:var(--acc);color:#fff}
+.cv.top .cv-band h1{font-size:26pt;line-height:1.05;font-weight:700;color:inherit}
+.cv.top .cv-band .cv-role{color:rgba(255,255,255,.85)}
+.cv.top .cv-band .cv-foto{border:1.2mm solid rgba(255,255,255,.9)}
+.cv.top .cv-body{padding:11mm 16mm 14mm}
+.cv-cols2{display:grid;grid-template-columns:72mm 1fr;gap:10mm}
+
+/* ---------- Layout «Seite»: farbige Spalte links ---------- */
+.cv.side{display:grid;grid-template-columns:66mm 1fr}
+.cv-side{background:var(--acc);color:#fff;padding:14mm 8mm 12mm;min-height:297mm}
+.cv-side .cv-foto{width:44mm;height:58mm;margin:0 auto 9mm;border:1mm solid rgba(255,255,255,.85)}
+.cv-side .cv-s h3{color:#fff;border-color:rgba(255,255,255,.3)}
+.cv-side .kv{grid-template-columns:1fr;gap:0;margin-bottom:2.4mm}
+.cv-side .kv span{color:rgba(255,255,255,.65);font-size:8.2pt}
+.cv-side .cv-tags li{background:rgba(255,255,255,.14);color:#fff}
+.cv-main{padding:16mm 14mm 14mm 11mm}
+.cv-h h1{font-size:25pt;line-height:1.05;font-weight:700;color:#14213D}
+.cv-h .cv-role{color:var(--acc);font-weight:500;margin-bottom:7mm}
+
+/* ---------- Varianten (Klassen m-…) ---------- */
+/* m-line: weisses Band mit farbiger Linie, Punkt nach dem Namen */
+.cv.top.m-line .cv-band{background:#fff;color:#14213D;border-bottom:1.6mm solid var(--acc);padding-bottom:9mm}
+.cv.top.m-line .cv-band .cv-role{color:var(--acc)}
+.cv.top.m-line .cv-band .cv-foto{border-color:#fff}
+.m-dot .cv-band h1::after,.m-dot .cv-h h1::after{content:".";color:var(--acc2,var(--acc))}
+/* m-light: helle, getönte Fläche statt kräftiger Farbe */
+.cv.top.m-light .cv-band{background:color-mix(in srgb,var(--acc) 11%,#fff);color:#14213D}
+.cv.top.m-light .cv-band .cv-role{color:var(--acc);font-weight:500}
+.cv.top.m-light .cv-band .cv-foto{border-color:#fff}
+.cv.side.m-light .cv-side{background:color-mix(in srgb,var(--acc) 11%,#fff);color:#14213D}
+.cv.side.m-light .cv-side .cv-s h3{color:var(--acc);border-color:color-mix(in srgb,var(--acc) 30%,transparent)}
+.cv.side.m-light .cv-side .kv span{color:#5A6A70}
+.cv.side.m-light .cv-side .cv-tags li{background:#fff;color:var(--acc)}
+.cv.side.m-light .cv-side .cv-foto{border-color:#fff}
+/* m-dark: dunkles Band oder dunkle Spalte, Akzent nur als Linie und Titel */
+.cv.top.m-dark .cv-band{background:#14213D;border-bottom:1.6mm solid var(--acc2,var(--acc))}
+.cv.top.m-dark .cv-band .cv-role{color:var(--acc2,var(--acc))}
+.cv.side.m-dark .cv-side{background:#14213D}
+.cv.side.m-dark .cv-side .cv-s h3{color:var(--acc2,#fff);border-color:rgba(255,255,255,.18)}
+.cv.side.m-dark .cv-main .cv-s h3{color:var(--acc)}
+/* m-mono: Titel und Daten in Schreibmaschinen-Schrift (IT) */
+.m-mono .cv-s h3,.m-mono .tl-z,.m-mono .cv-role,.m-mono .lt-subj,.m-mono .lt-date{font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;letter-spacing:0}
+.m-mono .cv-s h3::before{content:"// ";opacity:.6}
+/* m-caps: grosser Name in Grossbuchstaben */
+.m-caps .cv-band h1,.m-caps .cv-h h1,.m-caps .lt-sender b{text-transform:uppercase;letter-spacing:.03em}
+.cv.top.m-caps .cv-band h1{font-size:30pt}
+/* m-serif: klassische Serifenschrift für Titel (Büro) */
+.m-serif .cv-band h1,.m-serif .cv-h h1,.m-serif .cv-s h3,.m-serif .lt-sender b,.m-serif .lt-subj{font-family:Georgia,'Times New Roman',serif;letter-spacing:0}
+.m-serif .cv-s h3{text-transform:none;font-size:11pt;font-weight:700;letter-spacing:0}
+/* m-round: weiche Formen (Gesundheit) */
+.m-round .cv-foto{border-radius:50%;width:38mm;height:38mm}
+.cv.side.m-round .cv-side .cv-foto{width:44mm;height:44mm}
+.m-round .cv-tags li{border-radius:99mm}
+.cv.side.m-round .cv-side{border-radius:0 9mm 9mm 0}
+/* m-bar: Titel mit Farbbalken statt Linie (Handwerk) */
+.m-bar .cv-s h3{border:0;padding:0 0 0 3mm;border-left:1.4mm solid var(--acc2,var(--acc))}
+.m-bar .cv-side .cv-s h3{border-left-color:var(--acc2,#fff)}
+/* m-stripe: Warnstreifen unter dem Band (Handwerk) */
+.cv.top.m-stripe .cv-band{border-bottom:0;position:relative;margin-bottom:3mm}
+.cv.top.m-stripe .cv-band::after{content:"";position:absolute;left:0;right:0;bottom:-3mm;height:3mm;background:repeating-linear-gradient(135deg,#14213D 0 5mm,var(--acc2,#FBBF24) 5mm 10mm)}
+
+/* Werkstatt: Berufsbezeichnung in Orange */
+.cv.tpl-werkstatt .cv-h .cv-role{color:#C2410C}
+
+/* ---------- Bewerbungsbrief ---------- */
+.letter{padding:16mm 20mm 16mm 24mm;font-size:10.4pt;line-height:1.55}
+.letter::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4mm;background:var(--acc)}
+.letter.top::before{width:0}
+.letter.top .lt-sender{border-bottom:.6mm solid var(--acc);padding-bottom:4mm}
+.letter.m-dark::before{background:#14213D}
+.letter.m-dark .lt-sender b{color:#14213D}
+.letter.top.m-dark .lt-sender{border-bottom:1.2mm solid var(--acc2,var(--acc))}
+.letter.m-light::before{background:color-mix(in srgb,var(--acc) 35%,#fff)}
+.letter.m-stripe::before{width:0}
+.letter.m-stripe .lt-sender{border:0;padding-bottom:6mm;position:relative}
+.letter.m-stripe .lt-sender::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2.4mm;background:repeating-linear-gradient(135deg,#14213D 0 4mm,var(--acc2,#FBBF24) 4mm 8mm)}
+.letter.m-round::before{border-radius:0 3mm 3mm 0}
+.lt-sender b{display:block;font-size:14pt;font-weight:700;color:var(--acc);letter-spacing:-.01em}
+.m-dot .lt-sender b::after{content:".";color:var(--acc2,var(--acc))}
+.lt-sender span{display:block;font-size:9pt;color:#4A5578;line-height:1.5;margin-top:1mm}
+.lt-recip{margin:16mm 0 12mm 92mm;min-height:22mm}
+.lt-date{text-align:right;margin-bottom:9mm}
+.lt-subj{font-size:11.5pt;font-weight:700;margin:0 0 7mm;display:block;line-height:1.35}
+.lt-anrede{margin-bottom:4mm}
+.lt-p{margin:0 0 3.6mm;display:block}
+.lt-gruss{margin-top:7mm}
+.lt-name{margin-top:15mm;font-weight:500}
+.lt-beil{margin-top:9mm;font-size:9pt;color:#4A5578}
+.lt-beil b{color:#1D2433;font-weight:500}
+
+/* ---------- Mini-Vorschau: eine echte A4-Seite, verkleinert ---------- */
+.mini{position:relative;width:100%;aspect-ratio:210/297;overflow:hidden;background:#fff;border-radius:inherit}
+.mini>.page{position:absolute;left:0;top:0;transform-origin:0 0;transform:scale(var(--s,.25));pointer-events:none;user-select:none;height:297mm}

@@ -248,34 +248,56 @@ if (finePointer && !reduce) {
   obs.observe(el);
 })();
 
-/* ---------- Vorlagen: Galerie mit Filter und Flip ---------- */
+/* ---------- Vorlagen: Galerie mit echter Vorschau ----------
+   Braucht vorlagen.js und dokumente.css.
+   Vorderseite = Lebenslauf, Rückseite = Brief (Hover).
+   Klick oder Enter öffnet die grosse Vorschau als Set.          */
 (() => {
-  const grid = $("#tplGrid"); if (!grid) return;
-  const T = [
-    ["Werkstatt", "handwerk", "#14213D", false, true], ["Klar", "buero", "#4F46E5", false, true],
-    ["Fürsorge", "gesundheit", "#22C59A", true, true], ["Code", "it", "#4F46E5", true, false],
-    ["Funke", "handwerk", "#FF7A59", true, false], ["Bühne", "gestaltung", "#FF7A59", false, false],
-    ["Laden", "buero", "#14213D", true, false], ["Terminal", "it", "#14213D", false, false],
-    ["Pflege", "gesundheit", "#9C97F3", false, false], ["Skizze", "gestaltung", "#9C97F3", true, false],
-    ["Präzision", "handwerk", "#4F46E5", false, false], ["Netzwerk", "it", "#22C59A", false, false]
-  ];
-  const label = { handwerk: "Handwerk und Technik", buero: "Büro und Verkauf", gesundheit: "Gesundheit", it: "IT", gestaltung: "Gestaltung" };
-  const lines = n => Array.from({ length: n }, (_, k) => `<div class="doc-line ${["w90", "w70", "w80", "w60", "w75"][k % 5]}"></div>`).join("");
-  grid.innerHTML = T.slice(0, +grid.dataset.limit || T.length).map(([name, f, col, side, free]) => `
-    <div class="tpl ${side ? "side" : ""}" data-f="${f}" style="--c:${col}" tabindex="0" role="button" aria-label="Vorlage ${name}, ${label[f]}, Brief anzeigen">
+  const grid = $("#tplGrid"); if (!grid || !window.ZV) return;
+  const { TEMPLATES, FIELDS, cv, letter, sample, mini, fit, esc } = window.ZV;
+  const list = TEMPLATES.slice(0, +grid.dataset.limit || TEMPLATES.length);
+  const tag = t => `<span class="tpl-tag ${t.free ? "tag-free" : "tag-pass"}">${t.free ? "Gratis" : "Im Pass"}</span>`;
+  grid.innerHTML = list.map(t => {
+    const st = sample(t.field);
+    return `<div class="tpl" data-f="${t.field}" data-id="${t.id}" tabindex="0" role="button" aria-label="Vorlage ${esc(t.name)}, ${FIELDS[t.field]}, gross ansehen">
       <div class="tpl-flip">
-        <div class="tpl-face tpl-front"><div class="tpl-head"></div><div class="doc-line w50 strong"></div>${lines(3)}<div class="gap"></div>${lines(4)}<div class="gap"></div>${lines(3)}
-          <span class="tpl-tag ${free ? "tag-free" : "tag-pass"}">${free ? "Gratis" : "Im Pass"}</span></div>
-        <div class="tpl-face tpl-back"><div class="doc-line w40 strong" style="background:${col}"></div>${lines(1)}<div class="gap"></div><div class="doc-line w55 strong"></div>${lines(4)}<div class="gap"></div>${lines(4)}<div class="gap"></div><div class="doc-line w30"></div>
-          <span class="tpl-tag ${free ? "tag-free" : "tag-pass"}">Brief</span></div>
+        <div class="tpl-face tpl-front">${mini(cv(st, t))}${tag(t)}</div>
+        <div class="tpl-face tpl-back">${mini(letter(st, t))}<span class="tpl-tag tag-pass">Brief</span></div>
       </div>
-      <div class="tpl-meta"><div class="tpl-name">${name}</div><div class="tpl-field">${label[f]}</div></div>
-    </div>`).join("");
+      <div class="tpl-meta"><div class="tpl-name">${esc(t.name)}</div><div class="tpl-field">${FIELDS[t.field]}</div></div>
+    </div>`;
+  }).join("");
+  fit(grid);
+
+  /* Grosse Vorschau */
+  const dlg = document.createElement("dialog");
+  dlg.className = "tpl-dialog";
+  dlg.setAttribute("aria-labelledby", "tplDlgTitle");
+  document.body.appendChild(dlg);
+  const open = id => {
+    const t = TEMPLATES.find(x => x.id === id); if (!t) return;
+    const st = sample(t.field);
+    dlg.innerHTML = `<div class="tpl-dlg-head">
+        <div><h2 id="tplDlgTitle">${esc(t.name)}<span class="dot">.</span></h2><p>${FIELDS[t.field]} · ${t.free ? "Gratis" : "Im Lehrstellen-Pass"}</p></div>
+        <button type="button" class="tpl-dlg-x" aria-label="Schliessen"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      </div>
+      <div class="tpl-dlg-pages">
+        <figure>${mini(cv(st, t))}<figcaption>Lebenslauf</figcaption></figure>
+        <figure>${mini(letter(st, t))}<figcaption>Bewerbungsbrief</figcaption></figure>
+      </div>
+      <div class="tpl-dlg-foot">
+        <p>Beispiel mit erfundener Person. Mit deinen Angaben passt die KI alles an deine Lehrstelle an.</p>
+        <a href="app.html?tpl=${t.id}" class="btn btn-primary">Mit dieser Vorlage starten <span class="arrow" aria-hidden="true">→</span></a>
+      </div>`;
+    $(".tpl-dlg-x", dlg).addEventListener("click", () => dlg.close());
+    dlg.showModal(); fit(dlg);
+  };
+  dlg.addEventListener("click", e => { if (e.target === dlg) dlg.close(); });
   $$(".tpl", grid).forEach(t => {
-    const flip = () => t.classList.toggle("flipped");
-    t.addEventListener("click", () => { if (!finePointer) flip(); });
-    t.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); flip(); } });
+    t.addEventListener("click", () => open(t.dataset.id));
+    t.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(t.dataset.id); } });
   });
+
   $$(".filter").forEach(btn => btn.addEventListener("click", () => {
     $$(".filter").forEach(b => b.classList.toggle("on", b === btn));
     const f = btn.dataset.f;

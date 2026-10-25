@@ -113,15 +113,7 @@ body.ws-mode .app-main{max-width:1240px}
 .tpl-opt,.tpl-m{display:flex;flex-direction:column;gap:8px;align-items:center;font-size:14px;font-weight:500;padding:10px;border-radius:16px;border:2px solid transparent;transition:all .25s var(--ease)}
 .tpl-opt:hover,.tpl-m:hover{background:#fff}
 .tpl-opt.on,.tpl-m.on{border-color:var(--indigo);background:#fff;box-shadow:0 14px 30px -22px rgba(79,70,229,.8)}
-.thumb{position:relative;width:100%;aspect-ratio:210/297;background:#fff;border-radius:6px;box-shadow:0 0 0 1px var(--line),0 10px 20px -16px rgba(20,33,61,.6);overflow:hidden;padding:30% 10% 0}
-.thumb .th-head{position:absolute;left:0;right:0;top:0;height:20%;background:var(--acc)}
-.thumb .th-side{display:none}
-.thumb.side{padding:12% 8% 0 42%}
-.thumb.side .th-head{display:none}
-.thumb.side .th-side{display:block;position:absolute;left:0;top:0;bottom:0;width:34%;background:var(--acc)}
-.thumb.tpl-fuersorge .th-side{background:#CDEDE1}
-.thumb b{display:block;height:4px;border-radius:2px;background:var(--line);margin-bottom:6%}
-.thumb b.s{width:60%;background:var(--acc);opacity:.6}
+.thumb{width:100%;border-radius:6px;overflow:hidden;box-shadow:0 0 0 1px var(--line),0 10px 20px -16px rgba(20,33,61,.6)}
 .tone-card .seg{margin:0}
 
 /* Ladefenster */
@@ -168,78 +160,7 @@ body.ws-mode .app-main{max-width:1240px}
 .toast{position:fixed;left:50%;bottom:96px;z-index:200;transform:translate(-50%,20px);opacity:0;background:var(--ink);color:#fff;font-size:14px;padding:12px 18px;border-radius:12px;transition:all .35s var(--ease);pointer-events:none;max-width:calc(100% - 40px);text-align:center}
 .toast.on{opacity:1;transform:translate(-50%,0)}
 
-/* =========================================================
-   A4-Seiten (Vorschau und PDF)
-   ========================================================= */
-.page{width:210mm;min-height:297mm;background:#fff;color:#1D2433;font-family:'Poppins',Arial,sans-serif;font-size:9.6pt;line-height:1.5;position:relative;overflow:hidden}
-.page h1,.page h2,.page h3{letter-spacing:-.01em}
-:where(.page) p{margin:0}
-
-/* Lebenslauf – gemeinsame Teile */
-.cv-s{margin-bottom:7mm}
-.cv-s h3{font-size:8.4pt;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin-bottom:2.6mm;padding-bottom:1.4mm;border-bottom:.4mm solid color-mix(in srgb,var(--acc) 25%,transparent)}
-.kv{display:grid;grid-template-columns:23mm 1fr;gap:3mm;margin-bottom:1.4mm}
-.kv span{color:#6B7390}
-.kv b{font-weight:500;overflow-wrap:anywhere}
-.tl{display:grid;grid-template-columns:28mm 1fr;gap:3mm;margin-bottom:3mm}
-.tl-z{color:#6B7390;font-size:8.8pt}
-.tl b{display:block;font-weight:500}
-.tl span:not(.tl-z){display:block;color:#4A5578;font-size:9pt}
-.cv-tags{list-style:none;display:flex;flex-wrap:wrap;gap:1.6mm;padding:0;margin:0}
-.cv-tags li{font-size:8.6pt;padding:.8mm 2.6mm;border-radius:99mm;background:color-mix(in srgb,var(--acc) 10%,#fff);color:var(--acc)}
-.ref{margin-bottom:2.4mm}.ref b{display:block;font-weight:500}.ref span{color:#6B7390;font-size:9pt}
-.cv-role{font-size:10.5pt;margin-top:1mm}
-.cv-kp{font-size:10pt;color:#3A4466;margin:0 0 8mm;padding:3.4mm 4.4mm;border-left:1mm solid var(--acc);background:color-mix(in srgb,var(--acc) 6%,#fff)}
-.cv-foto{width:32mm;height:42mm;object-fit:cover;border-radius:3mm}
-
-/* Layout «oben» (Klar, Funke) */
-.cv.top .cv-band{display:flex;justify-content:space-between;align-items:center;gap:8mm;padding:14mm 16mm 12mm;background:var(--acc);color:#fff}
-.cv.top .cv-band h1{font-size:26pt;line-height:1.05;font-weight:700}
-.cv.top .cv-band .cv-role{color:rgba(255,255,255,.85)}
-.cv.top .cv-band .cv-foto{border:1.2mm solid rgba(255,255,255,.9)}
-.cv.top .cv-body{padding:11mm 16mm 14mm}
-.cv-cols2{display:grid;grid-template-columns:72mm 1fr;gap:10mm}
-.cv.tpl-funke .cv-band{background:#fff;color:#14213D;border-bottom:1.6mm solid var(--acc);padding-bottom:9mm}
-.cv.tpl-funke .cv-band .cv-role{color:var(--acc)}
-.cv.tpl-funke .cv-band h1::after{content:".";color:var(--acc)}
-.cv.tpl-funke .cv-foto{border-color:#fff}
-
-/* Layout «Seite» (Werkstatt, Fürsorge) */
-.cv.side{display:grid;grid-template-columns:66mm 1fr}
-.cv-side{background:var(--acc);color:#fff;padding:14mm 8mm 12mm;min-height:297mm}
-.cv-side .cv-foto{width:44mm;height:58mm;display:block;margin:0 auto 9mm;border:1mm solid rgba(255,255,255,.85)}
-.cv-side .cv-s h3{color:#fff;border-color:rgba(255,255,255,.3)}
-.cv-side .kv{grid-template-columns:1fr;gap:0;margin-bottom:2.4mm}
-.cv-side .kv span{color:rgba(255,255,255,.65);font-size:8.2pt}
-.cv-side .cv-tags li{background:rgba(255,255,255,.14);color:#fff}
-.cv-main{padding:16mm 14mm 14mm 11mm}
-.cv-h h1{font-size:25pt;line-height:1.05;font-weight:700;color:#14213D}
-.cv-h .cv-role{color:var(--acc);font-weight:500;margin-bottom:7mm}
-.cv.tpl-werkstatt .cv-h .cv-role{color:#E8603C}
-.cv.tpl-werkstatt .cv-main .cv-s h3{color:#14213D}
-.cv.tpl-fuersorge .cv-side{background:#E3F5EE;color:#14213D}
-.cv.tpl-fuersorge .cv-side .cv-s h3{color:var(--acc);border-color:color-mix(in srgb,var(--acc) 30%,transparent)}
-.cv.tpl-fuersorge .cv-side .kv span{color:#5A6A70}
-.cv.tpl-fuersorge .cv-side .cv-tags li{background:#fff;color:var(--acc)}
-.cv.tpl-fuersorge .cv-side .cv-foto{border-color:#fff}
-
-/* Bewerbungsbrief */
-.letter{padding:16mm 20mm 16mm 24mm;font-size:10.4pt;line-height:1.55}
-.letter::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4mm;background:var(--acc)}
-.letter.tpl-funke::before,.letter.tpl-klar::before{width:0}
-.letter.tpl-klar .lt-sender,.letter.tpl-funke .lt-sender{border-bottom:.6mm solid var(--acc);padding-bottom:4mm}
-.lt-sender b{display:block;font-size:14pt;font-weight:700;color:var(--acc);letter-spacing:-.01em}
-.letter.tpl-werkstatt .lt-sender b{color:#14213D}
-.lt-sender span{display:block;font-size:9pt;color:#4A5578;line-height:1.5;margin-top:1mm}
-.lt-recip{margin:16mm 0 12mm 92mm;min-height:22mm}
-.lt-date{text-align:right;margin-bottom:9mm}
-.lt-subj{font-size:11.5pt;font-weight:700;margin:0 0 7mm;display:block}
-.lt-anrede{margin-bottom:4mm}
-.lt-p{margin:0 0 3.6mm;display:block}
-.lt-gruss{margin-top:7mm}
-.lt-name{margin-top:15mm;font-weight:500}
-.lt-beil{margin-top:9mm;font-size:9pt;color:#4A5578}
-.lt-beil b{color:#1D2433;font-weight:500}
+/* A4-Seiten (Lebenslauf und Brief): siehe dokumente.css */
 
 /* =========================================================
    Druck / PDF

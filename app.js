@@ -10,12 +10,7 @@ const STORE = "zusago:v1";
 const STEPS = ["Inserat", "Über dich", "Schule", "Erfahrungen", "Stärken", "Referenzen", "Vorlage", "Fertig"];
 const STRENGTHS = ["zuverlässig", "pünktlich", "genau", "geduldig", "hilfsbereit", "kreativ", "teamfähig", "selbstständig", "kommunikativ", "handwerklich geschickt", "logisch denkend", "motiviert", "belastbar", "offen", "ordentlich", "freundlich"];
 const LEVELS = ["Muttersprache", "sehr gut", "gut", "Grundkenntnisse"];
-const TEMPLATES = [
-  { id: "klar", name: "Klar", layout: "top", acc: "#4F46E5" },
-  { id: "funke", name: "Funke", layout: "top", acc: "#E8603C" },
-  { id: "werkstatt", name: "Werkstatt", layout: "side", acc: "#14213D" },
-  { id: "fuersorge", name: "Fürsorge", layout: "side", acc: "#0B7A5C" }
-];
+const TEMPLATES = window.ZV.TEMPLATES; // alle Vorlagen kommen aus vorlagen.js
 
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
@@ -244,12 +239,17 @@ $("#back").addEventListener("click", () => show(Math.max(0, S.step - 1)));
 document.addEventListener("click", e => { const g = e.target.closest("[data-goto]"); if (g && !g.disabled) show(+g.dataset.goto); });
 
 /* ---------- Vorlagen ---------- */
+// Vorschau mit den eigenen Angaben; solange noch kein Name da ist, mit Beispielperson
+function thumbState(t) {
+  return S.profile.vorname.trim() ? S : Object.assign(window.ZV.sample(t.field), { job: Object.assign({}, window.ZV.sample(t.field).job, S.job.beruf ? { beruf: S.job.beruf } : {}) });
+}
 function tplThumb(t) {
-  return `<div class="thumb ${t.layout} tpl-${t.id}" style="--acc:${t.acc}"><i class="th-head"></i><i class="th-side"></i><b></b><b></b><b class="s"></b><b></b><b class="s"></b></div>`;
+  return `<div class="thumb">${window.ZV.mini(window.ZV.cv(thumbState(t), t))}</div>`;
 }
 function renderTplPick() {
   $("#tplPick").innerHTML = TEMPLATES.map(t => `<button type="button" role="radio" aria-checked="${S.template === t.id}" class="tpl-opt ${S.template === t.id ? "on" : ""}" data-tpl="${t.id}">${tplThumb(t)}<span>${t.name}</span></button>`).join("");
   $("#tplMini").innerHTML = TEMPLATES.map(t => `<button type="button" class="tpl-m ${S.template === t.id ? "on" : ""}" data-tpl="${t.id}" aria-label="Vorlage ${t.name}" aria-pressed="${S.template === t.id}">${tplThumb(t)}<span>${t.name}</span></button>`).join("");
+  window.ZV.fit($("#tplPick")); window.ZV.fit($("#tplMini"));
 }
 document.addEventListener("click", e => {
   const b = e.target.closest("[data-tpl]"); if (!b) return;
@@ -303,77 +303,11 @@ $("#noAi").addEventListener("click", () => {
 });
 
 /* ---------- Dokumente ---------- */
-const today = () => new Date().toLocaleDateString("de-CH", { day: "numeric", month: "long", year: "numeric" });
-const city = s => String(s || "").replace(/^\s*\d{4}\s*/, "").trim();
-function anrede() {
-  const n = S.job.kontakt_name.trim();
-  if (S.job.kontakt_anrede === "Frau" && n) return `Sehr geehrte Frau ${n}`;
-  if (S.job.kontakt_anrede === "Herr" && n) return `Sehr geehrter Herr ${n}`;
-  return "Sehr geehrte Damen und Herren";
-}
+// Lebenslauf und Brief werden in vorlagen.js gebaut (gleich wie in der Vorschau auf der Website)
 const ed = (path, text, tag = "span", cls = "") => `<${tag} class="ed ${cls}" contenteditable="true" spellcheck="true" data-edit="${path}">${esc(text)}</${tag}>`;
-
-function cvHTML() {
-  const p = S.profile, a = S.ai || {}, t = TEMPLATES.find(x => x.id === S.template) || TEMPLATES[0];
-  const nonEmpty = l => l.filter(o => Object.values(o).some(v => String(v).trim()));
-  const schule = nonEmpty(p.schule), erf = nonEmpty(p.erfahrungen), spr = nonEmpty(p.sprachen), ref = nonEmpty(p.referenzen);
-  const staerken = (a.staerken && a.staerken.length ? a.staerken : p.staerken);
-  const hobbys = a.hobbys || p.hobbys.join(", ");
-  const desc = i => (a.erfahrungen || []).find(e => e.nr === i + 1);
-  const name = `${esc(p.vorname)} ${esc(p.nachname)}`;
-  const photo = p.foto ? `<img class="cv-foto" src="${p.foto}" alt="">` : "";
-  const sec = (title, inner) => inner ? `<section class="cv-s"><h3>${title}</h3>${inner}</section>` : "";
-  const tl = (rows) => rows.map(r => `<div class="tl"><span class="tl-z">${esc(r.z)}</span><div><b>${esc(r.t)}</b>${r.d ? `<span>${r.d}</span>` : ""}</div></div>`).join("");
-  const personal = [
-    ["Adresse", [p.strasse, p.plz_ort].filter(Boolean).join(", ")], ["Telefon", p.telefon], ["E-Mail", p.email],
-    ["Geburtsdatum", p.geburtsdatum], ["Nationalität", p.nationalitaet]
-  ].filter(x => x[1]).map(([k, v]) => `<div class="kv"><span>${k}</span><b>${esc(v)}</b></div>`).join("");
-  const schuleHTML = tl(schule.map(s => ({ z: s.zeit, t: s.name, d: esc(s.details) })));
-  const erfHTML = tl(erf.map((e, i) => ({ z: e.zeit, t: [e.titel, e.ort].filter(Boolean).join(", "), d: desc(i) ? ed(`ai.erfahrungen.${(a.erfahrungen || []).indexOf(desc(i))}.beschreibung`, desc(i).beschreibung) : "" })));
-  const sprHTML = spr.map(s => `<div class="kv"><span>${esc(s.sprache)}</span><b>${esc(s.niveau)}</b></div>`).join("");
-  const stHTML = staerken.length ? `<ul class="cv-tags">${staerken.map(s => `<li>${esc(s)}</li>`).join("")}</ul>` : "";
-  const refHTML = ref.map(r => `<div class="ref"><b>${esc(r.name)}</b><span>${esc([r.funktion, r.telefon].filter(Boolean).join(" · "))}</span></div>`).join("");
-  const kp = a.kurzprofil ? ed("ai.kurzprofil", a.kurzprofil, "p", "cv-kp") : "";
-  const role = `Bewerbung als ${esc(S.job.beruf)}`;
-
-  if (t.layout === "side") {
-    return `<article class="page cv side tpl-${t.id}" style="--acc:${t.acc}">
-      <aside class="cv-side">${photo}
-        ${sec("Kontakt", personal)}${sec("Sprachen", sprHTML)}${sec("Stärken", stHTML)}${hobbys ? sec("Hobbys", `<p>${esc(hobbys)}</p>`) : ""}
-      </aside>
-      <div class="cv-main">
-        <header class="cv-h"><h1>${name}</h1><p class="cv-role">${role}</p>${kp}</header>
-        ${sec("Schulbildung", schuleHTML)}${sec(S.job.art === "schnupper" ? "Erfahrungen" : "Schnupperlehren und Erfahrungen", erfHTML)}
-        ${p.computer ? sec("Computer", `<p>${esc(p.computer)}</p>`) : ""}${sec("Referenzen", refHTML)}
-      </div></article>`;
-  }
-  return `<article class="page cv top tpl-${t.id}" style="--acc:${t.acc}">
-    <header class="cv-band"><div><h1>${name}</h1><p class="cv-role">${role}</p></div>${photo}</header>
-    <div class="cv-body">${kp}
-      <div class="cv-cols2">
-        <div>${sec("Personalien", personal)}${sec("Sprachen", sprHTML)}${sec("Stärken", stHTML)}${hobbys ? sec("Hobbys", `<p>${esc(hobbys)}</p>`) : ""}</div>
-        <div>${sec("Schulbildung", schuleHTML)}${sec("Schnupperlehren und Erfahrungen", erfHTML)}${p.computer ? sec("Computer", `<p>${esc(p.computer)}</p>`) : ""}${sec("Referenzen", refHTML)}</div>
-      </div>
-    </div></article>`;
-}
-
-function letterHTML() {
-  const p = S.profile, j = S.job, a = S.ai || {}, t = TEMPLATES.find(x => x.id === S.template) || TEMPLATES[0];
-  const sender = [p.strasse, p.plz_ort, p.telefon, p.email].filter(Boolean).map(esc).join("<br>");
-  const recip = [j.firma, j.kontakt_name ? `${j.kontakt_anrede} ${j.kontakt_name}`.trim() : "", j.strasse, j.plz_ort].filter(Boolean).map(esc).join("<br>");
-  const beilagen = j.art === "schnupper" ? ["Lebenslauf"] : ["Lebenslauf", "Zeugniskopien"];
-  return `<article class="page letter tpl-${t.id} ${t.layout}" style="--acc:${t.acc}">
-    <header class="lt-sender"><b>${esc(p.vorname)} ${esc(p.nachname)}</b><span>${sender}</span></header>
-    <div class="lt-recip">${recip || "&nbsp;"}</div>
-    <p class="lt-date">${esc(city(p.plz_ort) || "Ort")}, ${today()}</p>
-    ${ed("ai.brief_betreff", a.brief_betreff || "Bewerbung als " + j.beruf, "h2", "lt-subj")}
-    <p class="lt-anrede">${esc(anrede())}</p>
-    ${(a.brief_absaetze || []).map((t, i) => ed(`ai.brief_absaetze.${i}`, t, "p", "lt-p")).join("")}
-    <p class="lt-gruss">Freundliche Grüsse</p>
-    <p class="lt-name">${esc(p.vorname)} ${esc(p.nachname)}</p>
-    <p class="lt-beil"><b>Beilagen</b><br>${beilagen.join("<br>")}</p>
-  </article>`;
-}
+const currentTpl = () => TEMPLATES.find(x => x.id === S.template) || TEMPLATES[0];
+function cvHTML() { return window.ZV.cv(S, currentTpl(), ed); }
+function letterHTML() { return window.ZV.letter(S, currentTpl(), ed); }
 
 /* ---------- Arbeitsbereich ---------- */
 function renderWorkspace() {
@@ -448,6 +382,10 @@ $("#wipe").addEventListener("click", () => {
 /* ---------- Start ---------- */
 bindFields(); bindTags(); bindRows(); renderStrengths(); renderPhoto(); renderTplPick(); renderTone(); setSrc(S.src || "link"); updateJobTitle();
 const params = new URLSearchParams(location.search);
+if (params.get("tpl") && TEMPLATES.some(t => t.id === params.get("tpl"))) {
+  S.template = params.get("tpl"); save(); renderTplPick();
+  if (!params.get("link") && !params.get("src")) history.replaceState(null, "", "app.html");
+}
 if (params.get("link")) {
   S.step = 0; setSrc("link"); $("#jobUrl").value = params.get("link");
   history.replaceState(null, "", "app.html");

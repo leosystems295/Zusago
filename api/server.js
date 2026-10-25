@@ -11,10 +11,20 @@
      MODEL               Modell zum Schreiben   (Standard ChatGPT: gpt-6-sol,  Claude: claude-sonnet-5-5)
      MODEL_FAST          Modell zum Auslesen    (Standard ChatGPT: gpt-6-luna, Claude: claude-haiku-5-5)
      MOCK=1              Test-Modus ohne KI (liefert Beispieltexte)
+
+   Bezahlung (Stripe Checkout, TWINT und Karte):
+     STRIPE_SECRET_KEY   geheimer Schlüssel von dashboard.stripe.com (sk_test_… zum Testen, sk_live_… live)
+     TOKEN_SECRET        langer, zufälliger Text zum Signieren der Bewerbungs-Tickets
+     SITE_URL            Adresse der Website, z.B. https://zusago.onrender.com
+     FREE_MODE=1         nur zum Testen: alles gratis, keine Zahlung nötig
+   Guthaben: Der Code ist die ID der Stripe-Zahlung (cs_…). Wie viele Bewerbungen
+   gekauft und schon gebraucht sind, steht direkt bei der Zahlung in Stripe
+   (PaymentIntent → Metadaten «credits» und «used»). Es braucht keine Datenbank.
    ========================================================= */
 const http = require("node:http");
 const dns = require("node:dns").promises;
 const net = require("node:net");
+const crypto = require("node:crypto");
 
 const PORT = process.env.PORT || 8787;
 const OPENAI_KEY = process.env.OPENAI_API_KEY || "";
@@ -29,7 +39,7 @@ const ORIGINS = (process.env.ALLOWED_ORIGINS ||
   .split(",").map(s => s.trim()).filter(Boolean);
 
 /* ---------- Schutz vor zu vielen Anfragen (pro IP und Stunde) ---------- */
-const LIMITS = { inserat: 20, generate: 12, rewrite: 40 };
+const LIMITS = { inserat: 20, generate: 12, rewrite: 40, checkout: 20, guthaben: 240 };
 const hits = new Map();
 function limited(ip, kind) {
   const now = Date.now(), key = ip + "|" + kind;
@@ -59,6 +69,75 @@ function readBody(req, max = 60_000) {
 }
 const clip = (s, n) => String(s ?? "").slice(0, n);
 class UserError extends Error {}
+class PayError extends Error {}   // 402: zuerst bezahlen
+
+/* ---------- Bezahlung: Stripe ---------- */
+const STRIPE_KEY = process.env.STRIPE_SECRET_KEY || "";
+const TOKEN_SECRET = process.env.TOKEN_SECRET || (STRIPE_KEY ? crypto.createHash("sha256").update("zusago|" + STRIPE_KEY).digest("hex") : "");
+const SITE_URL = (process.env.SITE_URL || "https://zusago.onrender.com").replace(/\/+$/, "");
+const FREE = process.env.FREE_MODE === "1";
+const PACKS = { 1: 690, 3: 1490, 5: 1990, 10: 2990 };          // Rappen
+const VALID_DAYS = 365;                                          // Guthaben 12 Monate gültig
+const STRIPE_API = process.env.STRIPE_API_BASE || "https://api.stripe.com/v1";
+
+function formPairs(obj, prefix = "", out = []) {
+  for (const [k, v] of Object.entries(obj)) {
+    const key = prefix ? `${prefix}[${k}]` : k;
+    if (v !== null && typeof v === "object") formPairs(v, key, out);
+    else if (v !== undefined && v !== null) out.push([key, String(v)]);
+  }
+  return out;
+}
+async function stripe(method, path, params) {
+  if (!STRIPE_KEY) throw new Error("no_stripe");
+  const qs = params ? new URLSearchParams(formPairs(params)).toString() : "";
+  const r = await fetch(STRIPE_API + path + (method === "GET" && qs ? "?" + qs : ""), {
+    method, signal: AbortSignal.timeout(20_000),
+    headers: { "Authorization": "Bearer " + STRIPE_KEY, "Content-Type": "application/x-www-form-urlencoded" },
+    body: method === "GET" ? undefined : qs
+  }).catch(() => { throw new Error("stripe_failed"); });
+  const data = await r.json().catch(() => ({}));
+  if (!r.ok) {
+    console.error("Stripe", r.status, JSON.stringify(data.error || {}).slice(0, 400));
+    const e = new Error(r.status === 404 ? "stripe_404" : "stripe_failed"); throw e;
+  }
+  return data;
+}
+const isCode = c => typeof c === "string" && /^cs_(test|live)_[A-Za-z0-9]{10,240}$/.test(c);
+async function lookup(code) {
+  if (!code) throw new PayError(NEED_PAY);
+  if (!isCode(code)) throw new PayError("Dieser Guthaben-Code ist ungültig.");
+  let s;
+  try { s = await stripe("GET", `/checkout/sessions/${code}`, { expand: ["payment_intent", "payment_intent.latest_charge"] }); }
+  catch (e) { if (e.message === "stripe_404") throw new PayError("Diesen Guthaben-Code kennen wir nicht."); throw e; }
+  const credits = +(s.payment_intent?.metadata?.credits ?? s.metadata?.credits ?? 0);
+  if (s.payment_status !== "paid") return { status: s.status === "expired" ? "abgelaufen" : "offen", credits, used: 0, remaining: 0, url: s.status === "open" ? s.url : null };
+  const pi = s.payment_intent || {};
+  const used = +(pi.metadata?.used ?? 0);
+  const tooOld = (Date.now() / 1000 - s.created) > VALID_DAYS * 86400;
+  const refunded = pi.latest_charge && typeof pi.latest_charge === "object" ? pi.latest_charge.refunded : false;
+  return { status: tooOld ? "abgelaufen" : (refunded ? "erstattet" : "bezahlt"), credits, used, remaining: (tooOld || refunded) ? 0 : Math.max(0, credits - used), pi: pi.id };
+}
+async function consume(info) {
+  await stripe("POST", `/payment_intents/${info.pi}`, { metadata: { used: info.used + 1 } });
+  return Math.max(0, info.remaining - 1);
+}
+/* Ticket: erlaubt für eine bezahlte Bewerbung beliebig viele Änderungen (90 Tage) */
+const hash16 = s => crypto.createHash("sha256").update(String(s)).digest("base64url").slice(0, 16);
+const jobKey = j => hash16([j.beruf, j.firma, j.art].map(x => String(x || "").trim().toLowerCase()).join("|"));
+function signTicket(code, jk) {
+  const p = Buffer.from(JSON.stringify({ c: hash16(code), j: jk, e: Date.now() + 90 * 86400_000 })).toString("base64url");
+  return p + "." + crypto.createHmac("sha256", TOKEN_SECRET).update(p).digest("base64url");
+}
+function readTicket(t) {
+  if (typeof t !== "string" || !TOKEN_SECRET) return null;
+  const [p, h] = t.split(".");
+  if (!p || !h) return null;
+  const want = crypto.createHmac("sha256", TOKEN_SECRET).update(p).digest("base64url");
+  if (h.length !== want.length || !crypto.timingSafeEqual(Buffer.from(h), Buffer.from(want))) return null;
+  try { const d = JSON.parse(Buffer.from(p, "base64url").toString("utf8")); return d.e > Date.now() ? d : null; } catch { return null; }
+}
+const NEED_PAY = "Kauf zuerst eine Bewerbung – einzeln oder im Paket.";
 
 /* ---------- Inserat von einer Website laden (mit Schutz vor internen Adressen) ---------- */
 function isPrivateIp(ip) {
@@ -223,6 +302,10 @@ const MOCKS = {
 
 /* ---------- Endpunkte ---------- */
 async function routeInserat(body) {
+  if (!FREE && !readTicket(body.ticket)) {
+    const info = await lookup(body.code);
+    if (info.remaining < 1) throw new PayError(NEED_PAY);
+  }
   let text = clip(body.text, 15_000).trim();
   if (!text && body.url) text = htmlToText(await fetchPage(clip(body.url, 2000)));
   if (text.length < 120) throw new UserError("Im Inserat steht zu wenig Text. Kopier den ganzen Text vom Inserat hier rein.");
@@ -252,6 +335,20 @@ function cleanJob(j = {}) {
 async function routeGenerate(body) {
   const profile = cleanProfile(body.profile), job = cleanJob(body.job), tone = TONE[body.tone] ? body.tone : "normal";
   if (!job.beruf) throw new UserError("Es fehlt der Beruf.");
+  let info = null, jk = jobKey(job);
+  const paidTicket = !FREE && readTicket(body.ticket);
+  const sameJob = paidTicket && paidTicket.j === jk;
+  if (!FREE && !sameJob) {
+    info = await lookup(body.code);
+    if (info.remaining < 1) throw new PayError(info.credits ? "Dein Guthaben ist aufgebraucht. Kauf weitere Bewerbungen." : NEED_PAY);
+  }
+  const result = await writeApplication(profile, job, tone);
+  if (FREE) return result;
+  if (sameJob) return Object.assign(result, { ticket: body.ticket });
+  const remaining = await consume(info);
+  return Object.assign(result, { ticket: signTicket(body.code, jk), guthaben: remaining });
+}
+async function writeApplication(profile, job, tone) {
   if (MOCK) return MOCKS.generate({ profile, job });
   const art = job.art === "schnupper"
     ? "Schreib eine kurze Anfrage für eine Schnupperlehre (2 bis 3 Absätze, 80 bis 130 Wörter)."
@@ -266,6 +363,7 @@ async function routeRewrite(body) {
   const absaetze = (Array.isArray(body.absaetze) ? body.absaetze : []).slice(0, 6).map(a => clip(a, 1500));
   const mode = ["kuerzer", "locker", "normal", "formell", "neu"].includes(body.mode) ? body.mode : "neu";
   if (!absaetze.length) throw new UserError("Es gibt keinen Text zum Überarbeiten.");
+  if (!FREE && !readTicket(body.ticket)) throw new PayError("Diese Bewerbung ist nicht bezahlt.");
   if (MOCK) return MOCKS.rewrite({ absaetze, mode });
   const task = { kuerzer: "Mach den Text etwa ein Drittel kürzer. Behalte die wichtigsten Aussagen.",
     neu: "Schreib den Text neu mit anderen Formulierungen. Inhalt und Länge bleiben ähnlich.",
@@ -277,8 +375,33 @@ async function routeRewrite(body) {
   });
 }
 
+async function routeCheckout(body) {
+  const n = Number(body.pack);
+  if (!PACKS[n]) throw new UserError("Dieses Paket gibt es nicht.");
+  if (FREE) throw new UserError("Der Test-Modus ist aktiv – es braucht keine Zahlung.");
+  const s = await stripe("POST", "/checkout/sessions", {
+    mode: "payment", locale: "de",
+    line_items: [{ quantity: 1, price_data: { currency: "chf", unit_amount: PACKS[n],
+      product_data: { name: n === 1 ? "Zusago – 1 Bewerbung" : `Zusago – ${n} Bewerbungen`,
+        description: "Lebenslauf und Bewerbungsbrief, passend zur Lehrstelle. Einmalig, kein Abo. 12 Monate gültig." } } }],
+    metadata: { credits: n },
+    payment_intent_data: { metadata: { credits: n, used: 0 }, description: `Zusago: ${n} Bewerbung${n === 1 ? "" : "en"}` },
+    success_url: `${SITE_URL}/app.html?bezahlt={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${SITE_URL}/app.html?abgebrochen=1`
+  });
+  return { url: s.url, code: s.id };
+}
+async function routeGuthaben(body) {
+  if (FREE) return { status: "gratis", credits: 999, used: 0, remaining: 999 };
+  if (!body.code) return { status: "keins", credits: 0, used: 0, remaining: 0 };
+  const info = await lookup(body.code);
+  delete info.pi;
+  return info;
+}
+
 /* ---------- Server ---------- */
-const ROUTES = { "/api/inserat": ["inserat", routeInserat], "/api/generate": ["generate", routeGenerate], "/api/rewrite": ["rewrite", routeRewrite] };
+const ROUTES = { "/api/inserat": ["inserat", routeInserat], "/api/generate": ["generate", routeGenerate], "/api/rewrite": ["rewrite", routeRewrite],
+  "/api/checkout": ["checkout", routeCheckout], "/api/guthaben": ["guthaben", routeGuthaben] };
 http.createServer(async (req, res) => {
   const origin = req.headers.origin || "";
   const path = (req.url || "").split("?")[0];
@@ -287,7 +410,7 @@ http.createServer(async (req, res) => {
     res.writeHead(ok ? 204 : 403, ok ? { "Access-Control-Allow-Origin": origin, "Access-Control-Allow-Methods": "POST, GET, OPTIONS", "Access-Control-Allow-Headers": "Content-Type", "Access-Control-Max-Age": "86400", "Vary": "Origin" } : {});
     return res.end();
   }
-  if (req.method === "GET" && (path === "/" || path === "/health")) return send(res, 200, { ok: true, ki: MOCK ? "test" : (KEY ? "bereit" : "kein Schlüssel"), anbieter: PROVIDER === "openai" ? "ChatGPT" : "Claude", modell: MODEL }, origin);
+  if (req.method === "GET" && (path === "/" || path === "/health")) return send(res, 200, { ok: true, ki: MOCK ? "test" : (KEY ? "bereit" : "kein Schlüssel"), anbieter: PROVIDER === "openai" ? "ChatGPT" : "Claude", modell: MODEL, bezahlung: FREE ? "test (gratis)" : (STRIPE_KEY ? (STRIPE_KEY.startsWith("sk_live") ? "live" : "test") : "nicht eingerichtet") }, origin);
   const route = ROUTES[path];
   if (!route || req.method !== "POST") return send(res, 404, { error: "Nicht gefunden." }, origin);
   if (origin && !ORIGINS.includes(origin) && !ORIGINS.includes("*")) return send(res, 403, { error: "Nicht erlaubt." }, origin);
@@ -299,6 +422,9 @@ http.createServer(async (req, res) => {
     send(res, 200, result, origin);
   } catch (e) {
     if (e instanceof UserError) return send(res, 400, { error: e.message }, origin);
+    if (e instanceof PayError) return send(res, 402, { error: e.message, bezahlen: true }, origin);
+    if (e.message === "no_stripe") { console.error("STRIPE_SECRET_KEY fehlt"); return send(res, 503, { error: "Die Bezahlung ist noch nicht eingerichtet." }, origin); }
+    if (e.message === "stripe_failed" || e.message === "stripe_404") return send(res, 502, { error: "Die Bezahlung ist gerade nicht erreichbar. Versuch es gleich nochmals." }, origin);
     if (e.message === "too_large") return send(res, 413, { error: "Die Anfrage ist zu gross." }, origin);
     if (e.message === "no_key") { console.error("OPENAI_API_KEY (oder ANTHROPIC_API_KEY) fehlt"); return send(res, 503, { error: "Die KI ist noch nicht eingerichtet." }, origin); }
     console.error(e);

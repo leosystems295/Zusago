@@ -449,7 +449,8 @@ function normalizeAi(d) {
   const str = v => typeof v === "string" ? v.trim() : "";
   return {
     kurzprofil: str(d.kurzprofil), staerken: (d.staerken || []).map(str).filter(Boolean).slice(0, 6),
-    erfahrungen: (d.erfahrungen || []).map(e => ({ nr: +e.nr || 0, beschreibung: str(e.beschreibung) })),
+    erfahrungen: (d.erfahrungen || []).map(e => ({ nr: +e.nr || 0, beschreibung: str(e.beschreibung) }))
+      .filter(e => e.beschreibung && !/keine (konkreten )?(angaben|tätigkeiten|informationen)|nicht angegeben|nichts angegeben/i.test(e.beschreibung)),
     hobbys: str(d.hobbys), brief_betreff: str(d.brief_betreff), brief_absaetze: (d.brief_absaetze || []).map(str).filter(Boolean).slice(0, 5)
   };
 }

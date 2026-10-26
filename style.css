@@ -692,7 +692,7 @@ h3{font-size:20px}
 .nd.is-current .nd-btn::after{transform:scaleX(1)}
 .nd-chev{width:14px;height:14px;transition:transform .3s var(--ease)}
 .nd.open .nd-chev{transform:rotate(180deg)}
-.nd-panel{position:absolute;top:calc(100% + 16px);left:50%;min-width:290px;display:grid;gap:2px;padding:8px;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 30px 60px -28px rgba(20,33,61,.45);opacity:0;visibility:hidden;transform:translate(-50%,6px);transition:opacity .25s var(--ease),transform .25s var(--ease),visibility 0s linear .25s;z-index:60}
+.nd-panel{position:absolute;top:calc(100% + 16px);left:50%;min-width:320px;display:grid;gap:2px;padding:8px;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 30px 60px -28px rgba(20,33,61,.45);opacity:0;visibility:hidden;transform:translate(-50%,6px);transition:opacity .25s var(--ease),transform .25s var(--ease),visibility 0s linear .25s;z-index:60}
 .nd-panel::before{content:"";position:absolute;left:0;right:0;top:-18px;height:18px}
 .nd.open .nd-panel{opacity:1;visibility:visible;transform:translate(-50%,0);transition-delay:0s}
 @media (hover:hover) and (pointer:fine){.nd:hover .nd-panel{opacity:1;visibility:visible;transform:translate(-50%,0);transition-delay:0s}.nd:hover .nd-chev{transform:rotate(180deg)}}
@@ -799,7 +799,10 @@ h3{font-size:20px}
 .ph-beruf{--ph:var(--ph-beruf);--ph-l:var(--ph-beruf-l);--ph-d:var(--ph-beruf-d)}
 
 /* Navigation: «Für wen» zweispaltig */
-@media (min-width:920px){.nd-panel.nd-wide{grid-template-columns:repeat(2,minmax(0,1fr));min-width:540px}}
+@media (min-width:920px){.nd-panel.nd-wide{grid-template-columns:repeat(2,minmax(0,1fr));width:660px;column-gap:6px}}
+.nav-links .nd-panel a{white-space:normal;align-content:start}
+.nd-panel span{line-height:1.4}
+.nd-panel.nd-wide a.nd-sub{border-top:1px solid var(--line);border-radius:0 0 12px 12px;margin-top:6px;padding-top:13px}
 .nav-links .nd-panel a.nd-sub{padding:9px 14px;font-size:14px;color:var(--ink-2)}
 .nav-links .nd-panel a.nd-sub b{font-weight:500}
 
@@ -890,3 +893,9 @@ h3{font-size:20px}
 .pkg-note b{color:var(--ink)}
 .phc-foot .btn-link{white-space:nowrap}
 .phase-page .tpl-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:26px 20px}.phase-page .tpl-grid .tpl{width:min(166px,calc(50% - 10px))}
+/* breites Menü «Für wen»: auf kleineren Bildschirmen links am Knopf ausrichten, damit es nicht aus dem Fenster ragt */
+@media (min-width:920px) and (max-width:1199px){
+  .nd-panel.nd-wide{left:-14px;transform:translate(0,6px)}
+  .nd.open .nd-panel.nd-wide{transform:translate(0,0)}
+}
+@media (min-width:920px) and (max-width:1199px) and (hover:hover) and (pointer:fine){.nd:hover .nd-panel.nd-wide{transform:translate(0,0)}}

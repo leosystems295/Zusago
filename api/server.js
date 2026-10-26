@@ -13,7 +13,7 @@
      MOCK=1              Test-Modus ohne KI (liefert Beispieltexte)
 
    Bezahlung (Stripe Checkout, TWINT und Karte):
-     STRIPE_SECRET_KEY   geheimer Schlüssel von dashboard.stripe.com (sk_test_… zum Testen, sk_live_… live)
+     STRIPE_SECRET_KEY   geheimer Schlüssel von dashboard.stripe.com (sk_test_… zum Testen, sk_live_… oder eingeschränkt rk_live_… live)
      TOKEN_SECRET        langer, zufälliger Text zum Signieren der Bewerbungs-Tickets
      SITE_URL            Adresse der Website, z.B. https://zusago.onrender.com
      FREE_MODE=1         nur zum Testen: alles gratis, keine Zahlung nötig
@@ -447,7 +447,7 @@ http.createServer(async (req, res) => {
     res.writeHead(ok ? 204 : 403, ok ? { "Access-Control-Allow-Origin": origin, "Access-Control-Allow-Methods": "POST, GET, OPTIONS", "Access-Control-Allow-Headers": "Content-Type", "Access-Control-Max-Age": "86400", "Vary": "Origin" } : {});
     return res.end();
   }
-  if (req.method === "GET" && (path === "/" || path === "/health")) return send(res, 200, { ok: true, ki: MOCK ? "test" : (KEY ? "bereit" : "kein Schlüssel"), anbieter: PROVIDER === "openai" ? "ChatGPT" : "Claude", modell: MODEL, bezahlung: FREE ? "test (gratis)" : (STRIPE_KEY ? (STRIPE_KEY.startsWith("sk_live") ? "live" : "test") : "nicht eingerichtet") }, origin);
+  if (req.method === "GET" && (path === "/" || path === "/health")) return send(res, 200, { ok: true, ki: MOCK ? "test" : (KEY ? "bereit" : "kein Schlüssel"), anbieter: PROVIDER === "openai" ? "ChatGPT" : "Claude", modell: MODEL, bezahlung: FREE ? "test (gratis)" : (STRIPE_KEY ? (/^(sk|rk)_live_/.test(STRIPE_KEY) ? "live" : "test") : "nicht eingerichtet") }, origin);
   const route = ROUTES[path];
   if (!route || req.method !== "POST") return send(res, 404, { error: "Nicht gefunden." }, origin);
   if (origin && !ORIGINS.includes(origin) && !ORIGINS.includes("*")) return send(res, 403, { error: "Nicht erlaubt." }, origin);

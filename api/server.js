@@ -17,6 +17,8 @@
      TOKEN_SECRET        langer, zufälliger Text zum Signieren der Bewerbungs-Tickets
      SITE_URL            Adresse der Website, z.B. https://zusago.onrender.com
      FREE_MODE=1         nur zum Testen: alles gratis, keine Zahlung nötig
+   Ablauf: Die Vorschau ist gratis (FREE_PREVIEWS pro Gerät und Tag, Standard 3).
+   Beim Herunterladen schaltet /api/unlock die Bewerbung frei und braucht 1 Guthaben.
    Guthaben: Der Code ist die ID der Stripe-Zahlung (cs_…). Wie viele Bewerbungen
    gekauft und schon gebraucht sind, steht direkt bei der Zahlung in Stripe
    (PaymentIntent → Metadaten «credits» und «used»). Es braucht keine Datenbank.
@@ -39,7 +41,7 @@ const ORIGINS = (process.env.ALLOWED_ORIGINS ||
   .split(",").map(s => s.trim()).filter(Boolean);
 
 /* ---------- Schutz vor zu vielen Anfragen (pro IP und Stunde) ---------- */
-const LIMITS = { inserat: 20, generate: 12, rewrite: 40, checkout: 20, guthaben: 240 };
+const LIMITS = { inserat: 20, generate: 12, rewrite: 40, checkout: 20, guthaben: 240, unlock: 30 };
 const hits = new Map();
 function limited(ip, kind) {
   const now = Date.now(), key = ip + "|" + kind;
@@ -48,6 +50,15 @@ function limited(ip, kind) {
   list.push(now); hits.set(key, list); return false;
 }
 setInterval(() => { const now = Date.now(); for (const [k, v] of hits) if (!v.some(t => now - t < 3600_000)) hits.delete(k); }, 600_000).unref();
+
+/* Gratis-Vorschau: pro Gerät und Tag begrenzt, zusätzlich eine Obergrenze pro IP (Schulnetz) */
+const FREE_PER_DEVICE = +process.env.FREE_PREVIEWS || 3, FREE_PER_IP = +process.env.FREE_PREVIEWS_IP || 40;
+const previews = new Map();
+const today = () => new Date().toISOString().slice(0, 10);
+function previewCount(key) { const v = previews.get(key); return v && v.d === today() ? v.n : 0; }
+function previewAllowed(ip, dev) { return previewCount("d|" + dev) < FREE_PER_DEVICE && previewCount("i|" + ip) < FREE_PER_IP; }
+function previewUsed(ip, dev) { for (const k of ["d|" + dev, "i|" + ip]) previews.set(k, { d: today(), n: previewCount(k) + 1 }); }
+setInterval(() => { const d = today(); for (const [k, v] of previews) if (v.d !== d) previews.delete(k); }, 3600_000).unref();
 
 /* ---------- Hilfsfunktionen ---------- */
 function send(res, status, data, origin) {
@@ -76,7 +87,7 @@ const STRIPE_KEY = process.env.STRIPE_SECRET_KEY || "";
 const TOKEN_SECRET = process.env.TOKEN_SECRET || (STRIPE_KEY ? crypto.createHash("sha256").update("zusago|" + STRIPE_KEY).digest("hex") : "");
 const SITE_URL = (process.env.SITE_URL || "https://zusago.onrender.com").replace(/\/+$/, "");
 const FREE = process.env.FREE_MODE === "1";
-const PACKS = { 1: 690, 3: 1490, 5: 1990, 10: 2990 };          // Rappen
+const PACKS = { 1: 790, 3: 1790, 10: 3990 };                    // Rappen
 const VALID_DAYS = 365;                                          // Guthaben 12 Monate gültig
 const STRIPE_API = process.env.STRIPE_API_BASE || "https://api.stripe.com/v1";
 
@@ -240,41 +251,50 @@ async function callAnthropic({ model, system, user, tool, maxTokens = 2000 }) {
   return block.input;
 }
 
-const STYLE = `Du schreibst für Zusago, ein Bewerbungs-Tool für Jugendliche in der Schweiz (8. bis 10. Klasse, 13 bis 16 Jahre), die eine Lehrstelle (EFZ/EBA) oder eine Schnupperlehre suchen.
-Regeln:
+const RULES = `Regeln:
 - Schweizer Hochdeutsch: immer «ss» statt «ß».
-- Bewerbungsbriefe sprechen den Betrieb mit «Sie» an.
-- Schreib so, wie eine motivierte Jugendliche oder ein motivierter Jugendlicher wirklich schreibt: einfach, ehrlich, konkret. Keine Floskeln, kein übertriebenes Erwachsenen-Deutsch, keine Superlative.
-- Erfinde NIE Fakten. Verwende nur Angaben aus dem Profil und dem Inserat. Fehlt etwas, lass es weg.
-- Verknüpfe die Erfahrungen, Stärken und Hobbys der Person mit dem, was im Inserat gesucht wird.`;
+- Bewerbungsschreiben sprechen die Firma mit «Sie» an.
+- Einfach, ehrlich, konkret. Keine Floskeln, keine Superlative, keine leeren Wörter wie «hochmotiviert» oder «teamorientiert» ohne Beleg.
+- Erfinde NIE Fakten, Zahlen oder Erfolge. Verwende nur Angaben aus dem Profil und dem Inserat. Fehlt etwas, lass es weg.
+- Verknüpfe Erfahrungen, Stärken und Interessen der Person mit dem, was im Inserat gesucht wird.`;
+const AUDIENCE = {
+  lehre: "Du schreibst für Zusago. Die Person ist Jugendliche/r in der Schweiz (8. bis 10. Klasse, 13 bis 16 Jahre) und sucht eine Lehrstelle (EFZ/EBA) oder eine Schnupperlehre. Schreib so, wie eine motivierte Jugendliche oder ein motivierter Jugendlicher wirklich schreibt: einfach und ehrlich, kein übertriebenes Erwachsenen-Deutsch.",
+  studium: "Du schreibst für Zusago. Die Person studiert (Uni, FH oder PH) in der Schweiz und sucht einen Nebenjob, eine Werkstudentenstelle oder die erste Stelle nach dem Studium. Ton: modern, konkret und selbstbewusst. Zeig Projekte und Nebenjobs mit Ergebnis.",
+  praktikum: "Du schreibst für Zusago. Die Person sucht ein Praktikum (nach der Matura, im Studium oder im Zwischenjahr) in der Schweiz. Ton: motiviert, lernbereit und mit klarem Ziel. Zeig, was sie mitbringt und was sie im Praktikum lernen möchte. Ein Praktikum ist eine Lernstelle – nicht wie für eine Kaderstelle schreiben.",
+  beruf: "Du schreibst für Zusago. Die Person hat Berufserfahrung und sucht eine neue Stelle in der Schweiz (Stellenwechsel, Wiedereinstieg oder Quereinstieg). Ton: professionell, sachlich und wirkungsorientiert – was sie erreicht hat, nicht nur was sie gemacht hat. Lücken (z.B. Familienzeit) offen und positiv formulieren. Kündigungsfrist und Lohnvorstellung nur erwähnen, wenn sie im Profil stehen."
+};
+const PHASES = Object.keys(AUDIENCE);
+const STYLE = AUDIENCE.lehre + "\n" + RULES;
 
 const TONE = {
   locker: "Ton: locker und persönlich, aber immer noch höflich und korrekt.",
-  normal: "Ton: freundlich, natürlich und klar – so wie die meisten guten Schülerbewerbungen.",
+  normal: "Ton: freundlich, natürlich und klar.",
   formell: "Ton: eher formell und sachlich, aber nicht steif."
 };
 
 const TOOL_INSERAT = {
-  name: "inserat", description: "Strukturierte Angaben aus einem Lehrstellen-Inserat",
+  name: "inserat", description: "Strukturierte Angaben aus einem Stelleninserat",
   input_schema: { type: "object", properties: {
-    beruf: { type: "string", description: "Lehrberuf inkl. EFZ/EBA, z.B. 'Informatiker/in EFZ'" },
+    beruf: { type: "string", description: "Bei Lehrstellen der Lehrberuf inkl. EFZ/EBA (z.B. 'Informatiker/in EFZ'), sonst die Stellenbezeichnung inkl. Pensum (z.B. 'Sachbearbeiter/in Personal 80 %')" },
     firma: { type: "string" }, strasse: { type: "string" }, plz_ort: { type: "string" },
     kontakt_anrede: { type: "string", enum: ["Frau", "Herr", ""] }, kontakt_name: { type: "string", description: "Nachname (evtl. mit Vorname) der Kontaktperson" },
-    lehrbeginn: { type: "string", description: "z.B. 'August 2027'" },
+    lehrbeginn: { type: "string", description: "Beginn bzw. Lehrbeginn, z.B. 'August 2027' oder 'nach Vereinbarung'" },
     anforderungen: { type: "array", items: { type: "string" }, description: "max. 6 kurze Stichworte, was gesucht wird" },
     aufgaben: { type: "array", items: { type: "string" }, description: "max. 5 kurze Stichworte zu den Aufgaben" },
-    ist_schnupperlehre: { type: "boolean" }
-  }, required: ["beruf", "firma", "anforderungen"] }
+    ist_schnupperlehre: { type: "boolean" },
+    stellenart: { type: "string", enum: ["lehrstelle", "schnupperlehre", "praktikum", "stelle"], description: "Art der ausgeschriebenen Stelle" },
+    zielgruppe: { type: "string", enum: ["lehre", "studium", "praktikum", "beruf"], description: "Für wen die Stelle am ehesten ist: lehre = Schulabgänger/Lehrstelle, studium = Studierende (Nebenjob, Werkstudium, Einstieg nach dem Studium), praktikum = Praktikum, beruf = Berufsleute mit Erfahrung" }
+  }, required: ["beruf", "firma", "anforderungen", "stellenart", "zielgruppe"] }
 };
 const TOOL_BEWERBUNG = {
-  name: "bewerbung", description: "Texte für Lebenslauf und Bewerbungsbrief",
+  name: "bewerbung", description: "Texte für Lebenslauf und Bewerbungsschreiben",
   input_schema: { type: "object", properties: {
-    kurzprofil: { type: "string", description: "1 Satz (max. 22 Wörter) für oben im Lebenslauf, in der Ich-Form" },
+    kurzprofil: { type: "string", description: "Kurzprofil für oben im Lebenslauf. Bei Lehrstellen 1 Satz in der Ich-Form (max. 22 Wörter); sonst 1 bis 2 Sätze (max. 35 Wörter), sachlich, z.B. 'Wirtschaftsstudent mit Schwerpunkt …'" },
     staerken: { type: "array", items: { type: "string" }, description: "3 bis 5 Stärken aus dem Profil, die besten für diesen Beruf zuerst" },
-    erfahrungen: { type: "array", items: { type: "object", properties: { nr: { type: "integer" }, beschreibung: { type: "string", description: "max. 14 Wörter, was gemacht/gelernt. Nur aus den Angaben im Profil ableiten. Wenn das Profil dazu nichts hergibt: leerer Text. Nie Hinweise wie «keine Angaben» schreiben." } }, required: ["nr", "beschreibung"] } },
-    hobbys: { type: "string", description: "Hobbys als kurze Zeile, z.B. 'Volleyball im Verein, PC zusammenbauen'" },
-    brief_betreff: { type: "string", description: "z.B. 'Bewerbung als Informatikerin EFZ'" },
-    brief_absaetze: { type: "array", items: { type: "string" }, description: "3 oder 4 Absätze ohne Anrede und ohne Grussformel, insgesamt 120 bis 200 Wörter" }
+    erfahrungen: { type: "array", items: { type: "object", properties: { nr: { type: "integer" }, beschreibung: { type: "string", description: "Bei Lehrstellen max. 14 Wörter, sonst max. 22 Wörter: was gemacht, gelernt oder erreicht. Nur aus den Angaben im Profil ableiten (auch aus 'details'). Wenn das Profil dazu nichts hergibt: leerer Text. Nie Hinweise wie «keine Angaben» schreiben." } }, required: ["nr", "beschreibung"] } },
+    hobbys: { type: "string", description: "Hobbys, Engagement oder Interessen als kurze Zeile, z.B. 'Volleyball im Verein, PC zusammenbauen'" },
+    brief_betreff: { type: "string", description: "z.B. 'Bewerbung als Informatikerin EFZ' oder 'Initiativbewerbung im Bereich Marketing'" },
+    brief_absaetze: { type: "array", items: { type: "string" }, description: "3 oder 4 Absätze ohne Anrede und ohne Grussformel" }
   }, required: ["kurzprofil", "staerken", "brief_betreff", "brief_absaetze"] }
 };
 const TOOL_TEXT = {
@@ -284,7 +304,7 @@ const TOOL_TEXT = {
 
 /* ---------- Beispieltexte für den Test-Modus ---------- */
 const MOCKS = {
-  inserat: () => ({ beruf: "Informatiker/in EFZ", firma: "Muster AG", strasse: "Bahnhofstrasse 1", plz_ort: "4500 Solothurn", kontakt_anrede: "Frau", kontakt_name: "Beispiel", lehrbeginn: "August 2027", anforderungen: ["Freude an Technik", "logisches Denken", "Teamfähigkeit", "Sek A oder B"], aufgaben: ["Computer einrichten", "Programmieren"], ist_schnupperlehre: false }),
+  inserat: () => ({ beruf: "Informatiker/in EFZ", firma: "Muster AG", strasse: "Bahnhofstrasse 1", plz_ort: "4500 Solothurn", kontakt_anrede: "Frau", kontakt_name: "Beispiel", lehrbeginn: "August 2027", anforderungen: ["Freude an Technik", "logisches Denken", "Teamfähigkeit", "Sek A oder B"], aufgaben: ["Computer einrichten", "Programmieren"], ist_schnupperlehre: false, stellenart: "lehrstelle", zielgruppe: "lehre" }),
   generate: (p) => ({
     kurzprofil: `Ich bin eine motivierte Schülerin und möchte meine Lehre als ${p.job?.beruf || "Informatikerin EFZ"} beginnen.`,
     staerken: (p.profile?.staerken || ["zuverlässig", "logisch", "teamfähig"]).slice(0, 4),
@@ -302,17 +322,13 @@ const MOCKS = {
 
 /* ---------- Endpunkte ---------- */
 async function routeInserat(body) {
-  if (!FREE && !readTicket(body.ticket)) {
-    const info = await lookup(body.code);
-    if (info.remaining < 1) throw new PayError(NEED_PAY);
-  }
   let text = clip(body.text, 15_000).trim();
   if (!text && body.url) text = htmlToText(await fetchPage(clip(body.url, 2000)));
   if (text.length < 120) throw new UserError("Im Inserat steht zu wenig Text. Kopier den ganzen Text vom Inserat hier rein.");
   if (MOCK) return MOCKS.inserat();
   return claude({
     model: MODEL_FAST, maxTokens: 800, tool: TOOL_INSERAT,
-    system: "Du liest Lehrstellen- und Schnupperlehr-Inserate aus der Schweiz und gibst die Angaben strukturiert zurück. Erfinde nichts; leere Felder bleiben leer.",
+    system: "Du liest Stelleninserate aus der Schweiz (Lehrstellen, Schnupperlehren, Praktika, Nebenjobs und Stellen für Berufsleute) und gibst die Angaben strukturiert zurück. Erfinde nichts; leere Felder bleiben leer.",
     user: "Inserat:\n\n" + text
   });
 }
@@ -321,41 +337,63 @@ function cleanProfile(p = {}) {
   return {
     vorname: clip(p.vorname, 60), geburtsdatum: clip(p.geburtsdatum, 30), klasse: clip(p.klasse, 80),
     schule: arr(p.schule, 6).map(s => ({ zeit: clip(s.zeit, 40), name: clip(s.name, 120), details: clip(s.details, 120) })),
-    erfahrungen: arr(p.erfahrungen, 8).map(e => ({ zeit: clip(e.zeit, 40), titel: clip(e.titel, 120), ort: clip(e.ort, 120) })),
+    erfahrungen: arr(p.erfahrungen, 8).map(e => ({ zeit: clip(e.zeit, 40), titel: clip(e.titel, 120), ort: clip(e.ort, 120), details: clip(e.details, 300) })),
     staerken: arr(p.staerken, 10).map(s => clip(s, 40)), hobbys: arr(p.hobbys, 10).map(s => clip(s, 60)),
     sprachen: arr(p.sprachen, 6).map(s => ({ sprache: clip(s.sprache, 30), niveau: clip(s.niveau, 30) })),
-    computer: clip(p.computer, 200), motivation: clip(p.motivation, 400)
+    computer: clip(p.computer, 200), motivation: clip(p.motivation, 400),
+    verfuegbar: clip(p.verfuegbar, 60), pensum: clip(p.pensum, 40), fuehrung: clip(p.fuehrung, 200), kuendigungsfrist: clip(p.kuendigung, 60), lohnvorstellung: clip(p.lohn, 60)
   };
 }
 function cleanJob(j = {}) {
   return { beruf: clip(j.beruf, 120), firma: clip(j.firma, 120), lehrbeginn: clip(j.lehrbeginn, 60),
     anforderungen: (Array.isArray(j.anforderungen) ? j.anforderungen : []).slice(0, 8).map(s => clip(s, 80)),
-    aufgaben: (Array.isArray(j.aufgaben) ? j.aufgaben : []).slice(0, 6).map(s => clip(s, 80)), art: j.art === "schnupper" ? "schnupper" : "lehre" };
+    aufgaben: (Array.isArray(j.aufgaben) ? j.aufgaben : []).slice(0, 6).map(s => clip(s, 80)),
+    art: ["lehre", "schnupper", "praktikum", "stelle", "initiativ"].includes(j.art) ? j.art : "lehre" };
 }
-async function routeGenerate(body) {
+async function routeGenerate(body, ip) {
   const profile = cleanProfile(body.profile), job = cleanJob(body.job), tone = TONE[body.tone] ? body.tone : "normal";
-  if (!job.beruf) throw new UserError("Es fehlt der Beruf.");
-  let info = null, jk = jobKey(job);
-  const paidTicket = !FREE && readTicket(body.ticket);
-  const sameJob = paidTicket && paidTicket.j === jk;
-  if (!FREE && !sameJob) {
-    info = await lookup(body.code);
-    if (info.remaining < 1) throw new PayError(info.credits ? "Dein Guthaben ist aufgebraucht. Kauf weitere Bewerbungen." : NEED_PAY);
+  const phase = PHASES.includes(body.phase) ? body.phase : "lehre";
+  if (!job.beruf) throw new UserError("Es fehlt die Stelle.");
+  const jk = jobKey(job), t = readTicket(body.ticket), unlocked = FREE || (t && t.j === jk);
+  const dev = clip(body.dev, 64) || "ohne";
+  let free = false;
+  if (!unlocked) {
+    let paid = false;
+    if (body.code) { try { paid = (await lookup(body.code)).remaining > 0; } catch {} }
+    if (!paid) {
+      if (!previewAllowed(ip, dev)) throw new PayError(`Heute hast du die ${FREE_PER_DEVICE} Gratis-Vorschauen schon gebraucht. Mit einem Paket geht es sofort weiter – oder morgen wieder gratis.`);
+      free = true;
+    }
   }
-  const result = await writeApplication(profile, job, tone);
-  if (FREE) return result;
-  if (sameJob) return Object.assign(result, { ticket: body.ticket });
-  const remaining = await consume(info);
-  return Object.assign(result, { ticket: signTicket(body.code, jk), guthaben: remaining });
+  const result = await writeApplication(profile, job, tone, phase);
+  if (free) previewUsed(ip, dev);
+  return Object.assign(result, unlocked && !FREE ? { ticket: body.ticket } : {}, { vorschau: !unlocked });
 }
-async function writeApplication(profile, job, tone) {
+/* Freischalten beim Herunterladen: braucht 1 Guthaben (gleiche Stelle nur einmal) */
+async function routeUnlock(body) {
+  const job = cleanJob(body.job);
+  if (!job.beruf) throw new UserError("Es fehlt die Stelle.");
+  const jk = jobKey(job), t = readTicket(body.ticket);
+  if (t && t.j === jk) return { ticket: body.ticket };
+  if (FREE) return { ticket: signTicket("gratis", jk) };
+  const info = await lookup(body.code);
+  if (info.remaining < 1) throw new PayError(info.credits ? "Dein Guthaben ist aufgebraucht. Kauf weitere Bewerbungen." : NEED_PAY);
+  const remaining = await consume(info);
+  return { ticket: signTicket(body.code, jk), guthaben: remaining };
+}
+const TASKS = {
+  schnupper: "Schreib eine kurze Anfrage für eine Schnupperlehre (2 bis 3 Absätze, 80 bis 130 Wörter).",
+  lehre: "Schreib einen Bewerbungsbrief für die Lehrstelle (3 bis 4 Absätze, 120 bis 200 Wörter): Einstieg mit Bezug zur Stelle, warum dieser Beruf, was die Person mitbringt (konkret mit Erfahrungen), Schluss mit Bitte um Gespräch oder Schnupperlehre.",
+  praktikum: "Schreib ein Motivationsschreiben für das Praktikum (3 bis 4 Absätze, 140 bis 220 Wörter): warum dieses Praktikum, was die Person mitbringt, was sie lernen möchte, Zeitraum und Pensum falls angegeben, Schluss mit Bitte um Gespräch.",
+  stelle: "Schreib ein Bewerbungsschreiben (3 bis 4 Absätze, 150 bis 230 Wörter): Einstieg mit Bezug zur Stelle, die passendste Erfahrung mit konkreten Ergebnissen, Motivation für genau diese Stelle, Verfügbarkeit, Pensum oder Kündigungsfrist falls angegeben, Schluss mit Bitte um Gespräch.",
+  initiativ: "Es gibt kein Inserat: Schreib eine Initiativbewerbung (3 bis 4 Absätze, 140 bis 220 Wörter): Bezug zur Firma und zum gewünschten Bereich, was die Person beitragen kann, Verfügbarkeit falls angegeben, Bitte um Gespräch. Der Betreff beginnt mit «Initiativbewerbung»."
+};
+async function writeApplication(profile, job, tone, phase = "lehre") {
   if (MOCK) return MOCKS.generate({ profile, job });
-  const art = job.art === "schnupper"
-    ? "Schreib eine kurze Anfrage für eine Schnupperlehre (2 bis 3 Absätze, 80 bis 130 Wörter)."
-    : "Schreib einen Bewerbungsbrief für die Lehrstelle (3 bis 4 Absätze, 120 bis 200 Wörter): Einstieg mit Bezug zur Stelle, warum dieser Beruf, was die Person mitbringt (konkret mit Erfahrungen), Schluss mit Bitte um Gespräch oder Schnupperlehre.";
+  const art = TASKS[job.art] || TASKS.lehre;
   return claude({
     model: MODEL, maxTokens: 1800, tool: TOOL_BEWERBUNG,
-    system: STYLE + "\n" + TONE[tone],
+    system: AUDIENCE[phase] + "\n" + RULES + "\n" + TONE[tone],
     user: `${art}\nDie Erfahrungen sind nummeriert (nr ab 1); gib pro Erfahrung eine kurze Beschreibung zurück, wie sie im Lebenslauf steht. Weisst du zu einer Erfahrung nichts, gib einen leeren Text zurück, nie einen Hinweis auf fehlende Angaben.\n\nSTELLE:\n${JSON.stringify(job, null, 1)}\n\nPROFIL:\n${JSON.stringify(profile, null, 1)}`
   });
 }
@@ -363,14 +401,13 @@ async function routeRewrite(body) {
   const absaetze = (Array.isArray(body.absaetze) ? body.absaetze : []).slice(0, 6).map(a => clip(a, 1500));
   const mode = ["kuerzer", "locker", "normal", "formell", "neu"].includes(body.mode) ? body.mode : "neu";
   if (!absaetze.length) throw new UserError("Es gibt keinen Text zum Überarbeiten.");
-  if (!FREE && !readTicket(body.ticket)) throw new PayError("Diese Bewerbung ist nicht bezahlt.");
   if (MOCK) return MOCKS.rewrite({ absaetze, mode });
   const task = { kuerzer: "Mach den Text etwa ein Drittel kürzer. Behalte die wichtigsten Aussagen.",
     neu: "Schreib den Text neu mit anderen Formulierungen. Inhalt und Länge bleiben ähnlich.",
     locker: TONE.locker + " Schreib den Text in diesem Ton neu.", normal: TONE.normal + " Schreib den Text in diesem Ton neu.",
     formell: TONE.formell + " Schreib den Text in diesem Ton neu." }[mode];
   return claude({
-    model: MODEL, maxTokens: 1500, tool: TOOL_TEXT, system: STYLE,
+    model: MODEL, maxTokens: 1500, tool: TOOL_TEXT, system: (AUDIENCE[body.phase] || AUDIENCE.lehre) + "\n" + RULES,
     user: `${task}\nGleiche Anzahl Absätze, keine Anrede, keine Grussformel. Erfinde keine neuen Fakten.\n\nSTELLE: ${clip(body.beruf, 120)} bei ${clip(body.firma, 120)}\n\nTEXT:\n${absaetze.map((a, i) => `[${i + 1}] ${a}`).join("\n\n")}`
   });
 }
@@ -383,7 +420,7 @@ async function routeCheckout(body) {
     mode: "payment", locale: "de",
     line_items: [{ quantity: 1, price_data: { currency: "chf", unit_amount: PACKS[n],
       product_data: { name: n === 1 ? "Zusago – 1 Bewerbung" : `Zusago – ${n} Bewerbungen`,
-        description: "Lebenslauf und Bewerbungsbrief, passend zur Lehrstelle. Einmalig, kein Abo. 12 Monate gültig." } } }],
+        description: "Lebenslauf und Bewerbungsschreiben, passend zur Stelle. Einmalig, kein Abo. 12 Monate gültig." } } }],
     metadata: { credits: n },
     payment_intent_data: { metadata: { credits: n, used: 0 }, description: `Zusago: ${n} Bewerbung${n === 1 ? "" : "en"}` },
     success_url: `${SITE_URL}/app.html?bezahlt={CHECKOUT_SESSION_ID}`,
@@ -401,7 +438,7 @@ async function routeGuthaben(body) {
 
 /* ---------- Server ---------- */
 const ROUTES = { "/api/inserat": ["inserat", routeInserat], "/api/generate": ["generate", routeGenerate], "/api/rewrite": ["rewrite", routeRewrite],
-  "/api/checkout": ["checkout", routeCheckout], "/api/guthaben": ["guthaben", routeGuthaben] };
+  "/api/checkout": ["checkout", routeCheckout], "/api/guthaben": ["guthaben", routeGuthaben], "/api/unlock": ["unlock", routeUnlock] };
 http.createServer(async (req, res) => {
   const origin = req.headers.origin || "";
   const path = (req.url || "").split("?")[0];
@@ -418,7 +455,7 @@ http.createServer(async (req, res) => {
   if (limited(ip, route[0])) return send(res, 429, { error: "Du hast in kurzer Zeit sehr viele Anfragen geschickt. Versuch es in einer Stunde nochmals." }, origin);
   try {
     const body = await readBody(req);
-    const result = await route[1](body);
+    const result = await route[1](body, ip);
     send(res, 200, result, origin);
   } catch (e) {
     if (e instanceof UserError) return send(res, 400, { error: e.message }, origin);

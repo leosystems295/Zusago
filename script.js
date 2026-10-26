@@ -77,15 +77,20 @@ if (finePointer && !reduce) {
   const fitSize = () => {
     box.style.fontSize = "";
     const probe = document.createElement("span"); probe.className = "rot-word rot-probe"; box.append(probe);
-    const widest = Math.max(...jobs.map(t => { probe.textContent = t; return probe.offsetWidth; })); probe.remove();
-    const avail = box.clientWidth - 4;
+    // gleich aufgebaut wie der sichtbare Text (einzelne Buchstaben), damit die Breite genau stimmt
+    const widest = Math.max(...jobs.map(t => { split(probe, t); probe.removeAttribute("aria-label"); return probe.scrollWidth; })); probe.remove();
+    const avail = box.clientWidth * 0.97;
     box.style.fontSize = widest > avail ? `${(avail / widest).toFixed(3)}em` : "";
     fitLine(current);
   };
   requestAnimationFrame(fitSize);
   addEventListener("resize", fitSize);
-  if (document.fonts) document.fonts.ready.then(fitSize);
+  addEventListener("load", fitSize);
+  // die Schrift (Poppins) kommt oft erst nach dem ersten Messen – dann neu messen
+  if (document.fonts) { document.fonts.ready.then(fitSize); document.fonts.addEventListener("loadingdone", fitSize); }
+  if (window.ResizeObserver) { let lastW = 0; new ResizeObserver(() => { if (box.clientWidth !== lastW) { lastW = box.clientWidth; fitSize(); } }).observe(box); }
   setInterval(() => {
+    fitSize(); // vor jedem Wechsel sicherstellen, dass alles passt
     i = (i + 1) % jobs.length;
     document.dispatchEvent(new CustomEvent("zusago:job", { detail: i }));
     if (reduce) { split(current, jobs[i]); fitLine(current); return; }

@@ -91,6 +91,7 @@ h3{font-size:20px}
 .rot-word .ch{display:inline-block;transform:translateY(105%);opacity:0;filter:blur(6px);transition:transform .75s var(--ease),opacity .55s ease,filter .55s ease;transition-delay:calc(var(--d) * 24ms)}
 .rot-word.in .ch{transform:none;opacity:1;filter:none}
 .rot-word.out .ch{transform:translateY(-95%);opacity:0;filter:blur(6px);transition-duration:.55s,.4s,.4s}
+.rot-probe{visibility:hidden;transform:none!important;left:0!important}
 .rot-line{position:absolute;left:-.06em;top:.78em;height:.26em;width:0;border-radius:.08em;background:#FFD9CC;z-index:0;transition:width .8s var(--ease)}
 .hero-sub{font-size:clamp(16px,1.6vw,19px);color:var(--ink-2);max-width:540px}
 .link-form{margin-top:28px;max-width:580px}

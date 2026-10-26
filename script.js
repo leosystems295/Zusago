@@ -73,9 +73,18 @@ if (finePointer && !reduce) {
   };
   split(current, jobs[0]);
   const fitLine = el => { line.style.width = `calc(${el.offsetWidth}px + .12em)`; };
-  requestAnimationFrame(() => fitLine(current));
-  addEventListener("resize", () => fitLine(current));
-  if (document.fonts) document.fonts.ready.then(() => fitLine(current));
+  // Schrift so verkleinern, dass auch der längste Text ganz in die Zeile passt (gleiche Grösse für alle Texte)
+  const fitSize = () => {
+    box.style.fontSize = "";
+    const probe = document.createElement("span"); probe.className = "rot-word rot-probe"; box.append(probe);
+    const widest = Math.max(...jobs.map(t => { probe.textContent = t; return probe.offsetWidth; })); probe.remove();
+    const avail = box.clientWidth - 4;
+    box.style.fontSize = widest > avail ? `${(avail / widest).toFixed(3)}em` : "";
+    fitLine(current);
+  };
+  requestAnimationFrame(fitSize);
+  addEventListener("resize", fitSize);
+  if (document.fonts) document.fonts.ready.then(fitSize);
   setInterval(() => {
     i = (i + 1) % jobs.length;
     document.dispatchEvent(new CustomEvent("zusago:job", { detail: i }));

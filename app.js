@@ -24,7 +24,7 @@ const PH = {
     st: STRENGTHS, lblSt: "Deine Stärken", p4: "Tipp deine Stärken an. Die KI wählt die passendsten für den Beruf aus.",
     hob: "Hobbys und Vereine", mot: "Warum interessiert dich dieser Beruf? (freiwillig, hilft der KI sehr)",
     p5: "Personen, die der Firma über dich Auskunft geben können, z.B. deine Klassenlehrperson. Frag sie vorher, ob das in Ordnung ist. Freiwillig.",
-    letter: "Bewerbungsbrief", fam: "start", tpl: "klar", pack: 3
+    letter: "Bewerbungsbrief", fam: "start", tpl: "luzern", pack: 3
   },
   studium: {
     arts: [["stelle", "Stelle oder Nebenjob"], ["praktikum", "Praktikum"], ["initiativ", "Initiativbewerbung"]],
@@ -37,7 +37,7 @@ const PH = {
     st: ["analytisch", "selbstständig", "strukturiert", "lernfreudig", "teamfähig", "kommunikativ", "zuverlässig", "belastbar", "kreativ", "lösungsorientiert", "genau", "flexibel"], lblSt: "Deine Stärken", p4: "Tipp deine Stärken an. Die KI wählt die passendsten für die Stelle aus.",
     hob: "Engagement und Interessen", mot: "Was reizt dich an dieser Stelle? (freiwillig, hilft der KI sehr)",
     p5: "Personen, die über dich Auskunft geben können, z.B. eine Dozentin oder deine Chefin im Nebenjob. Frag sie vorher. Freiwillig.",
-    letter: "Bewerbungsschreiben", fam: "campus", tpl: "netzwerk", pack: 3
+    letter: "Bewerbungsschreiben", fam: "campus", tpl: "basel", pack: 3
   },
   praktikum: {
     arts: [["praktikum", "Praktikum"], ["initiativ", "Initiativbewerbung"]],
@@ -50,7 +50,7 @@ const PH = {
     st: ["lernfreudig", "selbstständig", "kommunikativ", "kreativ", "teamfähig", "zuverlässig", "offen", "organisiert", "genau", "motiviert", "flexibel", "neugierig"], lblSt: "Deine Stärken", p4: "Tipp deine Stärken an. Die KI wählt die passendsten fürs Praktikum aus.",
     hob: "Interessen", mot: "Was möchtest du in diesem Praktikum lernen? (freiwillig, hilft der KI sehr)",
     p5: "Personen, die über dich Auskunft geben können, z.B. eine Lehrperson oder dein Chef im Ferienjob. Frag sie vorher. Freiwillig.",
-    letter: "Motivationsschreiben", fam: "campus", tpl: "skizze", pack: 3
+    letter: "Motivationsschreiben", fam: "campus", tpl: "genf", pack: 3
   },
   beruf: {
     arts: [["stelle", "Stelle"], ["initiativ", "Initiativbewerbung"]],
@@ -63,7 +63,7 @@ const PH = {
     st: ["Führung", "lösungsorientiert", "zuverlässig", "strukturiert", "kommunikativ", "belastbar", "selbstständig", "teamfähig", "kundenorientiert", "genau", "analytisch", "flexibel"], lblSt: "Deine Kompetenzen", p4: "Tipp an, was dich ausmacht. Die KI wählt das Passendste für die Stelle aus.",
     hob: "Interessen (freiwillig)", mot: "Warum diese Stelle, warum jetzt? (freiwillig, hilft der KI sehr)",
     p5: "Frühere Vorgesetzte, die über dich Auskunft geben können. Frag sie vorher. Lässt du das leer, steht «Referenzen auf Anfrage» im Lebenslauf.",
-    letter: "Bewerbungsschreiben", fam: "beruf", tpl: "praezision", pack: 10
+    letter: "Bewerbungsschreiben", fam: "beruf", tpl: "zuerich", pack: 10
   }
 };
 const ph = () => PH[S.phase] || PH.lehre;
@@ -77,7 +77,7 @@ const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": 
 
 /* ---------- Zustand ---------- */
 const fresh = () => ({
-  step: 0, src: "link", template: "klar", tone: "normal", doc: "cv",
+  step: 0, src: "link", template: "luzern", tone: "normal", doc: "cv",
   job: { art: "lehre", beruf: "", firma: "", strasse: "", plz_ort: "", kontakt_anrede: "", kontakt_name: "", lehrbeginn: "", anforderungen: [], aufgaben: [] },
   profile: {
     vorname: "", nachname: "", strasse: "", plz_ort: "", telefon: "", email: "", geburtsdatum: "", nationalitaet: "", foto: "",
@@ -583,7 +583,7 @@ function normalizeAi(d) {
 /* ---------- Dokumente ---------- */
 // Lebenslauf und Brief werden in vorlagen.js gebaut (gleich wie in der Vorschau auf der Website)
 const ed = (path, text, tag = "span", cls = "") => `<${tag} class="ed ${cls}" contenteditable="true" spellcheck="true" data-edit="${path}">${esc(text)}</${tag}>`;
-const currentTpl = () => TEMPLATES.find(x => x.id === S.template) || TEMPLATES[0];
+const currentTpl = () => window.ZV.byId(S.template);
 // In der Vorschau: kein Bearbeiten, Wasserzeichen darüber
 const WM = '<div class="wm" aria-hidden="true">' + "<span>VORSCHAU · zusago.ch</span>".repeat(7) + "</div>";
 function cvHTML(forPrint) { return forPrint ? window.ZV.cv(S, currentTpl()) : window.ZV.cv(S, currentTpl(), unlocked() ? ed : undefined); }
@@ -832,6 +832,7 @@ $("#wipe").addEventListener("click", () => {
 
 /* ---------- Start ---------- */
 S.apps = S.apps || [];
+S.template = window.ZV.byId(S.template).id; // frühere Vorlagen auf die neuen umstellen
 if (S.ai && !S.apps.length && S.job.beruf) trackUpsert(); // ältere Bewerbung in den Tracker übernehmen
 bindFields(); bindTags(); bindRows(); applyPhase(); renderStrengths(); renderPhoto(); renderTplPick(); renderTone(); setSrc(S.src || "link"); updateJobTitle(); renderCredits(); renderTrack(); renderAtt();
 IDB.get("anhaenge").then(v => { if (Array.isArray(v)) { ATT = v; renderAtt(); } }).catch(() => {});

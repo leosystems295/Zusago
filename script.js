@@ -94,10 +94,10 @@ if (finePointer && !reduce) {
   const box = $("#heroDocs"); if (!box || !window.ZV) return;
   const { sample, byId, cv, letter, mini, fit, esc } = window.ZV;
   const SCENES = [
-    { field: "handwerk", tpl: "werkstatt", kicker: "Lehrstelle · Inserat", url: "yousty.ch/lehrstellen/polymechaniker-efz", title: "Polymechaniker/in EFZ", firm: "Muster Präzision AG · Grenchen", req: ["handwerkliches Geschick", "räumliches Denken", "Genauigkeit"], meta: ["Lehrbeginn August 2027", "4 Jahre"] },
-    { field: "praktikum", tpl: "skizze", kicker: "Praktikum · Inserat", url: "jobs.ch/de/stellenangebote/praktikum-marketing", title: "Praktikum Marketing und Kommunikation", firm: "Muster Tourismus AG · Luzern", req: ["Freude an Social Media", "Sprachkenntnisse", "Matura"], meta: ["ab Januar 2027", "6 Monate · 100 %"] },
-    { field: "studium", tpl: "netzwerk", kicker: "Nebenjob · Inserat", url: "jobs.ch/de/stellenangebote/werkstudent-data", title: "Werkstudent/in Data Analytics", firm: "Muster Retail AG · Zürich", req: ["Studium Wirtschaft oder Informatik", "SQL oder Python", "40 %"], meta: ["ab Februar 2027", "neben dem Studium"] },
-    { field: "beruf_technik", tpl: "praezision", kicker: "Stelle · Inserat", url: "jobs.ch/de/stellenangebote/teamleiter-produktion", title: "Teamleiter/in Produktion", firm: "Muster Industrie AG · Solothurn", req: ["Führungserfahrung", "technische Grundbildung", "Prozessdenken"], meta: ["nach Vereinbarung", "100 %"] }
+    { field: "handwerk", tpl: "winterthur", kicker: "Lehrstelle · Inserat", url: "yousty.ch/lehrstellen/polymechaniker-efz", title: "Polymechaniker/in EFZ", firm: "Muster Präzision AG · Grenchen", req: ["handwerkliches Geschick", "räumliches Denken", "Genauigkeit"], meta: ["Lehrbeginn August 2027", "4 Jahre"] },
+    { field: "praktikum", tpl: "genf", kicker: "Praktikum · Inserat", url: "jobs.ch/de/stellenangebote/praktikum-marketing", title: "Praktikum Marketing und Kommunikation", firm: "Muster Tourismus AG · Luzern", req: ["Freude an Social Media", "Sprachkenntnisse", "Matura"], meta: ["ab Januar 2027", "6 Monate · 100 %"] },
+    { field: "studium", tpl: "basel", kicker: "Nebenjob · Inserat", url: "jobs.ch/de/stellenangebote/werkstudent-data", title: "Werkstudent/in Data Analytics", firm: "Muster Retail AG · Zürich", req: ["Studium Wirtschaft oder Informatik", "SQL oder Python", "40 %"], meta: ["ab Februar 2027", "neben dem Studium"] },
+    { field: "beruf_technik", tpl: "zuerich", kicker: "Stelle · Inserat", url: "jobs.ch/de/stellenangebote/teamleiter-produktion", title: "Teamleiter/in Produktion", firm: "Muster Industrie AG · Solothurn", req: ["Führungserfahrung", "technische Grundbildung", "Prozessdenken"], meta: ["nach Vereinbarung", "100 %"] }
   ];
   const linkIco = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7.1 0l3-3a5 5 0 0 0-7.1-7.1l-1.2 1.2M14 10a5 5 0 0 0-7.1 0l-3 3a5 5 0 0 0 7.1 7.1l1.2-1.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
   const arrow = '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 24h30M28 14l10 10-10 10" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
@@ -293,17 +293,18 @@ if (finePointer && !reduce) {
   const { TEMPLATES, FAMS, cv, letter, sampleFor, mini, fit, esc } = window.ZV;
   const only = grid.dataset.fam, limit = +grid.dataset.limit || 0;
   const order = ["start", "campus", "beruf", "klassisch"];
-  // gemischte Reihenfolge, damit auf der Startseite jede Familie vorkommt
-  const all = only ? TEMPLATES.filter(t => t.fam === only) : order.flatMap((f, k) => TEMPLATES.filter(t => t.fam === f).map((t, i) => ({ t, r: i * 4 + k }))).sort((a, b) => a.r - b.r).map(x => x.t);
+  // Lebensphasen-Seite: zuerst die Empfehlungen, dann aufgefüllt bis 4; sonst alle in gemischter Reihenfolge
+  const all = only ? [...TEMPLATES.filter(t => t.fam === only), ...TEMPLATES.filter(t => t.fam !== only)].slice(0, 4)
+    : order.flatMap((f, k) => TEMPLATES.filter(t => t.fam === f).map((t, i) => ({ t, r: i * 4 + k }))).sort((a, b) => a.r - b.r).map(x => x.t);
   const tag = () => "";
   grid.innerHTML = all.map((t, i) => {
     const st = sampleFor(t);
-    return `<div class="tpl${limit && i >= limit ? " over" : ""}" data-f="${t.fam}" data-id="${t.id}" tabindex="0" role="button" aria-label="Vorlage ${esc(t.name)}, Familie ${FAMS[t.fam].name}, gross ansehen">
+    return `<div class="tpl${limit && i >= limit ? " over" : ""}" data-f="${t.fam}" data-id="${t.id}" tabindex="0" role="button" aria-label="Vorlage ${esc(t.name)}, gross ansehen">
       <div class="tpl-flip">
         <div class="tpl-face tpl-front">${mini(cv(st, t))}${tag(t)}</div>
         <div class="tpl-face tpl-back">${mini(letter(st, t))}<span class="tpl-tag tag-pass">Brief</span></div>
       </div>
-      <div class="tpl-meta"><div class="tpl-name">${esc(t.name)}</div><div class="tpl-field">${FAMS[t.fam].name} · ${FAMS[t.fam].fuer}</div></div>
+      <div class="tpl-meta"><div class="tpl-name">${esc(t.name)}</div><div class="tpl-field">${esc(t.wirkung)}</div></div>
     </div>`;
   }).join("");
   fit(grid);
@@ -317,7 +318,7 @@ if (finePointer && !reduce) {
     const t = TEMPLATES.find(x => x.id === id); if (!t) return;
     const st = sampleFor(t);
     dlg.innerHTML = `<div class="tpl-dlg-head">
-        <div><h2 id="tplDlgTitle">${esc(t.name)}<span class="dot">.</span></h2><p>Familie ${FAMS[t.fam].name} · ${FAMS[t.fam].wirkung} · in jeder Bewerbung enthalten</p></div>
+        <div><h2 id="tplDlgTitle">${esc(t.name)}<span class="dot">.</span></h2><p>${esc(t.wirkung)} · empfohlen für ${FAMS[t.fam].fuer} · in jeder Bewerbung enthalten</p></div>
         <button type="button" class="tpl-dlg-x" aria-label="Schliessen"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
       </div>
       <div class="tpl-dlg-pages">

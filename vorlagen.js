@@ -1,5 +1,6 @@
 /* =========================================================
    Zusago – Vorlagen (gemeinsam für Website und App)
+   10 seriöse, moderne Vorlagen für Lebenslauf und Brief.
    - Liste aller Vorlagen
    - Lebenslauf und Brief als echte A4-Seite (HTML)
    - Beispielpersonen für die Vorschau auf der Website
@@ -9,38 +10,28 @@
   "use strict";
 
   /* ---------- Vorlagen ----------
-     layout: "top" (Band oben) oder "side" (Spalte links)
-     acc: Hauptfarbe, acc2: zweite Farbe (optional)
-     mods: Varianten aus dokumente.css
-     fam: Vorlagen-Familie (start, campus, beruf, klassisch)      */
+     layout: swiss | sidebar | band | margin | classic | timeline
+     font:   inter | plex | serif | mix (Titel Serif, Text Inter)
+     acc:    Hauptfarbe (zurückhaltend), mods: Varianten aus dokumente.css
+     fam:    Empfehlung (start = Lehrstelle, campus = Studium/Praktikum, beruf, klassisch) */
   const TEMPLATES = [
-    { id: "werkstatt",  name: "Werkstatt",  field: "handwerk",   layout: "side", acc: "#14213D", acc2: "#E8603C", mods: "m-bar m-dot",             fam: "start" },
-    { id: "klar",       name: "Klar",       field: "buero",      layout: "top",  acc: "#4F46E5",                  mods: "",                        fam: "start" },
-    { id: "fuersorge",  name: "Fürsorge",   field: "gesundheit", layout: "side", acc: "#0B7A5C",                  mods: "m-light m-round",         fam: "start" },
-    { id: "code",       name: "Code",       field: "it",         layout: "side", acc: "#4F46E5", acc2: "#A5B4FC", mods: "m-dark m-mono",           fam: "beruf" },
-    { id: "funke",      name: "Funke",      field: "handwerk",   layout: "top",  acc: "#E8603C",                  mods: "m-line m-dot",            fam: "start" },
-    { id: "buehne",     name: "Klassik",    field: "buero",      layout: "top",  acc: "#111827", acc2: "#6B7280", mods: "m-caps m-dot",            fam: "klassisch" },
-    { id: "laden",      name: "Laden",      field: "buero",      layout: "side", acc: "#9D174D",                  mods: "m-serif",                 fam: "start" },
-    { id: "terminal",   name: "Terminal",   field: "it",         layout: "top",  acc: "#0B7A5C", acc2: "#22C59A", mods: "m-dark m-mono",           fam: "campus" },
-    { id: "pflege",     name: "Pflege",     field: "gesundheit", layout: "top",  acc: "#0E7490",                  mods: "m-line m-round",          fam: "beruf" },
-    { id: "skizze",     name: "Skizze",     field: "gestaltung", layout: "side", acc: "#6D5DD3",                  mods: "m-light m-round m-dot",   fam: "campus" },
-    { id: "praezision", name: "Präzision",  field: "handwerk",   layout: "top",  acc: "#334155", acc2: "#FBBF24", mods: "m-stripe m-bar m-caps",   fam: "beruf" },
-    { id: "netzwerk",   name: "Netzwerk",   field: "it",         layout: "top",  acc: "#0369A1",                  mods: "m-light m-dot",           fam: "campus" },
-    { id: "hobel",      name: "Hobel",      field: "handwerk",   layout: "side", acc: "#7C2D12", acc2: "#F59E0B", mods: "m-bar",                   fam: "beruf" },
-    { id: "kontor",     name: "Kontor",     field: "buero",      layout: "top",  acc: "#1E3A8A",                  mods: "m-line m-serif",          fam: "beruf" },
-    { id: "kanzlei",    name: "Kanzlei",    field: "buero",      layout: "side", acc: "#334155",                  mods: "m-light m-serif",         fam: "klassisch" },
-    { id: "puls",       name: "Akte",       field: "buero",      layout: "top",  acc: "#374151",                  mods: "m-line m-serif",          fam: "klassisch" },
-    { id: "sanft",      name: "Sanft",      field: "gesundheit", layout: "side", acc: "#0F766E", acc2: "#5EEAD4", mods: "m-round m-bar",           fam: "beruf" },
-    { id: "pixel",      name: "Pixel",      field: "it",         layout: "side", acc: "#6D28D9", acc2: "#C4B5FD", mods: "m-dark m-dot",            fam: "campus" },
-    { id: "palette",    name: "Palette",    field: "gestaltung", layout: "top",  acc: "#DB2777", acc2: "#14213D", mods: "m-line m-caps m-dot",     fam: "campus" },
-    { id: "kontrast",   name: "Kontrast",   field: "gestaltung", layout: "top",  acc: "#111827", acc2: "#F43F5E", mods: "m-dark m-caps",           fam: "klassisch" }
+    { id: "zuerich",    name: "Zürich",     layout: "swiss",    font: "inter", acc: "#1F3A5F",                  mods: "",                 fam: "beruf",     field: "buero",      sample: "beruf_technik", wirkung: "klar und modern" },
+    { id: "basel",      name: "Basel",      layout: "sidebar",  font: "inter", acc: "#0F5257",                  mods: "m-tint",           fam: "campus",    field: "it",         sample: "studium",       wirkung: "ruhig, mit heller Seitenspalte" },
+    { id: "bern",       name: "Bern",       layout: "classic",  font: "serif", acc: "#1F2937",                  mods: "",                 fam: "klassisch", field: "buero",      sample: "beruf_buero",   wirkung: "klassisch, für Bank und Verwaltung" },
+    { id: "luzern",     name: "Luzern",     layout: "band",     font: "plex",  acc: "#1E293B", acc2: "#64748B", mods: "",                 fam: "start",     field: "buero",      sample: "buero",         wirkung: "starker Kopf, klarer Aufbau" },
+    { id: "genf",       name: "Genf",       layout: "sidebar",  font: "mix",   acc: "#6B1E2E",                  mods: "m-tint m-right",   fam: "campus", field: "gestaltung", sample: "praktikum",     wirkung: "elegant, Spalte rechts" },
+    { id: "lugano",     name: "Lugano",     layout: "margin",   font: "inter", acc: "#2D5A47",                  mods: "",                 fam: "beruf",     field: "gesundheit", sample: "beruf_pflege",  wirkung: "luftig, Titel am Rand" },
+    { id: "stgallen",   name: "St. Gallen", layout: "timeline", font: "plex",  acc: "#2E3A87",                  mods: "",                 fam: "start",     field: "it",         sample: "it",            wirkung: "mit Zeitstrahl" },
+    { id: "winterthur", name: "Winterthur", layout: "swiss",    font: "plex",  acc: "#33475B",                  mods: "m-bar m-levels",   fam: "start",     field: "handwerk",   sample: "handwerk",      wirkung: "technisch, mit Sprach-Balken" },
+    { id: "chur",       name: "Chur",       layout: "sidebar",  font: "mix",   acc: "#14213D", acc2: "#B9A47A", mods: "m-dark m-levels", fam: "beruf",     field: "gesundheit", sample: "gesundheit",    wirkung: "dunkle Spalte, edel" },
+    { id: "aarau",      name: "Aarau",      layout: "margin",   font: "inter", acc: "#111111",                  mods: "m-mono",           fam: "klassisch", field: "gestaltung", sample: "gestaltung",    wirkung: "schwarz-weiss, für Bewerbungsportale" }
   ];
   const FIELDS = { handwerk: "Handwerk und Technik", buero: "Büro und Verkauf", gesundheit: "Gesundheit", it: "IT", gestaltung: "Gestaltung" };
   const FAMS = {
-    start:     { name: "Start",     wirkung: "freundlich, klar, mit Farbakzent",      fuer: "Lehrstelle" },
-    campus:    { name: "Campus",    wirkung: "modern, luftig, Fokus auf Projekte",     fuer: "Studium und Praktikum" },
-    beruf:     { name: "Beruf",     wirkung: "seriös, viel Platz für Erfahrung",       fuer: "Berufsleute" },
-    klassisch: { name: "Klassisch", wirkung: "schlicht, schwarz-weiss",                fuer: "Banken, Verwaltung, Recht" }
+    start:     { name: "Lehrstelle", wirkung: "klar und übersichtlich",           fuer: "Lehrstelle und Schnupperlehre" },
+    campus:    { name: "Studium",    wirkung: "modern, Fokus auf Projekte",       fuer: "Studium und Praktikum" },
+    beruf:     { name: "Beruf",      wirkung: "seriös, viel Platz für Erfahrung", fuer: "Berufsleute" },
+    klassisch: { name: "Klassisch",  wirkung: "zurückhaltend, zeitlos",           fuer: "Banken, Verwaltung, Recht" }
   };
   /* Lebensphasen: steuern Aufbau, Überschriften und Beilagen */
   const PHASES = {
@@ -52,10 +43,17 @@
 
   const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const plain = (path, text, tag = "span", cls = "") => `<${tag}${cls ? ` class="${cls}"` : ""}>${esc(text)}</${tag}>`;
-  const byId = id => TEMPLATES.find(t => t.id === id) || TEMPLATES[0];
+  // frühere Vorlagen (bis Oktober 2026) auf die neuen umleiten
+  const OLD = { werkstatt: "winterthur", klar: "luzern", fuersorge: "chur", code: "stgallen", funke: "winterthur", buehne: "bern", laden: "genf", terminal: "stgallen",
+    pflege: "lugano", skizze: "genf", praezision: "zuerich", netzwerk: "basel", hobel: "winterthur", kontor: "zuerich", kanzlei: "bern", puls: "aarau", sanft: "lugano",
+    pixel: "basel", palette: "genf", kontrast: "aarau" };
+  const byId = id => TEMPLATES.find(t => t.id === id) || TEMPLATES.find(t => t.id === OLD[id]) || TEMPLATES[0];
   const pageAttr = t => `style="--acc:${t.acc}${t.acc2 ? `;--acc2:${t.acc2}` : ""}"`;
+  const cls = (t, kind) => `page ${kind} L-${t.layout} f-${t.font} tpl-${t.id} ${t.mods}`;
   const today = () => new Date().toLocaleDateString("de-CH", { day: "numeric", month: "long", year: "numeric" });
   const city = s => String(s || "").replace(/^\s*\d{4}\s*/, "").trim();
+  const LV = { muttersprache: 5, c2: 5, "sehr gut": 4, c1: 4, gut: 3, b2: 3, b1: 2, grundkenntnisse: 2, a2: 2, a1: 1 };
+  const level = n => LV[String(n || "").trim().toLowerCase()] || 3;
   function anrede(j) {
     const n = String(j.kontakt_name || "").trim();
     if (j.kontakt_anrede === "Frau" && n) return `Sehr geehrte Frau ${n}`;
@@ -63,72 +61,90 @@
     return "Sehr geehrte Damen und Herren";
   }
 
-  /* ---------- Lebenslauf ---------- */
-  function cv(st, t, ed = plain) {
-    t = typeof t === "string" ? byId(t) : (t || TEMPLATES[0]);
+  /* ---------- Bausteine für den Lebenslauf ---------- */
+  function parts(st, t, ed) {
     const p = st.profile, a = st.ai || {}, j = st.job || {};
     const nonEmpty = l => (l || []).filter(o => Object.values(o).some(v => String(v).trim()));
     const schule = nonEmpty(p.schule), erf = nonEmpty(p.erfahrungen), spr = nonEmpty(p.sprachen), ref = nonEmpty(p.referenzen);
     const staerken = (a.staerken && a.staerken.length ? a.staerken : p.staerken || []);
     const hobbys = a.hobbys || (p.hobbys || []).join(", ");
     const desc = i => (a.erfahrungen || []).find(e => e.nr === i + 1);
-    const name = `${esc(p.vorname)} ${esc(p.nachname)}`;
-    const photo = p.foto ? `<img class="cv-foto" src="${p.foto}" alt="">` : "";
-    const sec = (title, inner) => inner ? `<section class="cv-s"><h3>${title}</h3>${inner}</section>` : "";
-    const tl = rows => rows.map(r => `<div class="tl"><span class="tl-z">${esc(r.z)}</span><div><b>${esc(r.t)}</b>${r.d ? `<span>${r.d}</span>` : ""}</div></div>`).join("");
-    const personal = [
-      ["Adresse", [p.strasse, p.plz_ort].filter(Boolean).join(", ")], ["Telefon", p.telefon], ["E-Mail", p.email],
-      ["Geburtsdatum", p.geburtsdatum], ["Nationalität", p.nationalitaet]
-    ].filter(x => x[1]).map(([k, v]) => `<div class="kv"><span>${k}</span><b>${esc(v)}</b></div>`).join("");
-    const schuleHTML = tl(schule.map(s => ({ z: s.zeit, t: s.name, d: esc(s.details) })));
-    const erfHTML = tl(erf.map((e, i) => ({ z: e.zeit, t: [e.titel, e.ort].filter(Boolean).join(", "), d: desc(i) ? ed(`ai.erfahrungen.${(a.erfahrungen || []).indexOf(desc(i))}.beschreibung`, desc(i).beschreibung) : esc(e.details || "") })));
-    const sprHTML = spr.map(s => `<div class="kv"><span>${esc(s.sprache)}</span><b>${esc(s.niveau)}</b></div>`).join("");
-    const stHTML = staerken.length ? `<ul class="cv-tags">${staerken.map(s => `<li>${esc(s)}</li>`).join("")}</ul>` : "";
-    const refHTML = ref.map(r => `<div class="ref"><b>${esc(r.name)}</b><span>${esc([r.funktion, r.telefon].filter(Boolean).join(" · "))}</span></div>`).join("");
-    const kp = a.kurzprofil ? ed("ai.kurzprofil", a.kurzprofil, "p", "cv-kp") : "";
-    const role = j.beruf ? `Bewerbung als ${esc(j.beruf)}` : "Lebenslauf";
     const ph = PHASES[st.phase] || PHASES.lehre;
+    const sec = (title, inner, c = "") => inner ? `<section class="s ${c}"><h3>${title}</h3><div class="s-in">${inner}</div></section>` : "";
+    const entry = (z, title, org, d) => `<div class="e"><span class="e-z">${esc(z)}</span><div class="e-b"><b class="e-t">${esc(title)}</b>${org ? `<span class="e-o">${esc(org)}</span>` : ""}${d ? `<span class="e-d">${d}</span>` : ""}</div></div>`;
+    const schuleHTML = schule.map(s => entry(s.zeit, s.name, s.details, "")).join("");
+    const erfHTML = erf.map((e, i) => entry(e.zeit, e.titel, e.ort, desc(i) ? ed(`ai.erfahrungen.${(a.erfahrungen || []).indexOf(desc(i))}.beschreibung`, desc(i).beschreibung) : esc(e.details || ""))).join("");
     const erfTitel = !st.phase && j.art === "schnupper" ? "Erfahrungen" : ph.erf;
-    const comp = p.computer ? sec(ph.comp, `<p>${esc(p.computer)}</p>`) : "";
-    const hob = hobbys ? sec(ph.hob, `<p>${esc(hobbys)}</p>`) : "";
-    const refBlock = refHTML ? sec("Referenzen", refHTML) : (ph.refAuf ? sec("Referenzen", "<p>Auf Anfrage</p>") : "");
-    const mainSecs = ph.erfFirst ? sec(erfTitel, erfHTML) + sec(ph.schule, schuleHTML) : sec(ph.schule, schuleHTML) + sec(erfTitel, erfHTML);
+    const contact = [["Adresse", [p.strasse, p.plz_ort].filter(Boolean).join(", ")], ["Telefon", p.telefon], ["E-Mail", p.email]].filter(x => x[1]);
+    const personal = [["Geburtsdatum", p.geburtsdatum], ["Nationalität", p.nationalitaet]].filter(x => x[1]);
+    const kv = list => list.map(([k, v]) => `<div class="kv"><span>${k}</span><b>${esc(v)}</b></div>`).join("");
+    const bars = n => `<i class="lv" aria-hidden="true">${[1, 2, 3, 4, 5].map(k => `<u class="${k <= n ? "on" : ""}"></u>`).join("")}</i>`;
+    const sprHTML = spr.map(s => `<div class="lg"><span>${esc(s.sprache)}</span><b>${esc(s.niveau)}</b>${bars(level(s.niveau))}</div>`).join("");
+    const stHTML = staerken.length ? `<ul class="li">${staerken.map(s => `<li>${esc(s)}</li>`).join("")}</ul>` : "";
+    const refHTML = ref.map(r => `<div class="rf"><b>${esc(r.name)}</b><span>${esc([r.funktion, r.telefon].filter(Boolean).join(" · "))}</span></div>`).join("");
+    return {
+      p, j, ph, sec,
+      name: `${esc(p.vorname)} ${esc(p.nachname)}`,
+      role: j.beruf ? `Bewerbung als ${esc(j.beruf)}` : "Lebenslauf",
+      kp: a.kurzprofil ? ed("ai.kurzprofil", a.kurzprofil, "p", "kp") : "",
+      photo: p.foto ? `<img class="ph" src="${p.foto}" alt="">` : "",
+      contactKV: kv(contact), personalKV: kv(personal), allKV: kv(contact.concat(personal)),
+      contactLine: contact.map(([, v]) => `<span>${esc(v)}</span>`).join(""),
+      personalLine: personal.map(([k, v]) => `<span>${k} ${esc(v)}</span>`).join(""),
+      main: (ph.erfFirst ? [sec(erfTitel, erfHTML, "s-erf"), sec(ph.schule, schuleHTML, "s-sch")] : [sec(ph.schule, schuleHTML, "s-sch"), sec(erfTitel, erfHTML, "s-erf")]).join(""),
+      spr: sec("Sprachen", sprHTML, "s-spr"), st: sec(ph.st, stHTML, "s-st"),
+      comp: p.computer ? sec(ph.comp, `<p>${esc(p.computer)}</p>`, "s-comp") : "",
+      hob: hobbys ? sec(ph.hob, `<p>${esc(hobbys)}</p>`, "s-hob") : "",
+      ref: refHTML ? sec("Referenzen", refHTML, "s-ref") : (ph.refAuf ? sec("Referenzen", "<p>Auf Anfrage</p>", "s-ref") : "")
+    };
+  }
 
-    if (t.layout === "side") {
-      return `<article class="page cv side tpl-${t.id} ${t.mods}" ${pageAttr(t)}>
-        <aside class="cv-side">${photo}${sec("Kontakt", personal)}${sec("Sprachen", sprHTML)}${sec(ph.st, stHTML)}${hob}</aside>
-        <div class="cv-main">
-          <header class="cv-h"><h1>${name}</h1><p class="cv-role">${role}</p>${kp}</header>
-          ${mainSecs}${comp}${refBlock}
-        </div></article>`;
+  /* ---------- Lebenslauf ---------- */
+  function cv(st, t, ed = plain) {
+    t = typeof t === "string" ? byId(t) : (t || TEMPLATES[0]);
+    const x = parts(st, t, ed), open = `<article class="${cls(t, "cv")}" ${pageAttr(t)}>`;
+    const head = `<div class="hd-t"><h1 class="n">${x.name}</h1><p class="r">${x.role}</p></div>`;
+    switch (t.layout) {
+      case "sidebar":
+        return `${open}<aside class="sb">${x.photo}${x.sec("Kontakt", x.contactKV)}${x.sec("Persönlich", x.personalKV)}${x.spr}${x.st}${x.comp}${x.hob}</aside>
+          <div class="mn"><header class="hd">${head}</header>${x.kp}${x.main}${x.ref}</div></article>`;
+      case "band":
+        return `${open}<header class="hd">${head}${x.photo}</header><div class="strip">${x.contactLine}</div>
+          <div class="cols"><aside class="sb">${x.sec("Persönlich", x.personalKV)}${x.spr}${x.st}${x.comp}${x.hob}</aside><div class="mn">${x.kp}${x.main}${x.ref}</div></div></article>`;
+      case "margin":
+        return `${open}<header class="hd">${head}<p class="ct">${x.contactLine}</p>${x.photo}</header>
+          ${x.kp ? x.sec("Profil", x.kp) : ""}${x.main}${x.sec("Persönlich", x.personalKV)}${x.spr}${x.st}${x.comp}${x.hob}${x.ref}</article>`;
+      case "classic":
+        return `${open}<header class="hd">${x.photo}${head}<p class="ct">${x.contactLine}</p><p class="ct ct2">${x.personalLine}</p></header>
+          ${x.kp}${x.main}<div class="cols3">${x.spr}${x.st}${x.comp || x.hob}</div>${x.comp && x.hob ? x.hob : ""}${x.ref}</article>`;
+      case "timeline":
+        return `${open}<header class="hd">${head}${x.photo}</header>
+          <div class="cols"><aside class="sb">${x.sec("Kontakt", x.contactKV)}${x.sec("Persönlich", x.personalKV)}${x.spr}${x.st}${x.comp}${x.hob}</aside><div class="mn">${x.kp}${x.main}${x.ref}</div></div></article>`;
+      default: // swiss
+        return `${open}<header class="hd">${head.replace("</div>", `<p class="ct">${x.contactLine}</p></div>`)}${x.photo}</header>
+          <div class="cols"><div class="mn">${x.kp}${x.main}</div><aside class="sb">${x.sec("Persönlich", x.personalKV)}${x.spr}${x.st}${x.comp}${x.hob}${x.ref}</aside></div></article>`;
     }
-    return `<article class="page cv top tpl-${t.id} ${t.mods}" ${pageAttr(t)}>
-      <header class="cv-band"><div><h1>${name}</h1><p class="cv-role">${role}</p></div>${photo}</header>
-      <div class="cv-body">${kp}
-        <div class="cv-cols2">
-          <div>${sec("Personalien", personal)}${sec("Sprachen", sprHTML)}${sec(ph.st, stHTML)}${hob}</div>
-          <div>${mainSecs}${comp}${refBlock}</div>
-        </div>
-      </div></article>`;
   }
 
   /* ---------- Bewerbungsbrief ---------- */
   function letter(st, t, ed = plain) {
     t = typeof t === "string" ? byId(t) : (t || TEMPLATES[0]);
     const p = st.profile, j = st.job || {}, a = st.ai || {};
-    const sender = [p.strasse, p.plz_ort, p.telefon, p.email].filter(Boolean).map(esc).join("<br>");
+    const contact = [[p.strasse, p.plz_ort].filter(Boolean).join(", "), p.telefon, p.email].filter(Boolean).map(v => `<span>${esc(v)}</span>`).join("");
     const recip = [j.firma, j.kontakt_name ? `${j.kontakt_anrede || ""} ${j.kontakt_name}`.trim() : "", j.strasse, j.plz_ort].filter(Boolean).map(esc).join("<br>");
     const beilagen = j.art === "schnupper" ? ["Lebenslauf"] : (PHASES[st.phase] || PHASES.lehre).beil;
-    return `<article class="page letter ${t.layout} tpl-${t.id} ${t.mods}" ${pageAttr(t)}>
-      <header class="lt-sender"><b>${esc(p.vorname)} ${esc(p.nachname)}</b><span>${sender}</span></header>
-      <div class="lt-recip">${recip || "&nbsp;"}</div>
-      <p class="lt-date">${esc(city(p.plz_ort) || "Ort")}, ${st.datum || today()}</p>
-      ${ed("ai.brief_betreff", a.brief_betreff || (j.beruf ? "Bewerbung als " + j.beruf : "Bewerbung"), "h2", "lt-subj")}
-      <p class="lt-anrede">${esc(anrede(j))}</p>
-      ${(a.brief_absaetze || []).map((x, i) => ed(`ai.brief_absaetze.${i}`, x, "p", "lt-p")).join("")}
-      <p class="lt-gruss">Freundliche Grüsse</p>
-      <p class="lt-name">${esc(p.vorname)} ${esc(p.nachname)}</p>
-      <p class="lt-beil"><b>Beilagen</b><br>${beilagen.join("<br>")}</p>
+    return `<article class="${cls(t, "letter")}" ${pageAttr(t)}>
+      <header class="lh"><b class="ln">${esc(p.vorname)} ${esc(p.nachname)}</b><p class="lc">${contact}</p></header>
+      <div class="lb">
+        <div class="lt-recip">${recip || "&nbsp;"}</div>
+        <p class="lt-date">${esc(city(p.plz_ort) || "Ort")}, ${st.datum || today()}</p>
+        ${ed("ai.brief_betreff", a.brief_betreff || (j.beruf ? "Bewerbung als " + j.beruf : "Bewerbung"), "h2", "lt-subj")}
+        <p class="lt-anrede">${esc(anrede(j))}</p>
+        ${(a.brief_absaetze || []).map((x, i) => ed(`ai.brief_absaetze.${i}`, x, "p", "lt-p")).join("")}
+        <p class="lt-gruss">Freundliche Grüsse</p>
+        <p class="lt-name">${esc(p.vorname)} ${esc(p.nachname)}</p>
+        <p class="lt-beil"><b>Beilagen</b><br>${beilagen.join("<br>")}</p>
+      </div>
     </article>`;
   }
 
@@ -378,11 +394,8 @@
     }
   };
   const sample = field => Object.assign({ datum: "24. Oktober 2026" }, SAMPLES[field] || SAMPLES.it);
-  /* Beispielperson passend zur Vorlagen-Familie */
-  const FAM_SAMPLE = { netzwerk: "studium", pixel: "studium", terminal: "studium", skizze: "praktikum", palette: "praktikum",
-    code: "beruf_technik", praezision: "beruf_technik", hobel: "beruf_technik", pflege: "beruf_pflege", sanft: "beruf_pflege", kontor: "beruf_buero",
-    kanzlei: "beruf_buero", kontrast: "beruf_buero", buehne: "beruf_buero", puls: "beruf_buero" };
-  const sampleFor = t => sample((typeof t === "string" ? byId(t) : t).fam === "start" ? (typeof t === "string" ? byId(t) : t).field : FAM_SAMPLE[(typeof t === "string" ? byId(t) : t).id] || "studium");
+  /* Beispielperson passend zur Vorlage */
+  const sampleFor = t => sample((typeof t === "string" ? byId(t) : t).sample || (typeof t === "string" ? byId(t) : t).field);
 
   /* ---------- Mini-Vorschau ---------- */
   const A4_PX = 793.7; // 210 mm in CSS-Pixeln

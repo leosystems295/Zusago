@@ -1,120 +1,176 @@
 /* =========================================================
    Zusago – Dokumente (Lebenslauf und Bewerbungsbrief, A4)
-   Wird von der App (Vorschau und PDF) und von der Website
-   (Vorlagen-Vorschau) gemeinsam verwendet.
+   10 seriöse Vorlagen. Wird von der App (Vorschau und PDF)
+   und von der Website (Vorlagen-Vorschau) gemeinsam verwendet.
+   Schriften: Inter, IBM Plex Sans, Source Serif 4 (Google Fonts)
    ========================================================= */
-.page{width:210mm;min-height:297mm;background:#fff;color:#1D2433;font-family:'Poppins',Arial,sans-serif;font-size:9.6pt;line-height:1.5;position:relative;overflow:hidden;text-align:left}
-.page h1,.page h2,.page h3{letter-spacing:-.01em}
+.page{--ink:#1B2230;--mut:#5E6676;--hair:#E1E4EA;--tint:color-mix(in srgb,var(--acc) 6%,#fff);
+  width:210mm;min-height:297mm;background:#fff;color:var(--ink);font-family:var(--fb);font-size:9.3pt;line-height:1.5;
+  position:relative;overflow:hidden;text-align:left;box-sizing:border-box;-webkit-font-smoothing:antialiased;font-feature-settings:"kern","liga"}
+.page *,.page *::before,.page *::after{box-sizing:border-box}
+.page h1,.page h2,.page h3{margin:0}
 :where(.page) p{margin:0}
 .page h1:focus{outline:none}
+.f-inter{--fb:'Inter',Arial,sans-serif;--fh:'Inter',Arial,sans-serif}
+.f-plex{--fb:'IBM Plex Sans',Arial,sans-serif;--fh:'IBM Plex Sans',Arial,sans-serif}
+.f-serif{--fb:'Source Serif 4',Georgia,serif;--fh:'Source Serif 4',Georgia,serif;font-size:9.8pt}
+.f-mix{--fb:'Inter',Arial,sans-serif;--fh:'Source Serif 4',Georgia,serif}
 
-/* ---------- Lebenslauf – gemeinsame Teile ---------- */
-.cv-s{margin-bottom:7mm}
-.cv-s h3{font-size:8.4pt;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin-bottom:2.6mm;padding-bottom:1.4mm;border-bottom:.4mm solid color-mix(in srgb,var(--acc) 25%,transparent);line-height:1.3}
-.kv{display:grid;grid-template-columns:23mm 1fr;gap:3mm;margin-bottom:1.4mm}
-.kv span{color:#6B7390}
+/* ---------- Gemeinsame Bausteine ---------- */
+.n{font-family:var(--fh);font-size:27pt;line-height:1.05;font-weight:650;letter-spacing:-.022em;color:var(--ink)}
+.f-serif .n,.f-mix .n{font-weight:600;letter-spacing:-.012em;font-size:29pt}
+.r{font-size:10.2pt;font-weight:500;color:var(--acc);margin-top:2mm;letter-spacing:-.003em}
+.ct,.strip,.lc{display:flex;flex-wrap:wrap;row-gap:.6mm;font-size:8.7pt;color:var(--mut)}
+.ct span:not(:last-child)::after,.strip span:not(:last-child)::after,.lc span:not(:last-child)::after{content:"";display:inline-block;width:.9mm;height:.9mm;border-radius:50%;background:#B5BBC6;margin:0 2.6mm;vertical-align:.45mm}
+.kp{font-size:9.9pt;line-height:1.58;color:#2C3444;margin:0 0 7.5mm;max-width:150mm}
+.s{margin-bottom:6.2mm;break-inside:avoid}
+.s h3{font-family:var(--fb);font-size:7.5pt;line-height:1.3;font-weight:650;text-transform:uppercase;letter-spacing:.15em;color:var(--acc);margin-bottom:2.8mm}
+.e{display:grid;grid-template-columns:26mm 1fr;gap:4mm;margin-bottom:3.4mm}
+.e:last-child{margin-bottom:0}
+.e-z{color:var(--mut);font-size:8.5pt;font-variant-numeric:tabular-nums;padding-top:.25mm}
+.e-t{display:block;font-weight:600;letter-spacing:-.003em}
+.e-o{display:block;color:var(--mut);font-size:8.8pt}
+.e-d{display:block;color:#3A4251;margin-top:.7mm}
+.kv{display:grid;grid-template-columns:24mm 1fr;gap:3mm;margin-bottom:1.3mm}
+.kv span{color:var(--mut)}
 .kv b{font-weight:500;overflow-wrap:anywhere}
-.tl{display:grid;grid-template-columns:28mm 1fr;gap:3mm;margin-bottom:3mm}
-.tl-z{color:#6B7390;font-size:8.8pt}
-.tl b{display:block;font-weight:500}
-.tl span:not(.tl-z){display:block;color:#4A5578;font-size:9pt}
-.cv-tags{list-style:none;display:flex;flex-wrap:wrap;gap:1.6mm;padding:0;margin:0}
-.cv-tags li{font-size:8.6pt;padding:.8mm 2.6mm;border-radius:99mm;background:color-mix(in srgb,var(--acc) 10%,#fff);color:var(--acc)}
-.ref{margin-bottom:2.4mm}.ref b{display:block;font-weight:500}.ref span{color:#6B7390;font-size:9pt}
-.cv-role{font-size:10.5pt;margin-top:1mm}
-.cv-kp{font-size:10pt;color:#3A4466;margin:0 0 8mm;padding:3.4mm 4.4mm;border-left:1mm solid var(--acc);background:color-mix(in srgb,var(--acc) 6%,#fff)}
-.cv-foto{width:32mm;height:42mm;object-fit:cover;border-radius:3mm;display:block}
+.lg{display:grid;grid-template-columns:1fr auto;gap:3mm;margin-bottom:1.3mm;align-items:center}
+.lg b{font-weight:400;color:var(--mut)}
+.lv{display:none}
+.m-levels .lg b{display:none}
+.m-levels .lv{display:flex;gap:.8mm}
+.lv u{display:block;width:3.6mm;height:1.3mm;border-radius:.6mm;background:#DCE0E7}
+.lv u.on{background:var(--acc)}
+.li{list-style:none;padding:0;margin:0}
+.li li{position:relative;padding-left:3.6mm;margin-bottom:1.1mm}
+.li li::before{content:"";position:absolute;left:0;top:.62em;width:1.3mm;height:1.3mm;background:var(--acc)}
+.rf{margin-bottom:2.2mm}.rf b{display:block;font-weight:600}.rf span{color:var(--mut);font-size:8.8pt}
+.s p{color:#2C3444}
+.ph{width:30mm;height:38mm;object-fit:cover;border-radius:1.2mm;display:block;flex:none}
+/* Seitenspalte: Angaben untereinander */
+.sb .kv{grid-template-columns:1fr;gap:0;margin-bottom:2.2mm}
+.sb .kv span{font-size:7.9pt}
 
-/* ---------- Layout «oben»: farbiges Band mit Name ---------- */
-.cv.top .cv-band{display:flex;justify-content:space-between;align-items:center;gap:8mm;padding:14mm 16mm 12mm;background:var(--acc);color:#fff}
-.cv.top .cv-band h1{font-size:26pt;line-height:1.05;font-weight:700;color:inherit}
-.cv.top .cv-band .cv-role{color:rgba(255,255,255,.85)}
-.cv.top .cv-band .cv-foto{border:1.2mm solid rgba(255,255,255,.9)}
-.cv.top .cv-body{padding:11mm 16mm 14mm}
-.cv-cols2{display:grid;grid-template-columns:72mm 1fr;gap:10mm}
+/* ---------- Layout «swiss» (Zürich, Winterthur) ---------- */
+.cv.L-swiss{padding:16mm 16mm 14mm}
+.L-swiss .hd{display:flex;justify-content:space-between;align-items:flex-start;gap:10mm;padding-bottom:8mm;margin-bottom:8mm;border-bottom:.35mm solid var(--hair)}
+.L-swiss .n{font-size:28pt;color:var(--acc)}
+.L-swiss .ct{margin-top:5mm}
+.L-swiss .cols{display:grid;grid-template-columns:1fr 54mm;gap:10mm}
+.L-swiss .sb{border-left:.35mm solid var(--hair);padding-left:7mm}
+.m-bar .n{color:var(--ink)}
+.cv.m-bar .hd-t{border-left:1.6mm solid var(--acc);padding-left:5mm}
+.m-bar .s h3{display:flex;align-items:center;gap:2.4mm;color:var(--ink)}
+.m-bar .s h3::before{content:"";width:4mm;height:1mm;background:var(--acc);flex:none}
 
-/* ---------- Layout «Seite»: farbige Spalte links ---------- */
-.cv.side{display:grid;grid-template-columns:66mm 1fr}
-.cv-side{background:var(--acc);color:#fff;padding:14mm 8mm 12mm;min-height:297mm}
-.cv-side .cv-foto{width:44mm;height:58mm;margin:0 auto 9mm;border:1mm solid rgba(255,255,255,.85)}
-.cv-side .cv-s h3{color:#fff;border-color:rgba(255,255,255,.3)}
-.cv-side .kv{grid-template-columns:1fr;gap:0;margin-bottom:2.4mm}
-.cv-side .kv span{color:rgba(255,255,255,.65);font-size:8.2pt}
-.cv-side .cv-tags li{background:rgba(255,255,255,.14);color:#fff}
-.cv-main{padding:16mm 14mm 14mm 11mm}
-.cv-h h1{font-size:25pt;line-height:1.05;font-weight:700;color:#14213D}
-.cv-h .cv-role{color:var(--acc);font-weight:500;margin-bottom:7mm}
+/* ---------- Layout «sidebar» (Basel, Genf, Chur) ---------- */
+.cv.L-sidebar{display:grid;grid-template-columns:64mm 1fr}
+.cv.L-sidebar.m-right{grid-template-columns:1fr 64mm}
+.L-sidebar .sb{padding:16mm 8mm 12mm 10mm;border-right:.35mm solid var(--hair);min-height:297mm}
+.m-right .sb{order:2;border-right:0;border-left:.35mm solid var(--hair);padding:16mm 10mm 12mm 8mm}
+.L-sidebar .sb .ph{width:42mm;height:53mm;margin:0 0 9mm}
+.L-sidebar .mn{padding:16mm 15mm 14mm 11mm}
+.m-right .mn{padding:16mm 11mm 14mm 16mm}
+.L-sidebar .mn .hd{margin-bottom:8mm;padding-bottom:7mm;border-bottom:.35mm solid var(--hair)}
+.m-tint .sb{background:var(--tint);border-color:transparent}
+.m-dark .sb{background:var(--acc);color:#E9EDF4;border:0}
+.m-dark .sb .s h3{color:var(--acc2,#fff)}
+.m-dark .sb .kv span,.m-dark .sb .lg b{color:rgba(255,255,255,.62)}
+.m-dark .sb p{color:#E9EDF4}
+.m-dark .sb .li li::before{background:var(--acc2,#fff)}
+.m-dark .sb .lv u{background:rgba(255,255,255,.18)}
+.m-dark .sb .lv u.on{background:var(--acc2,#fff)}
+.m-dark .mn .s h3{color:var(--acc)}
+.m-dark .mn .hd{border-bottom-color:var(--acc2,var(--hair))}
 
-/* ---------- Varianten (Klassen m-…) ---------- */
-/* m-line: weisses Band mit farbiger Linie, Punkt nach dem Namen */
-.cv.top.m-line .cv-band{background:#fff;color:#14213D;border-bottom:1.6mm solid var(--acc);padding-bottom:9mm}
-.cv.top.m-line .cv-band .cv-role{color:var(--acc)}
-.cv.top.m-line .cv-band .cv-foto{border-color:#fff}
-.m-dot .cv-band h1::after,.m-dot .cv-h h1::after{content:".";color:var(--acc2,var(--acc))}
-/* m-light: helle, getönte Fläche statt kräftiger Farbe */
-.cv.top.m-light .cv-band{background:color-mix(in srgb,var(--acc) 11%,#fff);color:#14213D}
-.cv.top.m-light .cv-band .cv-role{color:var(--acc);font-weight:500}
-.cv.top.m-light .cv-band .cv-foto{border-color:#fff}
-.cv.side.m-light .cv-side{background:color-mix(in srgb,var(--acc) 11%,#fff);color:#14213D}
-.cv.side.m-light .cv-side .cv-s h3{color:var(--acc);border-color:color-mix(in srgb,var(--acc) 30%,transparent)}
-.cv.side.m-light .cv-side .kv span{color:#5A6A70}
-.cv.side.m-light .cv-side .cv-tags li{background:#fff;color:var(--acc)}
-.cv.side.m-light .cv-side .cv-foto{border-color:#fff}
-/* m-dark: dunkles Band oder dunkle Spalte, Akzent nur als Linie und Titel */
-.cv.top.m-dark .cv-band{background:#14213D;border-bottom:1.6mm solid var(--acc2,var(--acc))}
-.cv.top.m-dark .cv-band .cv-role{color:var(--acc2,var(--acc))}
-.cv.side.m-dark .cv-side{background:#14213D}
-.cv.side.m-dark .cv-side .cv-s h3{color:var(--acc2,#fff);border-color:rgba(255,255,255,.18)}
-.cv.side.m-dark .cv-main .cv-s h3{color:var(--acc)}
-/* m-mono: Titel und Daten in Schreibmaschinen-Schrift (IT) */
-.m-mono .cv-s h3,.m-mono .tl-z,.m-mono .cv-role,.m-mono .lt-subj,.m-mono .lt-date{font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;letter-spacing:0}
-.m-mono .cv-s h3::before{content:"// ";opacity:.6}
-/* m-caps: grosser Name in Grossbuchstaben */
-.m-caps .cv-band h1,.m-caps .cv-h h1,.m-caps .lt-sender b{text-transform:uppercase;letter-spacing:.03em}
-.cv.top.m-caps .cv-band h1{font-size:30pt}
-/* m-serif: klassische Serifenschrift für Titel (Büro) */
-.m-serif .cv-band h1,.m-serif .cv-h h1,.m-serif .cv-s h3,.m-serif .lt-sender b,.m-serif .lt-subj{font-family:Georgia,'Times New Roman',serif;letter-spacing:0}
-.m-serif .cv-s h3{text-transform:none;font-size:11pt;font-weight:700;letter-spacing:0}
-/* m-round: weiche Formen (Gesundheit) */
-.m-round .cv-foto{border-radius:50%;width:38mm;height:38mm}
-.cv.side.m-round .cv-side .cv-foto{width:44mm;height:44mm}
-.m-round .cv-tags li{border-radius:99mm}
-.cv.side.m-round .cv-side{border-radius:0 9mm 9mm 0}
-/* m-bar: Titel mit Farbbalken statt Linie (Handwerk) */
-.m-bar .cv-s h3{border:0;padding:0 0 0 3mm;border-left:1.4mm solid var(--acc2,var(--acc))}
-.m-bar .cv-side .cv-s h3{border-left-color:var(--acc2,#fff)}
-/* m-stripe: Warnstreifen unter dem Band (Handwerk) */
-.cv.top.m-stripe .cv-band{border-bottom:0;position:relative;margin-bottom:3mm}
-.cv.top.m-stripe .cv-band::after{content:"";position:absolute;left:0;right:0;bottom:-3mm;height:3mm;background:repeating-linear-gradient(135deg,#14213D 0 5mm,var(--acc2,#FBBF24) 5mm 10mm)}
+/* ---------- Layout «band» (Luzern) ---------- */
+.L-band .hd{background:var(--acc);color:#fff;padding:15mm 16mm 13mm;display:flex;justify-content:space-between;align-items:center;gap:10mm}
+.L-band .n{color:#fff;font-size:28pt}
+.L-band .r{color:rgba(255,255,255,.72)}
+.L-band .ph{border:.8mm solid rgba(255,255,255,.9);width:29mm;height:36mm}
+.L-band .strip{padding:4mm 16mm;background:var(--tint);border-bottom:.35mm solid var(--hair);color:#3A4251}
+.L-band .cols{display:grid;grid-template-columns:56mm 1fr;gap:10mm;padding:10mm 16mm 14mm}
+.L-band .s h3{color:var(--acc);padding-bottom:1.6mm;border-bottom:.35mm solid var(--hair)}
 
-/* Werkstatt: Berufsbezeichnung in Orange */
-.cv.tpl-werkstatt .cv-h .cv-role{color:#C2410C}
+/* ---------- Layout «margin» (Lugano, Aarau): Titel am linken Rand ---------- */
+.cv.L-margin{padding:16mm 18mm 12mm}
+.L-margin .hd{position:relative;padding-right:40mm;min-height:38mm;margin-bottom:6mm}
+.L-margin .n{font-size:33pt;font-weight:300;letter-spacing:-.03em;color:var(--acc)}
+.L-margin .ct{margin-top:5mm}
+.L-margin .hd .ph{position:absolute;right:0;top:0}
+.L-margin .s{display:grid;grid-template-columns:38mm 1fr;gap:6mm;padding-top:3mm;border-top:.35mm solid var(--hair);margin-bottom:3.4mm}
+.L-margin .e{margin-bottom:2.8mm}
+.L-margin .s h3{margin:0;padding-top:.45mm}
+.L-margin .s .kp{margin:0;max-width:none}
+.L-margin .kv{grid-template-columns:28mm 1fr}
+.L-margin .s-spr .s-in,.L-margin .s-st .li{display:grid;grid-template-columns:1fr 1fr;column-gap:8mm}
+.m-mono .n{font-weight:700;font-size:27pt;letter-spacing:-.02em;color:#111}
+.m-mono .r,.m-mono .s h3{color:#111}
+.m-mono .s{border-top-color:#111}
+.m-mono .li li::before{background:#111}
+
+/* ---------- Layout «classic» (Bern) ---------- */
+.cv.L-classic{padding:16mm 20mm 14mm}
+.L-classic .hd{text-align:center;position:relative;padding:2mm 32mm 6mm;margin-bottom:8mm;border-bottom:.25mm solid var(--ink);box-shadow:0 .9mm 0 0 #fff,0 1.15mm 0 0 var(--ink)}
+.L-classic .hd .ph{position:absolute;right:0;top:0;width:25mm;height:32mm}
+.L-classic .n{font-size:30pt}
+.L-classic .r{color:var(--mut);font-family:var(--fb);font-size:8.4pt;text-transform:uppercase;letter-spacing:.16em;margin-top:2.4mm}
+.L-classic .ct{justify-content:center;margin-top:3.6mm}
+.L-classic .ct2{margin-top:.6mm}
+.L-classic .kp{text-align:center;font-style:italic;margin:0 auto 7mm}
+.L-classic .s h3{display:flex;align-items:center;gap:4mm;font-family:var(--fh);text-transform:none;letter-spacing:.01em;font-size:11.5pt;font-weight:600;color:var(--ink);margin-bottom:3.4mm}
+.L-classic .s h3::before,.L-classic .s h3::after{content:"";flex:1;height:.25mm;background:#C9CDD4}
+.L-classic .e{grid-template-columns:30mm 1fr}
+.L-classic .cols3{display:grid;grid-template-columns:repeat(3,1fr);gap:8mm}
+.L-classic .cols3 .s h3{font-size:10.5pt}
+.L-classic .li li::before{border-radius:50%;background:var(--ink)}
+
+/* ---------- Layout «timeline» (St. Gallen) ---------- */
+.L-timeline .hd{display:flex;justify-content:space-between;align-items:center;gap:10mm;padding:14mm 16mm 8mm;border-bottom:.35mm solid var(--hair)}
+.L-timeline .hd-t::before{content:"";display:block;width:12mm;height:1.3mm;background:var(--acc);margin-bottom:5mm}
+.L-timeline .cols{display:grid;grid-template-columns:60mm 1fr}
+.L-timeline .sb{padding:9mm 7mm 10mm 12mm;background:var(--tint);min-height:232mm}
+.L-timeline .sb .lg{grid-template-columns:1fr;gap:0;margin-bottom:2mm}
+.L-timeline .sb .lg b{font-size:7.9pt}
+.L-timeline .mn{padding:9mm 16mm 10mm 10mm}
+.L-timeline .mn .s-erf .s-in,.L-timeline .mn .s-sch .s-in{position:relative;margin-left:1.2mm;padding-left:6mm;border-left:.4mm solid color-mix(in srgb,var(--acc) 28%,#fff)}
+.L-timeline .mn .e{grid-template-columns:1fr;gap:.3mm;position:relative;margin-bottom:3.4mm}
+.L-timeline .mn .e::before{content:"";position:absolute;left:-7.55mm;top:.9mm;width:2.4mm;height:2.4mm;border-radius:50%;background:#fff;border:.55mm solid var(--acc)}
+.L-timeline .mn .e-z{color:var(--acc);font-weight:600;font-size:8pt;padding:0}
 
 /* ---------- Bewerbungsbrief ---------- */
-.letter{padding:16mm 20mm 16mm 24mm;font-size:10.4pt;line-height:1.55}
-.letter::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4mm;background:var(--acc)}
-.letter.top::before{width:0}
-.letter.top .lt-sender{border-bottom:.6mm solid var(--acc);padding-bottom:4mm}
-.letter.m-dark::before{background:#14213D}
-.letter.m-dark .lt-sender b{color:#14213D}
-.letter.top.m-dark .lt-sender{border-bottom:1.2mm solid var(--acc2,var(--acc))}
-.letter.m-light::before{background:color-mix(in srgb,var(--acc) 35%,#fff)}
-.letter.m-stripe::before{width:0}
-.letter.m-stripe .lt-sender{border:0;padding-bottom:6mm;position:relative}
-.letter.m-stripe .lt-sender::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2.4mm;background:repeating-linear-gradient(135deg,#14213D 0 4mm,var(--acc2,#FBBF24) 4mm 8mm)}
-.letter.m-round::before{border-radius:0 3mm 3mm 0}
-.lt-sender b{display:block;font-size:14pt;font-weight:700;color:var(--acc);letter-spacing:-.01em}
-.m-dot .lt-sender b::after{content:".";color:var(--acc2,var(--acc))}
-.lt-sender span{display:block;font-size:9pt;color:#4A5578;line-height:1.5;margin-top:1mm}
-.lt-recip{margin:16mm 0 12mm 92mm;min-height:22mm}
+.letter{padding:18mm 20mm 16mm 24mm;font-size:10.1pt;line-height:1.56}
+.f-serif.letter{font-size:10.6pt}
+.lh{padding-bottom:5mm;border-bottom:.35mm solid var(--hair)}
+.ln{display:block;font-family:var(--fh);font-size:17pt;line-height:1.1;font-weight:650;letter-spacing:-.015em;color:var(--ink)}
+.f-serif .ln,.f-mix .ln{font-weight:600;font-size:19pt}
+.lc{margin-top:2mm}
+.lt-recip{margin:15mm 0 12mm 95mm;min-height:22mm}
 .lt-date{text-align:right;margin-bottom:9mm}
-.lt-subj{font-size:11.5pt;font-weight:700;margin:0 0 7mm;display:block;line-height:1.35}
+.page .lt-subj{font-family:var(--fh);font-size:11.6pt;line-height:1.35;font-weight:700;margin:0 0 6.5mm;display:block}
 .lt-anrede{margin-bottom:4mm}
 .lt-p{margin:0 0 3.6mm;display:block}
 .lt-gruss{margin-top:7mm}
 .lt-name{margin-top:15mm;font-weight:500}
-.lt-beil{margin-top:9mm;font-size:9pt;color:#4A5578}
-.lt-beil b{color:#1D2433;font-weight:500}
+.lt-beil{margin-top:9mm;font-size:9pt;color:var(--mut)}
+.lt-beil b{color:var(--ink);font-weight:600}
+/* Brief passend zur Vorlage */
+.letter.L-swiss .ln{color:var(--acc)}
+.letter.m-bar .ln{color:var(--ink)}
+.letter.m-bar .lh{border:0;border-left:1.6mm solid var(--acc);padding:0 0 0 5mm;margin-bottom:5mm}
+.letter.L-sidebar .lh,.letter.L-band .lh{margin:-18mm -20mm 0 -24mm;padding:15mm 20mm 8mm 24mm;border:0}
+.letter.m-tint .lh{background:var(--tint)}
+.letter.m-dark .lh,.letter.L-band .lh{background:var(--acc)}
+.letter.m-dark .ln,.letter.L-band .ln{color:#fff}
+.letter.m-dark .lc,.letter.L-band .lc{color:rgba(255,255,255,.72)}
+.letter.m-dark .lc span::after,.letter.L-band .lc span::after{background:rgba(255,255,255,.4)}
+.letter.m-dark .lh{border-bottom:1.2mm solid var(--acc2,var(--acc))}
+.letter.L-margin .ln{font-weight:300;font-size:24pt;letter-spacing:-.03em;color:var(--acc)}
+.letter.m-mono .ln{font-weight:700;font-size:19pt;letter-spacing:-.02em;color:#111}
+.letter.m-mono .lh{border-bottom-color:#111}
+.letter.L-classic .lh{text-align:center;border-bottom:.25mm solid var(--ink);box-shadow:0 .9mm 0 0 #fff,0 1.15mm 0 0 var(--ink)}
+.letter.L-classic .lc{justify-content:center}
+.letter.L-timeline .lh::before{content:"";display:block;width:12mm;height:1.3mm;background:var(--acc);margin-bottom:5mm}
 
 /* ---------- Mini-Vorschau: eine echte A4-Seite, verkleinert ---------- */
 .mini{position:relative;width:100%;aspect-ratio:210/297;overflow:hidden;background:#fff;border-radius:inherit}

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bewerbung erstellen – Zusago</title>
-<meta name="description" content="Erstelle deinen Lebenslauf und deine Bewerbung für die Lehrstelle – Schritt für Schritt.">
+<meta name="description" content="Erstelle Lebenslauf und Bewerbungsschreiben passend zur Stelle – Schritt für Schritt.">
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#4F46E5">
 <link rel="icon" href="assets/favicon.ico" sizes="any">
@@ -23,12 +23,13 @@
   <a href="index.html" class="app-logo" aria-label="Zur Startseite"><img src="assets/zusago-logo-farbig.svg" alt="Zusago" width="120" height="27"></a>
   <ol class="progress-steps" id="progress" aria-label="Fortschritt"></ol>
   <div class="progress-mobile" aria-hidden="true"><span id="progressText">Schritt 1 von 7</span><div class="pm-bar"><i id="progressBar"></i></div></div>
+  <button type="button" class="track-btn" id="trackBtn" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 8h8M8 12h8M8 16h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>Meine Bewerbungen</span><b id="trackCount">0</b></button>
   <button type="button" class="credit-pill" id="creditPill" hidden aria-label="Dein Guthaben"><span class="cp-dot" aria-hidden="true"></span><span id="creditText">–</span></button>
 </header>
 
 <main class="app-main">
 
-  <!-- KASSE: vor dem Start bezahlen -->
+  <!-- KASSE: Freischalten beim Herunterladen -->
   <section class="paygate" id="payGate" hidden aria-labelledby="payTitle">
     <div class="panel-head">
       <span class="eyebrow" id="payEyebrow">Bevor es losgeht</span>
@@ -36,16 +37,15 @@
       <p id="payLead">Eine Bewerbung heisst: Lebenslauf und Brief für eine Stelle, beliebig oft anpassen, als PDF. Einmal bezahlen, kein Abo, kein Konto.</p>
     </div>
 
-    <div class="pkgs pay-pkgs" id="payPkgs" role="radiogroup" aria-label="Anzahl Bewerbungen wählen">
-      <button type="button" class="pkg" role="radio" aria-checked="false" data-n="1" data-total="6.90"><span class="pkg-n">1 Bewerbung</span><span class="pkg-price">CHF 6.90</span><span class="pkg-per">Für eine Stelle</span></button>
-      <button type="button" class="pkg" role="radio" aria-checked="false" data-n="3" data-total="14.90"><span class="pkg-n">3 Bewerbungen</span><span class="pkg-price">CHF 14.90</span><span class="pkg-per">CHF 4.97 pro Bewerbung</span><span class="pkg-save">−28 %</span></button>
-      <button type="button" class="pkg on" role="radio" aria-checked="true" data-n="5" data-total="19.90"><span class="pkg-fav">Am beliebtesten</span><span class="pkg-n">5 Bewerbungen</span><span class="pkg-price">CHF 19.90</span><span class="pkg-per">CHF 3.98 pro Bewerbung</span><span class="pkg-save">−42 %</span></button>
-      <button type="button" class="pkg" role="radio" aria-checked="false" data-n="10" data-total="29.90"><span class="pkg-n">10 Bewerbungen</span><span class="pkg-price">CHF 29.90</span><span class="pkg-per">CHF 2.99 pro Bewerbung</span><span class="pkg-save">−57 %</span></button>
+    <div class="pkgs pay-pkgs three" id="payPkgs" role="radiogroup" aria-label="Anzahl Bewerbungen wählen">
+      <button type="button" class="pkg" role="radio" aria-checked="false" data-n="1" data-total="7.90"><span class="pkg-n">1 Bewerbung</span><span class="pkg-price">CHF 7.90</span><span class="pkg-per">Für eine bestimmte Stelle</span></button>
+      <button type="button" class="pkg" role="radio" aria-checked="false" data-n="3" data-total="17.90"><span class="pkg-n">3 Bewerbungen</span><span class="pkg-price">CHF 17.90</span><span class="pkg-per">ca. CHF 5.97 pro Bewerbung</span><span class="pkg-save">−24 %</span></button>
+      <button type="button" class="pkg on" role="radio" aria-checked="true" data-n="10" data-total="39.90"><span class="pkg-fav">Am meisten gespart</span><span class="pkg-n">10 Bewerbungen</span><span class="pkg-price">CHF 39.90</span><span class="pkg-per">ca. CHF 3.99 pro Bewerbung</span><span class="pkg-save">−49 %</span></button>
     </div>
 
     <div class="pay-box">
       <div class="pay-actions">
-        <button type="button" class="btn btn-primary btn-lg" id="payNow">Weiter zur Zahlung · <span id="payAmount">CHF 19.90</span> <span class="arrow" aria-hidden="true">→</span></button>
+        <button type="button" class="btn btn-primary btn-lg" id="payNow">Weiter zur Zahlung · <span id="payAmount">CHF 39.90</span> <span class="arrow" aria-hidden="true">→</span></button>
         <button type="button" class="btn btn-ghost" id="payParent">Eltern bezahlen lassen</button>
       </div>
       <ul class="pay-methods" aria-label="Zahlungsarten">
@@ -71,7 +71,7 @@
       <p class="lbl">Dein Guthaben-Code</p>
       <div class="code-row"><code id="paidCode">–</code><button type="button" class="btn-link" id="paidCopy">Kopieren</button></div>
       <p class="hint">Speicher den Code (z.B. als Foto oder Notiz). Damit kannst du dein Guthaben auf einem anderen Gerät brauchen.</p>
-      <button type="button" class="btn btn-primary btn-lg w100" id="paidGo">Jetzt Bewerbung erstellen <span class="arrow" aria-hidden="true">→</span></button>
+      <button type="button" class="btn btn-primary btn-lg w100" id="paidGo"><span id="paidGoText">Jetzt Bewerbung erstellen</span> <span class="arrow" aria-hidden="true">→</span></button>
       <p class="hint paid-parent">Du hast für dein Kind bezahlt? Dann kannst du diese Seite schliessen. Auf seinem Gerät geht es automatisch weiter.</p>
     </div>
 
@@ -80,7 +80,7 @@
       <div class="row-input"><input id="codeInput" placeholder="cs_live_…" autocomplete="off" spellcheck="false" aria-label="Guthaben-Code"><button type="button" class="btn btn-ghost" id="codeUse">Einlösen</button></div>
       <p class="hint">Den Code bekommst du nach der Zahlung. Damit kannst du dein Guthaben auch auf einem anderen Gerät brauchen.</p>
     </details>
-    <p class="pay-back"><button type="button" class="btn-link" id="payClose" hidden>← Zurück zur Bewerbung</button><a href="preise.html">Preise und Fragen</a> · <a href="agb.html">AGB</a></p>
+    <p class="pay-back"><button type="button" class="btn-link" id="payClose" hidden>← Zurück zur Vorschau</button><a href="preise.html">Preise und Fragen</a> · <a href="agb.html">AGB</a></p>
   </section>
 
   <!-- 0: INSERAT -->
@@ -88,7 +88,7 @@
     <div class="panel-head">
       <span class="eyebrow">Schritt 1</span>
       <h1>Für welche Stelle bewirbst du dich<span class="dot">?</span></h1>
-      <p>Füg den Link zum Inserat ein. Zusago liest heraus, was der Betrieb sucht.</p>
+      <p>Füg den Link zum Inserat ein. Zusago liest heraus, was die Firma sucht.</p>
     </div>
 
     <div class="seg" role="tablist" aria-label="Wie willst du das Inserat angeben?">
@@ -98,9 +98,9 @@
     </div>
 
     <div class="src" data-src-panel="link">
-      <label class="lbl" for="jobUrl">Link zum Lehrstelleninserat</label>
+      <label class="lbl" for="jobUrl">Link zum Inserat</label>
       <div class="row-input">
-        <input id="jobUrl" type="url" inputmode="url" placeholder="https://www.yousty.ch/…" autocomplete="off">
+        <input id="jobUrl" type="url" inputmode="url" placeholder="https://www.jobs.ch/…" autocomplete="off">
         <button type="button" class="btn btn-primary" id="readUrl">Inserat lesen</button>
       </div>
     </div>
@@ -110,26 +110,34 @@
       <button type="button" class="btn btn-primary" id="readText">Inserat lesen</button>
     </div>
     <div class="src" data-src-panel="manual" hidden>
-      <p class="hint">Kein Problem. Gib einfach den Beruf und – falls du ihn kennst – den Betrieb an.</p>
+      <p class="hint">Kein Problem. Gib die Stelle und – falls du sie kennst – die Firma an. Für eine Wunschfirma ohne Inserat wähl unten «Initiativbewerbung».</p>
     </div>
     <p class="err" id="jobErr" role="alert"></p>
     <div class="loading-line" id="jobLoading" hidden><span class="spin"></span>Zusago liest das Inserat …</div>
 
+    <div class="card phase-pick" id="phasePick">
+      <p class="lbl" id="phaseLbl">Wo stehst du gerade? *</p>
+      <p class="hint" id="phaseHint">Damit Zusago die passenden Fragen stellt und deinen Lebenslauf richtig aufbaut.</p>
+      <div class="ph-opts" role="radiogroup" aria-labelledby="phaseLbl">
+        <button type="button" role="radio" aria-checked="false" class="ph-opt ph-lehre" data-phase="lehre"><b>Schule und Lehrstelle</b><span>Lehrstelle oder Schnupperlehre</span></button>
+        <button type="button" role="radio" aria-checked="false" class="ph-opt ph-studium" data-phase="studium"><b>Studium</b><span>Nebenjob, Werkstudium, erste Stelle</span></button>
+        <button type="button" role="radio" aria-checked="false" class="ph-opt ph-praktikum" data-phase="praktikum"><b>Praktikum</b><span>Nach der Matura, im Studium</span></button>
+        <button type="button" role="radio" aria-checked="false" class="ph-opt ph-beruf" data-phase="beruf"><b>Beruf</b><span>Stellenwechsel, Wiedereinstieg</span></button>
+      </div>
+    </div>
+
     <div class="card job-card" id="jobCard">
       <div class="card-title"><span class="check-circle sm">✓</span><span id="jobCardTitle">Angaben zur Stelle</span></div>
-      <div class="radio-row" role="radiogroup" aria-label="Art der Bewerbung">
-        <label class="radio"><input type="radio" name="art" value="lehre" data-bind="job.art"> Lehrstelle</label>
-        <label class="radio"><input type="radio" name="art" value="schnupper" data-bind="job.art"> Schnupperlehre</label>
-      </div>
+      <div class="radio-row" role="radiogroup" aria-label="Art der Bewerbung" id="artRow"></div>
       <div class="grid2">
-        <div class="field full"><label class="lbl" for="f-beruf">Beruf *</label><input id="f-beruf" list="berufe" data-bind="job.beruf" placeholder="z.B. Informatiker/in EFZ" required></div>
-        <div class="field"><label class="lbl" for="f-firma">Betrieb</label><input id="f-firma" data-bind="job.firma" placeholder="z.B. Muster AG"></div>
-        <div class="field"><label class="lbl" for="f-lb">Lehrbeginn</label><input id="f-lb" data-bind="job.lehrbeginn" placeholder="z.B. August 2027"></div>
+        <div class="field full"><label class="lbl" for="f-beruf" id="lblBeruf">Beruf *</label><input id="f-beruf" list="berufe" data-bind="job.beruf" placeholder="z.B. Informatiker/in EFZ" required></div>
+        <div class="field"><label class="lbl" for="f-firma">Firma</label><input id="f-firma" data-bind="job.firma" placeholder="z.B. Muster AG"></div>
+        <div class="field"><label class="lbl" for="f-lb" id="lblBeginn">Lehrbeginn</label><input id="f-lb" data-bind="job.lehrbeginn" placeholder="z.B. August 2027"></div>
         <div class="field"><label class="lbl" for="f-jstr">Strasse</label><input id="f-jstr" data-bind="job.strasse" placeholder="Bahnhofstrasse 1"></div>
         <div class="field"><label class="lbl" for="f-jort">PLZ und Ort</label><input id="f-jort" data-bind="job.plz_ort" placeholder="4500 Solothurn"></div>
         <div class="field"><label class="lbl" for="f-kan">Kontaktperson</label>
           <div class="pair"><select id="f-kan" data-bind="job.kontakt_anrede" aria-label="Anrede"><option value="">–</option><option>Frau</option><option>Herr</option></select><input data-bind="job.kontakt_name" placeholder="Nachname" aria-label="Name der Kontaktperson"></div></div>
-        <div class="field"><label class="lbl" for="reqInput">Das sucht der Betrieb</label>
+        <div class="field"><label class="lbl" for="reqInput">Das sucht die Firma</label>
           <div class="tag-input" data-list="job.anforderungen"><input id="reqInput" placeholder="Eintippen und Enter"></div></div>
       </div>
     </div>
@@ -169,14 +177,18 @@
   <section class="panel" data-step="2" hidden>
     <div class="panel-head">
       <span class="eyebrow">Schritt 3</span>
-      <h1>Deine Schulzeit<span class="dot">.</span></h1>
-      <p>Die aktuelle Schule zuerst, danach die Primarschule.</p>
+      <h1 id="t2">Deine Schulzeit<span class="dot">.</span></h1>
+      <p id="p2">Die aktuelle Schule zuerst, danach die Primarschule.</p>
     </div>
     <div class="card">
-      <div class="field"><label class="lbl" for="f-kl">In welcher Klasse bist du?</label>
+      <div class="field" id="klasseField"><label class="lbl" for="f-kl">In welcher Klasse bist du?</label>
         <select id="f-kl" data-bind="profile.klasse"><option value="">Bitte wählen</option><option>8. Klasse</option><option>9. Klasse</option><option>10. Schuljahr</option><option>Brückenangebot</option></select></div>
       <div class="rows" data-rows="profile.schule" data-fields="zeit:Zeitraum:2023 – heute|name:Schule:Sekundarschule Solothurn|details:Niveau / Details:Niveau A"></div>
-      <button type="button" class="btn-add" data-add="profile.schule">+ Weitere Schule</button>
+      <button type="button" class="btn-add" data-add="profile.schule" id="addSchule">+ Weitere Schule</button>
+      <div class="grid2 extras" id="extras2" hidden>
+        <div class="field"><label class="lbl" for="f-verf" id="lblVerf">Verfügbar ab (freiwillig)</label><input id="f-verf" data-bind="profile.verfuegbar" placeholder="z.B. Februar 2027"></div>
+        <div class="field"><label class="lbl" for="f-pens">Pensum (freiwillig)</label><input id="f-pens" data-bind="profile.pensum" placeholder="z.B. 40 % oder 100 %"></div>
+      </div>
     </div>
   </section>
 
@@ -184,12 +196,20 @@
   <section class="panel" data-step="3" hidden>
     <div class="panel-head">
       <span class="eyebrow">Schritt 4</span>
-      <h1>Schnupperlehren und Erfahrungen<span class="dot">.</span></h1>
-      <p>Schnupperlehren, Ferienjobs, Ämtli oder Mithilfe im Familienbetrieb – alles zählt. Noch nichts? Dann einfach weiter.</p>
+      <h1 id="t3">Schnupperlehren und Erfahrungen<span class="dot">.</span></h1>
+      <p id="p3">Schnupperlehren, Ferienjobs, Ämtli oder Mithilfe im Familienbetrieb – alles zählt. Noch nichts? Dann einfach weiter.</p>
     </div>
     <div class="card">
-      <div class="rows" data-rows="profile.erfahrungen" data-fields="zeit:Wann:März 2026|titel:Was:Schnupperlehre Informatikerin EFZ|ort:Wo:Muster AG, Solothurn"></div>
-      <button type="button" class="btn-add" data-add="profile.erfahrungen">+ Weitere Erfahrung</button>
+      <div class="rows" data-rows="profile.erfahrungen" data-fields="zeit:Wann:März 2026|titel:Was:Schnupperlehre Informatikerin EFZ|ort:Wo:Muster AG, Solothurn|details:Was hast du gemacht? (freiwillig):Laptops eingerichtet"></div>
+      <button type="button" class="btn-add" data-add="profile.erfahrungen" id="addErf">+ Weitere Erfahrung</button>
+      <div class="extras" id="extras3" hidden>
+        <div class="field"><label class="lbl" for="f-fuehr">Führungserfahrung (freiwillig)</label><input id="f-fuehr" data-bind="profile.fuehrung" placeholder="z.B. Team von 9 Personen, Lernende betreut"></div>
+        <div class="grid2">
+          <div class="field"><label class="lbl" for="f-kuend">Kündigungsfrist (freiwillig)</label><input id="f-kuend" data-bind="profile.kuendigung" placeholder="z.B. 3 Monate"></div>
+          <div class="field"><label class="lbl" for="f-lohn">Lohnvorstellung (nur wenn verlangt)</label><input id="f-lohn" data-bind="profile.lohn" placeholder="z.B. CHF 95 000 brutto pro Jahr"></div>
+        </div>
+        <p class="hint">Kündigungsfrist und Lohnvorstellung kommen nur in den Brief, wenn du sie einträgst.</p>
+      </div>
     </div>
   </section>
 
@@ -197,19 +217,19 @@
   <section class="panel" data-step="4" hidden>
     <div class="panel-head">
       <span class="eyebrow">Schritt 5</span>
-      <h1>Was dich ausmacht<span class="dot">.</span></h1>
-      <p>Tipp deine Stärken an. Die KI wählt die passendsten für den Beruf aus.</p>
+      <h1 id="t4">Was dich ausmacht<span class="dot">.</span></h1>
+      <p id="p4">Tipp deine Stärken an. Die KI wählt die passendsten für die Stelle aus.</p>
     </div>
     <div class="card">
-      <p class="lbl">Deine Stärken <span class="muted-s">(bis 6)</span></p>
+      <p class="lbl"><span id="lblSt">Deine Stärken</span> <span class="muted-s">(bis 6)</span></p>
       <div class="chips" id="strengths"></div>
-      <div class="field"><label class="lbl" for="hobbyInput">Hobbys und Vereine</label>
+      <div class="field"><label class="lbl" for="hobbyInput" id="lblHob">Hobbys und Vereine</label>
         <div class="tag-input" data-list="profile.hobbys"><input id="hobbyInput" placeholder="z.B. Volleyball im Verein – Enter drücken"></div></div>
       <p class="lbl">Sprachen</p>
       <div class="rows" data-rows="profile.sprachen" data-fields="sprache:Sprache:Deutsch|niveau:Niveau:select"></div>
       <button type="button" class="btn-add" data-add="profile.sprachen">+ Weitere Sprache</button>
       <div class="field"><label class="lbl" for="f-pc">Computer</label><input id="f-pc" data-bind="profile.computer" placeholder="z.B. Word, PowerPoint, Excel, 10-Finger-System"></div>
-      <div class="field"><label class="lbl" for="f-mot">Warum interessiert dich dieser Beruf? (freiwillig, hilft der KI sehr)</label>
+      <div class="field"><label class="lbl" for="f-mot" id="lblMot">Warum interessiert dich dieser Beruf? (freiwillig, hilft der KI sehr)</label>
         <textarea id="f-mot" rows="3" data-bind="profile.motivation" placeholder="z.B. Ich habe meinen eigenen PC zusammengebaut und möchte verstehen, wie Netzwerke funktionieren."></textarea></div>
     </div>
   </section>
@@ -219,7 +239,7 @@
     <div class="panel-head">
       <span class="eyebrow">Schritt 6</span>
       <h1>Referenzen<span class="dot">.</span></h1>
-      <p>Personen, die den Betrieb über dich Auskunft geben können, z.B. deine Klassenlehrperson. Frag sie vorher, ob das in Ordnung ist. Freiwillig.</p>
+      <p id="p5">Personen, die der Firma über dich Auskunft geben können, z.B. deine Klassenlehrperson. Frag sie vorher, ob das in Ordnung ist. Freiwillig.</p>
     </div>
     <div class="card">
       <div class="rows" data-rows="profile.referenzen" data-fields="name:Name:Frau Anna Lehrer|funktion:Funktion:Klassenlehrerin|telefon:Telefon:032 123 45 67"></div>
@@ -232,7 +252,7 @@
     <div class="panel-head">
       <span class="eyebrow">Schritt 7</span>
       <h1>Wähl deine Vorlage<span class="dot">.</span></h1>
-      <p>Lebenslauf und Brief bekommen das gleiche Design. Du kannst die Vorlage später noch wechseln.</p>
+      <p>Lebenslauf und Brief bekommen das gleiche Design. Zuerst siehst du die Vorlagen für deine Lebensphase, alle anderen kannst du ebenfalls wählen.</p>
     </div>
     <div class="tpl-pick" id="tplPick" role="radiogroup" aria-label="Vorlage"></div>
     <div class="card tone-card">
@@ -252,7 +272,7 @@
         <div class="ws-head">
           <div class="mock-tabs doc-tabs" role="tablist" aria-label="Dokument">
             <button role="tab" aria-selected="true" data-doc="cv">Lebenslauf</button>
-            <button role="tab" aria-selected="false" data-doc="letter">Bewerbungsbrief</button>
+            <button role="tab" aria-selected="false" data-doc="letter" id="tabLetter">Bewerbungsbrief</button>
             <span class="tab-ind" aria-hidden="true"></span>
           </div>
           <p class="hint edit-hint">Klick in den Text, um ihn direkt zu ändern.</p>
@@ -260,12 +280,30 @@
         <div class="sheet-wrap" id="sheetWrap"><div class="sheet" id="sheet"></div></div>
       </div>
       <aside class="ws-side">
-        <div class="side-block done-note"><span class="check-circle">✓</span><div><b>Stark!</b><span>Deine Bewerbung ist bereit. Lies sie in Ruhe durch.</span></div></div>
-        <div class="side-block">
+        <div class="side-block done-note"><span class="check-circle">✓</span><div><b id="doneT">Stark!</b><span id="doneS">Deine Bewerbung ist bereit. Lies sie in Ruhe durch.</span></div></div>
+        <div class="side-block unlock-block" id="unlockBlock" hidden>
+          <p class="lbl">Herunterladen</p>
+          <p class="hint">Das ist deine Vorschau. Gefällt sie dir? Schalte sie frei – dann kannst du sie als PDF herunterladen und im Text selbst ändern.</p>
+          <button type="button" class="btn btn-primary w100" id="unlockBtn">Freischalten und herunterladen</button>
+          <p class="hint unlock-cost" id="unlockCost"></p>
+          <div class="loading-line" id="unlockLoading" hidden><span class="spin"></span>Wird freigeschaltet …</div>
+          <p class="err" id="unlockErr" role="alert"></p>
+        </div>
+        <div class="side-block" id="dlBlock">
           <p class="lbl">Herunterladen</p>
           <button type="button" class="btn btn-primary w100" data-print="current">PDF von dieser Seite</button>
           <button type="button" class="btn btn-ghost w100" data-print="both">Beides in einem PDF</button>
+          <button type="button" class="btn btn-ghost w100" data-print="dossier" id="dossierBtn">Ganzes Dossier als PDF</button>
           <p class="hint">Im Druckfenster «Als PDF sichern» bzw. «Als PDF speichern» wählen.</p>
+        </div>
+        <div class="side-block">
+          <p class="lbl">Zeugnisse fürs Dossier</p>
+          <p class="hint">Zeugnisse, Diplome, Multicheck oder Arbeitszeugnisse – als Foto oder PDF. Sie kommen im Dossier nach Lebenslauf und Brief und bleiben auf deinem Gerät.</p>
+          <ul class="att-list" id="attList"></ul>
+          <label class="btn btn-ghost btn-sm att-add" for="attInput">+ Zeugnis hinzufügen</label>
+          <input type="file" id="attInput" accept="image/*,application/pdf" multiple hidden>
+          <div class="loading-line" id="attLoading" hidden><span class="spin"></span><span id="attLoadingText">Wird vorbereitet …</span></div>
+          <p class="err" id="attErr" role="alert"></p>
         </div>
         <div class="side-block">
           <p class="lbl">Vorlage</p>
@@ -280,7 +318,7 @@
           <div class="loading-line" id="rwLoading" hidden><span class="spin"></span>Die KI überarbeitet deinen Brief …</div>
           <p class="err" id="rwErr" role="alert"></p>
         </div>
-        <div class="side-block">
+        <div class="side-block" id="creditBlock">
           <p class="lbl">Dein Guthaben</p>
           <p class="credit-line" id="creditLine">–</p>
           <p class="hint">Dein Code – speicher ihn, damit du dein Guthaben auch auf einem anderen Gerät brauchen kannst:</p>
@@ -290,6 +328,7 @@
         <div class="side-block">
           <button type="button" class="btn-link" data-goto="1">Angaben ändern</button>
           <button type="button" class="btn-link" id="newJob">Neue Stelle – gleiche Angaben</button>
+          <button type="button" class="btn-link" id="trackOpen2">Meine Bewerbungen ansehen</button>
           <button type="button" class="btn-link danger" id="wipe">Alle meine Daten löschen</button>
         </div>
       </aside>
@@ -309,6 +348,16 @@
     <p class="gen-sub" id="genSub">Das dauert etwa 20 Sekunden.</p>
   </div>
 </div>
+
+<dialog class="track-dlg" id="trackDlg" aria-labelledby="trackTitle">
+  <div class="td-head">
+    <div><p class="eyebrow">Übersicht</p><h2 id="trackTitle">Meine Bewerbungen<span class="dot">.</span></h2></div>
+    <button type="button" class="td-close" id="trackClose" aria-label="Schliessen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+  </div>
+  <p class="hint td-hint">Jede Bewerbung, die Zusago für dich schreibt, landet hier. Trag ein, wo du sie verschickt hast – nach zwei Wochen ohne Antwort erinnert dich Zusago ans Nachfragen.</p>
+  <div class="td-list" id="trackList"></div>
+  <p class="td-empty" id="trackEmpty">Noch keine Bewerbung. Sobald Zusago deine erste Bewerbung geschrieben hat, erscheint sie hier.</p>
+</dialog>
 
 <div id="printRoot" aria-hidden="true"></div>
 

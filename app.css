@@ -226,3 +226,84 @@ body.pay-mode .progress-steps,body.pay-mode .progress-mobile{visibility:hidden}
 @media (max-width:999px){.credit-pill{order:3;margin-left:10px}}
 @media (max-width:520px){.credit-pill{font-size:12px;padding:5px 10px}.progress-mobile{min-width:0}}
 [hidden]{display:none!important}
+
+/* ---------- Dossier: Zeugnisse ---------- */
+.att-list{list-style:none;padding:0;margin:4px 0 0;display:flex;flex-direction:column;gap:8px}
+.att-list:empty{display:none}
+.att-list li{display:flex;align-items:center;gap:10px;background:var(--bg,#F7F8FC);border:1px solid var(--line);border-radius:12px;padding:6px 10px 6px 6px}
+.att-thumb{flex:none;width:34px;height:46px;border-radius:5px;overflow:hidden;background:#fff;border:1px solid var(--line)}
+.att-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.att-name{flex:1;min-width:0;font-size:13px;font-weight:500;color:var(--ink);overflow-wrap:anywhere}
+.att-name small{display:block;font-weight:400;color:var(--ink-3);font-size:12px}
+.att-add{align-self:flex-start;cursor:pointer}
+.page.att-page{display:flex;align-items:center;justify-content:center;padding:8mm;height:297mm;min-height:0;overflow:hidden}
+.att-page img{max-width:100%;max-height:100%;object-fit:contain;display:block}
+
+/* ---------- Bewerbungs-Tracker ---------- */
+.track-btn{display:inline-flex;align-items:center;gap:8px;font:inherit;font-size:13px;font-weight:500;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 8px 6px 12px;cursor:pointer;white-space:nowrap;margin-left:auto}
+.track-btn svg{width:16px;height:16px;color:var(--indigo)}
+.track-btn b{min-width:22px;height:22px;border-radius:999px;background:var(--indigo-l);color:var(--indigo);font-size:12px;display:inline-flex;align-items:center;justify-content:center;padding:0 6px}
+.track-btn:hover{border-color:var(--indigo)}
+.track-btn:not([hidden])+.credit-pill{margin-left:10px}
+@media (max-width:999px){.track-btn{order:3;margin-left:10px}.track-btn span{display:none}.track-btn{padding:6px 8px}}
+.track-dlg{width:min(760px,calc(100vw - 32px));max-height:calc(100vh - 48px);border:0;border-radius:24px;padding:28px;box-shadow:0 40px 100px -30px rgba(20,33,61,.5);color:var(--ink);font-family:var(--font)}
+.track-dlg::backdrop{background:rgba(20,33,61,.45);backdrop-filter:blur(3px)}
+.td-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.td-head h2{font-size:clamp(24px,4vw,32px);letter-spacing:-.03em;margin:4px 0 0}
+.td-close{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink);flex:none}
+.td-close svg{width:18px;height:18px}
+.td-hint{margin:10px 0 18px}
+.td-list{display:flex;flex-direction:column;gap:10px}
+.td-item{display:flex;flex-wrap:wrap;gap:12px 16px;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:16px;padding:14px 16px;background:#fff}
+.td-item.cur{border-color:var(--indigo);box-shadow:0 0 0 3px var(--indigo-l)}
+.td-main{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1 1 260px}
+.td-main b{font-size:16px}
+.td-main span{font-size:14px;color:var(--ink-2)}
+.td-main small{font-size:12px;color:var(--ink-3)}
+.td-due{display:block;margin-top:6px;font-size:13px!important;color:var(--coral-d)!important;background:var(--coral-l);border-radius:8px;padding:6px 10px}
+.td-act{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.td-status{font:inherit;font-size:13px;font-weight:500;border:1px solid var(--line);border-radius:999px;padding:8px 12px;background:#fff;color:var(--ink);min-height:40px;cursor:pointer}
+.td-status.st-versendet{background:var(--indigo-l);border-color:#C9C6FB;color:var(--indigo-d)}
+.td-status.st-schnuppern,.td-status.st-gespraech{background:#FFF4D6;border-color:#F4DC94;color:#7A5300}
+.td-status.st-zusage{background:var(--mint-l);border-color:#A6E8D5;color:var(--mint-d)}
+.td-status.st-absage{background:#F1F2F6;color:var(--ink-2)}
+.td-empty{color:var(--ink-2);font-size:14px;text-align:center;padding:24px 0 8px}
+.td-status{width:auto}
+.td-act{flex:0 0 auto}
+@media (max-width:560px){
+  .app-top{gap:8px;padding:10px 14px}
+  .app-logo img{width:100px;height:auto}
+  .progress-mobile{min-width:0;flex:1 1 50px}
+  .credit-pill .cp-long{display:none}
+  .track-btn,.credit-pill{margin-left:0!important}
+  .td-act{width:100%}
+  .track-dlg{padding:22px 18px}
+}
+.track-dlg{margin:auto;inset:0;position:fixed}
+.track-dlg .td-status{width:auto;max-width:100%}
+@media (max-width:1380px) and (min-width:561px){.track-btn span{display:none}.track-btn{padding:6px 8px}}
+
+/* ---------- Lebensphase wählen ---------- */
+.phase-pick{margin-bottom:16px}
+.phase-pick.invalid{border-color:#E11D48;box-shadow:0 0 0 4px rgba(225,29,72,.12)}
+.ph-opts{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px}
+.ph-opt{display:flex;flex-direction:column;gap:3px;text-align:left;padding:14px 14px 13px;border:1.5px solid var(--line);border-radius:14px;background:#fff;transition:all .2s var(--ease);position:relative}
+.ph-opt b{font-size:15px;color:var(--ink)}
+.ph-opt span{font-size:12.5px;color:var(--ink-2);line-height:1.35}
+.ph-opt::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--pc,#4F46E5);margin-bottom:6px}
+.ph-opt.ph-lehre{--pc:#4F46E5}.ph-opt.ph-studium{--pc:#0EA5E9}.ph-opt.ph-praktikum{--pc:#F59E0B}.ph-opt.ph-beruf{--pc:#10B981}
+.ph-opt:hover{border-color:var(--pc)}
+.ph-opt.on{border-color:var(--pc);background:color-mix(in srgb,var(--pc) 8%,#fff);box-shadow:0 8px 20px -14px var(--pc)}
+.ph-opt.on::after{content:"✓";position:absolute;top:10px;right:12px;font-weight:700;color:var(--pc)}
+@media (max-width:760px){.ph-opts{grid-template-columns:1fr 1fr}.ph-opt{padding:12px}}
+.extras{margin-top:18px;padding-top:16px;border-top:1px dashed var(--line)}
+
+/* ---------- Vorschau mit Wasserzeichen ---------- */
+#sheet{position:relative}
+.wm{position:absolute;inset:0;pointer-events:none;overflow:hidden;display:flex;flex-direction:column;justify-content:space-around;align-items:center;z-index:5}
+.wm span{transform:rotate(-28deg);font:800 54px/1 var(--font,system-ui);letter-spacing:.08em;color:rgba(79,70,229,.13);white-space:nowrap}
+body.is-preview #sheet{-webkit-user-select:none;user-select:none}
+body.is-preview #sheet img{-webkit-user-drag:none}
+.unlock-block{background:linear-gradient(180deg,#EEF2FF,#fff);border-color:#C7D2FE}
+.unlock-block .hint{margin:6px 0 12px}
+.unlock-cost{margin:10px 0 0!important;font-size:12.5px}

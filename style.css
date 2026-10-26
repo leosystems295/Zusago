@@ -788,3 +788,105 @@ h3{font-size:20px}
 .footer-social{display:inline-flex;align-items:center;gap:9px;margin-top:18px;font-size:14px;color:#B9C0D6;padding:8px 14px 8px 10px;border:1px solid #24345A;border-radius:999px;transition:color .2s,border-color .2s}
 .footer-social svg{width:20px;height:20px}
 .footer-social:hover{color:#fff;border-color:#4A5578}
+
+/* =========================================================
+   Konzept 26.10.2026: alle Lebensphasen
+   ========================================================= */
+:root{--ph-lehre:#FF7A59;--ph-lehre-l:#FFE8E1;--ph-lehre-d:#9A3A1F;--ph-studium:#22C59A;--ph-studium-l:#DDF6EE;--ph-studium-d:#0B7A5C;--ph-praktikum:#22C59A;--ph-praktikum-l:#DDF6EE;--ph-praktikum-d:#0B7A5C;--ph-beruf:#4F46E5;--ph-beruf-l:#EEF0FF;--ph-beruf-d:#3730A3}
+.ph-lehre{--ph:var(--ph-lehre);--ph-l:var(--ph-lehre-l);--ph-d:var(--ph-lehre-d)}
+.ph-studium{--ph:var(--ph-studium);--ph-l:var(--ph-studium-l);--ph-d:var(--ph-studium-d)}
+.ph-praktikum{--ph:var(--ph-praktikum);--ph-l:var(--ph-praktikum-l);--ph-d:var(--ph-praktikum-d)}
+.ph-beruf{--ph:var(--ph-beruf);--ph-l:var(--ph-beruf-l);--ph-d:var(--ph-beruf-d)}
+
+/* Navigation: «Für wen» zweispaltig */
+@media (min-width:920px){.nd-panel.nd-wide{grid-template-columns:repeat(2,minmax(0,1fr));min-width:540px}}
+.nav-links .nd-panel a.nd-sub{padding:9px 14px;font-size:14px;color:var(--ink-2)}
+.nav-links .nd-panel a.nd-sub b{font-weight:500}
+
+/* Hero */
+.sub-links{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;align-items:center;margin-top:12px;color:var(--ink-3);font-size:14px}
+.sub-links .sub-link{margin-top:0}
+
+/* Wo stehst du gerade? */
+.phase-grid{display:grid;gap:18px}
+@media (min-width:700px){.phase-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (min-width:1100px){.phase-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.phase-card{position:relative;display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);border-radius:24px;padding:26px 24px 20px;overflow:hidden;transition:transform .4s var(--ease),box-shadow .4s,border-color .3s}
+.phase-card::before{content:"";position:absolute;left:0;top:0;right:0;height:4px;background:var(--ph)}
+.phase-card:hover{transform:translateY(-4px);box-shadow:0 30px 60px -38px rgba(20,33,61,.5);border-color:color-mix(in srgb,var(--ph) 40%,var(--line))}
+.phc-link{display:block;color:inherit}
+.phc-kicker{display:inline-block;font-size:12px;font-weight:500;color:var(--ph-d);background:var(--ph-l);border-radius:999px;padding:4px 10px;margin-bottom:12px}
+.phase-card h3{font-size:22px;letter-spacing:-.02em;line-height:1.2}
+.phase-card h3 .dot{color:var(--ph)}
+.phase-card p{color:var(--ink-2);font-size:15px;margin-top:8px}
+.phc-doc{margin:18px -6px 0;height:170px;overflow:hidden;mask-image:linear-gradient(#000 55%,transparent);-webkit-mask-image:linear-gradient(#000 55%,transparent)}
+.phc-doc .doc-pair{max-width:280px;margin:0 auto}
+.phc-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:auto;padding-top:14px;border-top:1px solid var(--line)}
+.btn-link{font:inherit;font-size:14px;font-weight:500;color:var(--indigo);background:none;border:0;padding:6px 0;cursor:pointer}
+.btn-link:hover{text-decoration:underline}
+
+/* Beispiele: Tabs */
+.ex-tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:28px}
+.ex-tab{font:inherit;font-size:15px;font-weight:500;padding:10px 20px;border-radius:999px;border:1.5px solid var(--line);background:#fff;color:var(--ink-2);cursor:pointer;transition:all .25s var(--ease);min-height:44px}
+.ex-tab:hover{color:var(--ink);border-color:var(--ink-3)}
+.ex-tab.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.ex-panel[hidden]{display:none}
+.ex-docs .doc-pair{max-width:620px}
+.ex-cap{text-align:center;margin-top:18px;color:var(--ink);font-weight:500}
+.ex-cap span{display:block;font-weight:400;font-size:14px;color:var(--ink-3)}
+
+/* Vorlagen: Startseiten-Auswahl */
+.tpl-grid:not(.filtered) .tpl.over{display:none}
+
+/* Preise: drei Karten */
+.price-cards{display:grid;gap:18px;max-width:980px;margin:0 auto}
+@media (min-width:820px){.price-cards{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.pc{position:relative;display:flex;flex-direction:column;gap:6px;background:#fff;border:2px solid var(--line);border-radius:24px;padding:30px 24px 24px}
+.pc-fav{border-color:var(--indigo);box-shadow:0 30px 60px -36px rgba(79,70,229,.6)}
+.pc-n{font-size:15px;font-weight:500;color:var(--ink-2)}
+.pc-price{font-size:clamp(30px,3.6vw,40px);font-weight:700;letter-spacing:-.03em;color:var(--ink);white-space:nowrap}
+.pc-per{font-size:14px;color:var(--ink-2)}
+.pc-per b{display:inline-block;margin-left:6px;font-size:12px;font-weight:700;color:var(--mint-d);background:var(--mint-l);border-radius:999px;padding:2px 8px}
+.pc-for{font-size:14px;color:var(--ink-3);margin:6px 0 18px;flex:1}
+.pc-note{text-align:center;max-width:640px;margin:26px auto 0;font-size:15px;color:var(--ink-2)}
+.pc-note b{color:var(--ink)}
+.trust-more{text-align:center;margin-top:30px;font-size:15px;color:var(--ink-2)}
+.trust-more a{color:var(--indigo);font-weight:500}
+
+/* Zielgruppen-Seiten */
+.phase-page .eyebrow{color:var(--ph-d)}
+.phase-page .page-title .dot,.phase-page h2 .dot{color:var(--ph)}
+.ph-hero{text-align:left;padding-bottom:60px}
+.ph-hero-grid{position:relative;z-index:2;display:grid;gap:40px;align-items:center}
+@media (min-width:960px){.ph-hero-grid{grid-template-columns:1.05fr 1fr}}
+.ph-hero-text{display:flex;flex-direction:column;align-items:flex-start}
+.ph-hero .page-lead{margin-left:0;max-width:560px}
+.ph-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+.ph-hero .trust{justify-content:flex-start}
+.ph-hero-doc .doc-pair{max-width:520px}
+.ph-hero::before{content:"";position:absolute;width:520px;height:520px;right:-140px;top:60px;border-radius:50%;background:var(--ph-l);filter:blur(10px);opacity:.8;z-index:0}
+.ph-what{display:grid;gap:40px;align-items:start}
+@media (min-width:900px){.ph-what{grid-template-columns:1fr 1fr}}
+.ph-what h2{font-size:clamp(28px,3.6vw,42px);letter-spacing:-.03em;line-height:1.08}
+.ph-docs,.ph-qs{margin-top:22px}
+.ph-qs{background:#fff;border:1px solid var(--line);border-radius:22px;padding:26px}
+.ph-box{background:#fff;border:1px solid var(--line);border-radius:22px;padding:28px}
+.ph-box-t{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:12px}
+.ph-box-t:not(:first-child){margin-top:24px}
+.ph-order{list-style:none;counter-reset:o;padding:0;margin:0;display:grid;gap:8px}
+.ph-order li{counter-increment:o;display:flex;gap:12px;align-items:center;font-weight:500}
+.ph-order li::before{content:counter(o);flex:none;width:28px;height:28px;border-radius:50%;background:var(--ph-l);color:var(--ph-d);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.ph-tone{color:var(--ink-2)}
+.soon{display:flex;gap:10px;align-items:flex-start;margin-top:18px;font-size:14px;color:var(--ink-2)}
+.soon-b{flex:none;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--indigo);background:var(--indigo-l);border-radius:999px;padding:3px 9px;margin-top:2px}
+.phase-page .h-ico{background:var(--ph-l);color:var(--ph-d)}
+
+/* Beispiele-Seite */
+.ex-grid{display:grid;gap:34px}
+@media (min-width:760px){.ex-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (min-width:1100px){.ex-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.ex-item figcaption{text-align:center;margin-top:14px;font-weight:500;font-size:15px}
+@media (min-width:860px){.pkgs.three{grid-template-columns:repeat(3,minmax(0,1fr));max-width:900px}}
+.pkg-note b{color:var(--ink)}
+.phc-foot .btn-link{white-space:nowrap}
+.phase-page .tpl-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:26px 20px}.phase-page .tpl-grid .tpl{width:min(166px,calc(50% - 10px))}

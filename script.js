@@ -60,12 +60,12 @@ if (finePointer && !reduce) {
   })();
 }
 
-/* ---------- Berufe-Wechsel im Hero ---------- */
+/* ---------- Situations-Wechsel im Hero ---------- */
 (() => {
   const box = $("#rotator"); if (!box) return;
   const line = $(".rot-line", box);
   // gleiche Reihenfolge wie die Beispiel-Szenen im Hero (heroDocs)
-  const jobs = ["Informatiker/in", "Polymechaniker/in", "Kauffrau/-mann", "FaGe", "Grafiker/in"];
+  const jobs = ["für die Lehrstelle", "fürs Praktikum", "für den Nebenjob", "für den nächsten Job"];
   let i = 0, current = $(".rot-word", box);
   const split = (el, text) => {
     el.setAttribute("aria-label", text);
@@ -86,7 +86,7 @@ if (finePointer && !reduce) {
     old.classList.remove("in"); old.classList.add("out");
     requestAnimationFrame(() => requestAnimationFrame(() => { next.classList.add("in"); fitLine(next); }));
     setTimeout(() => old.remove(), 1200);
-  }, 3000);
+  }, 3400);
 })();
 
 /* ---------- Hero: Inserat → echte Dokumente (wechselt mit dem Beruf) ---------- */
@@ -94,11 +94,10 @@ if (finePointer && !reduce) {
   const box = $("#heroDocs"); if (!box || !window.ZV) return;
   const { sample, byId, cv, letter, mini, fit, esc } = window.ZV;
   const SCENES = [
-    { field: "it", tpl: "terminal", url: "yousty.ch/lehrstellen/informatiker-efz", title: "Informatiker/in EFZ", firm: "Muster Informatik AG · Solothurn", req: ["Freude an Technik", "logisches Denken", "Sek A oder B"] },
-    { field: "handwerk", tpl: "werkstatt", url: "yousty.ch/lehrstellen/polymechaniker-efz", title: "Polymechaniker/in EFZ", firm: "Muster Präzision AG · Grenchen", req: ["handwerkliches Geschick", "räumliches Denken", "Genauigkeit"] },
-    { field: "buero", tpl: "klar", url: "lena.ch/lehrstelle/kauffrau-kaufmann-efz", title: "Kauffrau/Kaufmann EFZ", firm: "Muster Versicherungen AG · Olten", req: ["Freude am Kundenkontakt", "exakte Arbeitsweise", "gutes Deutsch"] },
-    { field: "gesundheit", tpl: "fuersorge", url: "yousty.ch/lehrstellen/fage-efz", title: "Fachfrau/Fachmann Gesundheit EFZ", firm: "Alterszentrum Muster · Biel", req: ["Einfühlungsvermögen", "Belastbarkeit", "Teamfähigkeit"] },
-    { field: "gestaltung", tpl: "buehne", url: "muster-studio.ch/jobs/lehre-grafik", title: "Grafiker/in EFZ", firm: "Studio Muster GmbH · Bern", req: ["Kreativität", "Mappe mit Arbeiten", "Genauigkeit"] }
+    { field: "handwerk", tpl: "werkstatt", kicker: "Lehrstelle · Inserat", url: "yousty.ch/lehrstellen/polymechaniker-efz", title: "Polymechaniker/in EFZ", firm: "Muster Präzision AG · Grenchen", req: ["handwerkliches Geschick", "räumliches Denken", "Genauigkeit"], meta: ["Lehrbeginn August 2027", "4 Jahre"] },
+    { field: "praktikum", tpl: "skizze", kicker: "Praktikum · Inserat", url: "jobs.ch/de/stellenangebote/praktikum-marketing", title: "Praktikum Marketing und Kommunikation", firm: "Muster Tourismus AG · Luzern", req: ["Freude an Social Media", "Sprachkenntnisse", "Matura"], meta: ["ab Januar 2027", "6 Monate · 100 %"] },
+    { field: "studium", tpl: "netzwerk", kicker: "Nebenjob · Inserat", url: "jobs.ch/de/stellenangebote/werkstudent-data", title: "Werkstudent/in Data Analytics", firm: "Muster Retail AG · Zürich", req: ["Studium Wirtschaft oder Informatik", "SQL oder Python", "40 %"], meta: ["ab Februar 2027", "neben dem Studium"] },
+    { field: "beruf_technik", tpl: "praezision", kicker: "Stelle · Inserat", url: "jobs.ch/de/stellenangebote/teamleiter-produktion", title: "Teamleiter/in Produktion", firm: "Muster Industrie AG · Solothurn", req: ["Führungserfahrung", "technische Grundbildung", "Prozessdenken"], meta: ["nach Vereinbarung", "100 %"] }
   ];
   const linkIco = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7.1 0l3-3a5 5 0 0 0-7.1-7.1l-1.2 1.2M14 10a5 5 0 0 0-7.1 0l-3 3a5 5 0 0 0 7.1 7.1l1.2-1.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
   const arrow = '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 24h30M28 14l10 10-10 10" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
@@ -107,14 +106,14 @@ if (finePointer && !reduce) {
     return `<div class="hd-scene ${k === 0 ? "on" : ""}" ${k === 0 ? "" : 'aria-hidden="true"'}>
       <div class="ad-card">
         <div class="ad-url">${linkIco}${esc(sc.url)}</div>
-        <span class="ad-kicker">Lehrstelle · Inserat</span>
+        <span class="ad-kicker">${esc(sc.kicker)}</span>
         <div class="ad-title">${esc(sc.title)}</div>
         <div class="ad-firm">${esc(sc.firm)}</div>
         <div class="ad-req">${sc.req.map(r => `<span>${esc(r)}</span>`).join("")}</div>
-        <div class="ad-meta"><span>Lehrbeginn August 2027</span><span>3 Jahre</span></div>
+        <div class="ad-meta">${sc.meta.map(m => `<span>${esc(m)}</span>`).join("")}</div>
       </div>
       <div class="hd-arrow">${arrow}</div>
-      <div class="doc-pair" role="img" aria-label="Beispiel: Lebenslauf und Bewerbungsbrief als ${esc(sc.title)} in der Vorlage ${esc(t.name)}">
+      <div class="doc-pair" role="img" aria-label="Beispiel: Lebenslauf und Bewerbungsschreiben für ${esc(sc.title)} in der Vorlage ${esc(t.name)}">
         <div class="dp-page dp-letter">${mini(letter(st, t))}</div>
         <div class="dp-page dp-cv">${mini(cv(st, t))}</div>
         <span class="dp-badge"><span class="spark" aria-hidden="true"></span>Passend zum Inserat</span>
@@ -291,17 +290,20 @@ if (finePointer && !reduce) {
    Klick oder Enter öffnet die grosse Vorschau als Set.          */
 (() => {
   const grid = $("#tplGrid"); if (!grid || !window.ZV) return;
-  const { TEMPLATES, FIELDS, cv, letter, sample, mini, fit, esc } = window.ZV;
-  const list = TEMPLATES.slice(0, +grid.dataset.limit || TEMPLATES.length);
+  const { TEMPLATES, FAMS, cv, letter, sampleFor, mini, fit, esc } = window.ZV;
+  const only = grid.dataset.fam, limit = +grid.dataset.limit || 0;
+  const order = ["start", "campus", "beruf", "klassisch"];
+  // gemischte Reihenfolge, damit auf der Startseite jede Familie vorkommt
+  const all = only ? TEMPLATES.filter(t => t.fam === only) : order.flatMap((f, k) => TEMPLATES.filter(t => t.fam === f).map((t, i) => ({ t, r: i * 4 + k }))).sort((a, b) => a.r - b.r).map(x => x.t);
   const tag = () => "";
-  grid.innerHTML = list.map(t => {
-    const st = sample(t.field);
-    return `<div class="tpl" data-f="${t.field}" data-id="${t.id}" tabindex="0" role="button" aria-label="Vorlage ${esc(t.name)}, ${FIELDS[t.field]}, gross ansehen">
+  grid.innerHTML = all.map((t, i) => {
+    const st = sampleFor(t);
+    return `<div class="tpl${limit && i >= limit ? " over" : ""}" data-f="${t.fam}" data-id="${t.id}" tabindex="0" role="button" aria-label="Vorlage ${esc(t.name)}, Familie ${FAMS[t.fam].name}, gross ansehen">
       <div class="tpl-flip">
         <div class="tpl-face tpl-front">${mini(cv(st, t))}${tag(t)}</div>
         <div class="tpl-face tpl-back">${mini(letter(st, t))}<span class="tpl-tag tag-pass">Brief</span></div>
       </div>
-      <div class="tpl-meta"><div class="tpl-name">${esc(t.name)}</div><div class="tpl-field">${FIELDS[t.field]}</div></div>
+      <div class="tpl-meta"><div class="tpl-name">${esc(t.name)}</div><div class="tpl-field">${FAMS[t.fam].name} · ${FAMS[t.fam].fuer}</div></div>
     </div>`;
   }).join("");
   fit(grid);
@@ -313,17 +315,17 @@ if (finePointer && !reduce) {
   document.body.appendChild(dlg);
   const open = id => {
     const t = TEMPLATES.find(x => x.id === id); if (!t) return;
-    const st = sample(t.field);
+    const st = sampleFor(t);
     dlg.innerHTML = `<div class="tpl-dlg-head">
-        <div><h2 id="tplDlgTitle">${esc(t.name)}<span class="dot">.</span></h2><p>${FIELDS[t.field]} · In jeder Bewerbung enthalten</p></div>
+        <div><h2 id="tplDlgTitle">${esc(t.name)}<span class="dot">.</span></h2><p>Familie ${FAMS[t.fam].name} · ${FAMS[t.fam].wirkung} · in jeder Bewerbung enthalten</p></div>
         <button type="button" class="tpl-dlg-x" aria-label="Schliessen"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
       </div>
       <div class="tpl-dlg-pages">
         <figure>${mini(cv(st, t))}<figcaption>Lebenslauf</figcaption></figure>
-        <figure>${mini(letter(st, t))}<figcaption>Bewerbungsbrief</figcaption></figure>
+        <figure>${mini(letter(st, t))}<figcaption>Bewerbungsschreiben</figcaption></figure>
       </div>
       <div class="tpl-dlg-foot">
-        <p>Beispiel mit erfundener Person. Mit deinen Angaben passt die KI alles an deine Lehrstelle an.</p>
+        <p>Beispiel mit erfundener Person. Mit deinen Angaben passt die KI alles an deine Stelle an.</p>
         <a href="app.html?tpl=${t.id}" class="btn btn-primary">Mit dieser Vorlage starten <span class="arrow" aria-hidden="true">→</span></a>
       </div>`;
     $(".tpl-dlg-x", dlg).addEventListener("click", () => dlg.close());
@@ -337,7 +339,7 @@ if (finePointer && !reduce) {
 
   $$(".filter").forEach(btn => btn.addEventListener("click", () => {
     $$(".filter").forEach(b => b.classList.toggle("on", b === btn));
-    const f = btn.dataset.f;
+    const f = btn.dataset.f; grid.classList.toggle("filtered", f !== "alle");
     $$(".tpl", grid).forEach((t, i) => {
       const show = f === "alle" || t.dataset.f === f;
       t.classList.toggle("hide", !show); t.classList.remove("enter");
@@ -349,7 +351,7 @@ if (finePointer && !reduce) {
 /* ---------- Preise: Paket wählen ---------- */
 (() => {
   const box = $("#pkgs"); if (!box) return;
-  const ONE = 6.90, chf = v => v.toFixed(2);
+  const ONE = +($(".pkg[data-n=\"1\"]", box)?.dataset.total || 7.90), chf = v => v.toFixed(2);
   const pick = b => {
     $$(".pkg", box).forEach(x => { x.classList.toggle("on", x === b); x.setAttribute("aria-checked", String(x === b)); });
     const n = +b.dataset.n, tot = +b.dataset.total, save = n * ONE - tot;
@@ -450,3 +452,23 @@ if (finePointer && !reduce) {
 })();
 
 $("#year").textContent = new Date().getFullYear();
+
+
+/* ---------- Beispiele: Tabs pro Lebensphase ---------- */
+(() => {
+  $$("[data-ex-tabs]").forEach(box => {
+    const tabs = $$("[data-ex]", box), panels = $$("[data-ex-panel]", box.parentElement);
+    const pick = b => {
+      tabs.forEach(x => { const on = x === b; x.classList.toggle("on", on); x.setAttribute("aria-selected", String(on)); x.tabIndex = on ? 0 : -1; });
+      panels.forEach(p => p.hidden = p.dataset.exPanel !== b.dataset.ex);
+      if (window.ZV) window.ZV.fit(box.parentElement);
+    };
+    tabs.forEach((b, i) => {
+      b.addEventListener("click", () => pick(b));
+      b.addEventListener("keydown", e => {
+        const d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0; if (!d) return;
+        e.preventDefault(); const n = tabs[(i + d + tabs.length) % tabs.length]; n.focus(); pick(n);
+      });
+    });
+  });
+})();
